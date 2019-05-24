@@ -27,13 +27,6 @@ export interface ICommandHandler {
 export interface ICommand {
     id: string;
     handler: ICommandHandler;
-    description?: ICommandHandlerDescription;
-}
-
-export interface ICommandHandlerDescription {
-    description: string;
-    args: { name: string; description?: string; }[];
-    returns?: string;
 }
 
 export interface ICommandRegistry {
@@ -57,14 +50,6 @@ export const CommandsRegistry: ICommandRegistry = new class implements ICommandR
                 throw new Error(`invalid command`);
             }
             return this.registerCommand({ id: idOrCommand, handler });
-        }
-
-        // add argument validation if rich command metadata is provided
-        if (idOrCommand.description) {
-            const actualHandler = idOrCommand.handler;
-            idOrCommand.handler = function (accessor, ...args: any[]) {
-                return actualHandler(accessor, ...args);
-            };
         }
 
         // find a place to store the command
