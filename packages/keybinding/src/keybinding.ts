@@ -1,8 +1,9 @@
-import { Keybinding, KeyCode, ResolvedKeybinding } from '@fin/keyboard/src/keyCodes';
-import { IContextKeyServiceTarget } from '@fin/contextkey/src';
-import { IResolveResult } from '@fin/keybinding/src/keybindingResolver';
-import { ResolvedKeybindingItem } from '@fin/keybinding/src/resolvedKeybindingItem';
-import { Event } from '@fin/event/src';
+import { Event } from '@fin/event';
+import { KeyCode, Keybinding } from '@fin/keyboard';
+import { ResolvedKeybinding } from './resolvedKeybinding';
+import { IContextKeyServiceTarget } from '@fin/contextkey';
+import { IResolveResult } from './keybindingResolver';
+import { ResolvedKeybindingItem } from './resolvedKeybindingItem';
 
 export interface IUserFriendlyKeybinding {
   key: string;
@@ -21,7 +22,7 @@ export interface IKeybindingEvent {
   keybindings?: IUserFriendlyKeybinding[];
 }
 
-export interface IKeyboardEvent {
+export interface IKeyboardEventLite {
   readonly ctrlKey: boolean;
   readonly shiftKey: boolean;
   readonly altKey: boolean;
@@ -38,14 +39,14 @@ export interface IKeybindingService {
    */
   resolveKeybinding(keybinding: Keybinding): ResolvedKeybinding[];
 
-  resolveKeyboardEvent(keyboardEvent: IKeyboardEvent): ResolvedKeybinding;
+  resolveKeyboardEvent(keyboardEvent: IKeyboardEventLite): ResolvedKeybinding;
 
   resolveUserBinding(userBinding: string): ResolvedKeybinding[];
 
   /**
    * Resolve and dispatch `keyboardEvent`, but do not invoke the command or change inner state.
    */
-  softDispatch(keyboardEvent: IKeyboardEvent, target: IContextKeyServiceTarget): IResolveResult;
+  softDispatch(keyboardEvent: IKeyboardEventLite, target: IContextKeyServiceTarget): IResolveResult;
 
   /**
    * Look up keybindings for a command.

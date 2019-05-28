@@ -1,5 +1,5 @@
-import { Disposable } from '@fin/disposable/src';
-import { Event, Emitter } from '@fin/event/src';
+import { Event, Emitter } from '@fin/event';
+import { Disposable } from '@fin/disposable';
 import { CommandsRegistry, ICommand, ICommandEvent, ICommandService } from './commands';
 
 export const NullCommandService: ICommandService = {

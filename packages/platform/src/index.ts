@@ -16,61 +16,19 @@ let _isQunit = false;
 let _locale: string = undefined;
 let _language: string = undefined;
 
-interface NLSConfig {
-  locale: string;
-  availableLanguages: { [key: string]: string; };
-}
-
-export interface IProcessEnvironment {
-  [key: string]: string;
-}
-
-interface INodeProcess {
-  platform: string;
-  env: IProcessEnvironment;
-  getuid(): number;
-  nextTick: Function;
-}
-export declare let process: INodeProcess;
-declare let global: any;
-
-interface INavigator {
-  userAgent: string;
-  language: string;
-}
-declare let navigator: INavigator;
 declare let self: any;
 
 export const LANGUAGE_DEFAULT = 'en';
 
 // OS detection
-if (typeof process === 'object') {
-  _isWindows = (process.platform === 'win32');
-  _isMacintosh = (process.platform === 'darwin');
-  _isLinux = (process.platform === 'linux');
-  _isRootUser = !_isWindows && (process.getuid() === 0);
-  let rawNlsConfig = process.env['VSCODE_NLS_CONFIG'];
-  if (rawNlsConfig) {
-    try {
-      let nlsConfig: NLSConfig = JSON.parse(rawNlsConfig);
-      let resolved = nlsConfig.availableLanguages['*'];
-      _locale = nlsConfig.locale;
-      // VSCode's default language is 'en'
-      _language = resolved ? resolved : LANGUAGE_DEFAULT;
-    } catch (e) {
-    }
-  }
-  _isNative = true;
-} else if (typeof navigator === 'object') {
-  let userAgent = navigator.userAgent;
-  _isWindows = userAgent.indexOf('Windows') >= 0;
-  _isMacintosh = userAgent.indexOf('Macintosh') >= 0;
-  _isLinux = userAgent.indexOf('Linux') >= 0;
-  _isWeb = true;
-  _locale = navigator.language;
-  _language = _locale;
-  _isQunit = !!(<any>self).QUnit;
-}
+let { userAgent } = navigator;
+_isWindows = userAgent.indexOf('Windows') >= 0;
+_isMacintosh = userAgent.indexOf('Macintosh') >= 0;
+_isLinux = userAgent.indexOf('Linux') >= 0;
+_isWeb = true;
+_locale = navigator.language;
+_language = _locale;
+_isQunit = !!(<any>self).QUnit;
 
 export enum Platform {
   Web,
@@ -98,15 +56,13 @@ export const isNative = _isNative;
 export const isWeb = _isWeb;
 export const platform = _platform;
 
-
 export const enum OperatingSystem {
   Windows = 1,
   Macintosh = 2,
   Linux = 3
 }
-export const OS = (_isMacintosh ? OperatingSystem.Macintosh : (_isWindows ? OperatingSystem.Windows : OperatingSystem.Linux));
 
-const userAgent = navigator.userAgent;
+export const OS: OperatingSystem = (_isMacintosh ? OperatingSystem.Macintosh : (_isWindows ? OperatingSystem.Windows : OperatingSystem.Linux));
 
 export const isIE = (userAgent.indexOf('Trident') >= 0);
 export const isEdge = (userAgent.indexOf('Edge/') >= 0);

@@ -1,5 +1,5 @@
-import { combinedDisposable, IDisposable } from '@fin/disposable/src';
-import { LinkedList } from '@fin/linkedlist/src';
+import { combinedDisposable, IDisposable } from '@fin/disposable';
+import { LinkedList } from '@fin/linkedlist';
 
 export interface Event<T> {
   (listener: (e: T) => any, thisArgs?: any, disposables?: IDisposable[]): IDisposable;

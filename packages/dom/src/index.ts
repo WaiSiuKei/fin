@@ -1,4 +1,4 @@
-import { IDisposable } from '@fin/disposable/src';
+import { IDisposable } from '@fin/disposable';
 
 class DomListener implements IDisposable {
 

@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { IDisposable } from '@fin/disposable';
-import { Event } from '@fin/event/src';
-import { LinkedList } from '@fin/linkedlist/src';
+import { Event } from '@fin/event';
+import { LinkedList } from '@fin/linkedlist';
 
 export interface ICommandEvent {
     commandId: string;

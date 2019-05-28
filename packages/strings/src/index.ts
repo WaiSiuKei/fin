@@ -5,7 +5,7 @@
 'use strict';
 
 
-import { CharCode } from '@fin/charcode/src';
+import { CharCode } from '@fin/charcode';
 
 /**
  * The empty string.

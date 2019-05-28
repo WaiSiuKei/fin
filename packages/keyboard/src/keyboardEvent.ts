@@ -1,10 +1,7 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
 
-import { KeyCode, KeyCodeUtils, KeyMod, SimpleKeybinding } from '@fin/keyboard/src/keyCodes';
-import { isFirefox, isIE, isMacintosh, isWebKit } from '@fin/platform/src';
+import { KeyCode, KeyCodeUtils, KeyMod } from './keyCodes';
+import { isFirefox, isIE, isMacintosh, isWebKit } from '@fin/platform';
+import { SimpleKeybinding } from './keybinding';
 
 let KEY_CODE_MAP: { [keyCode: number]: KeyCode } = new Array(230);
 let INVERSE_KEY_CODE_MAP: KeyCode[] = new Array(KeyCode.MAX_VALUE);
@@ -179,8 +176,6 @@ export function getCodeForKeyCode(keyCode: KeyCode): number {
 
 export interface IKeyboardEvent {
 
-  readonly _standardKeyboardEventBrand: true;
-
   readonly browserEvent: KeyboardEvent;
   readonly target: HTMLElement;
 
@@ -207,8 +202,6 @@ const shiftKeyMod = KeyMod.Shift;
 const metaKeyMod = (isMacintosh ? KeyMod.CtrlCmd : KeyMod.WinCtrl);
 
 export class StandardKeyboardEvent implements IKeyboardEvent {
-
-  readonly _standardKeyboardEventBrand = true;
 
   public readonly browserEvent: KeyboardEvent;
   public readonly target: HTMLElement;

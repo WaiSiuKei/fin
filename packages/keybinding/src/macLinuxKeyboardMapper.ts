@@ -1,16 +1,15 @@
-import { IMMUTABLE_CODE_TO_KEY_CODE, IMMUTABLE_KEY_CODE_TO_CODE, ScanCode, ScanCodeBinding, ScanCodeUtils } from '@fin/keybinding/src/scanCode';
-import { Keybinding, KeybindingType, KeyCode, KeyCodeUtils, ResolvedKeybinding, ResolvedKeybindingPart, SimpleKeybinding } from '@fin/keyboard/src/keyCodes';
-import { OperatingSystem } from '@fin/platform/src';
-import { AriaLabelProvider, UILabelProvider, UserSettingsLabelProvider } from '@fin/keybinding/src/keybindingLabels';
-import { CharCode } from '@fin/charcode/src';
-import { IKeyboardMapper } from '@fin/keybinding/src/keyboardMapper';
-import { IKeyboardEvent } from '@fin/keybinding/src/keybinding';
+import { IMMUTABLE_CODE_TO_KEY_CODE, IMMUTABLE_KEY_CODE_TO_CODE, ScanCode, ScanCodeBinding, ScanCodeUtils, IKeyboardEvent, ChordKeybinding } from '@fin/keyboard';
+import { KeyCode, KeyCodeUtils, } from '@fin/keyboard';
+import { OperatingSystem } from '@fin/platform';
+import { CharCode } from '@fin/charcode';
+import { Keybinding, KeybindingType, SimpleKeybinding } from '@fin/keyboard';
+import { ResolvedKeybinding, ResolvedKeybindingPart } from './resolvedKeybinding';
+import { AriaLabelProvider, UILabelProvider, UserSettingsLabelProvider } from './keybindingLabels';
+import { IKeyboardMapper } from './keyboardMapper';
+import { IKeyboardEventLite } from '@fin/keybinding/src/keybinding';
 
 export interface IMacLinuxKeyMapping {
   value: string;
-  withShift: string;
-  withAltGr: string;
-  withShiftAltGr: string;
 }
 
 function macLinuxKeyMappingEquals(a: IMacLinuxKeyMapping, b: IMacLinuxKeyMapping): boolean {
@@ -22,9 +21,6 @@ function macLinuxKeyMappingEquals(a: IMacLinuxKeyMapping, b: IMacLinuxKeyMapping
   }
   return (
     a.value === b.value
-    && a.withShift === b.withShift
-    && a.withAltGr === b.withAltGr
-    && a.withShiftAltGr === b.withShiftAltGr
   );
 }
 
@@ -153,9 +149,6 @@ export class NativeResolvedKeybinding extends ResolvedKeybinding {
 interface IScanCodeMapping {
   scanCode: ScanCode;
   value: number;
-  withShift: number;
-  withAltGr: number;
-  withShiftAltGr: number;
 }
 
 class ScanCodeCombo {
@@ -187,15 +180,6 @@ class ScanCodeCombo {
   private getProducedCharCode(mapping: IMacLinuxKeyMapping): string {
     if (!mapping) {
       return '';
-    }
-    if (this.ctrlKey && this.shiftKey && this.altKey) {
-      return mapping.withShiftAltGr;
-    }
-    if (this.ctrlKey && this.altKey) {
-      return mapping.withAltGr;
-    }
-    if (this.shiftKey) {
-      return mapping.withShift;
     }
     return mapping.value;
   }
@@ -536,9 +520,6 @@ export class MacLinuxKeyboardMapper implements IKeyboardMapper {
         if (!producesLatinLetter[charCode]) {
           missingLatinLettersOverride[ScanCodeUtils.toString(scanCode)] = {
             value: value,
-            withShift: withShift,
-            withAltGr: '',
-            withShiftAltGr: ''
           };
         }
       };
@@ -587,16 +568,10 @@ export class MacLinuxKeyboardMapper implements IKeyboardMapper {
 
         const rawMapping = missingLatinLettersOverride[strScanCode] || rawMappings[strScanCode];
         const value = MacLinuxKeyboardMapper.getCharCode(rawMapping.value);
-        const withShift = MacLinuxKeyboardMapper.getCharCode(rawMapping.withShift);
-        const withAltGr = MacLinuxKeyboardMapper.getCharCode(rawMapping.withAltGr);
-        const withShiftAltGr = MacLinuxKeyboardMapper.getCharCode(rawMapping.withShiftAltGr);
 
         const mapping: IScanCodeMapping = {
           scanCode: scanCode,
           value: value,
-          withShift: withShift,
-          withAltGr: withAltGr,
-          withShiftAltGr: withShiftAltGr,
         };
         mappings[mappingsLen++] = mapping;
 
@@ -615,88 +590,6 @@ export class MacLinuxKeyboardMapper implements IKeyboardMapper {
       }
     }
 
-    // Handle all `withShiftAltGr` entries
-    for (let i = mappings.length - 1; i >= 0; i--) {
-      const mapping = mappings[i];
-      const scanCode = mapping.scanCode;
-      const withShiftAltGr = mapping.withShiftAltGr;
-      if (withShiftAltGr === mapping.withAltGr || withShiftAltGr === mapping.withShift || withShiftAltGr === mapping.value) {
-        // handled below
-        continue;
-      }
-      const kb = MacLinuxKeyboardMapper._charCodeToKb(withShiftAltGr);
-      if (!kb) {
-        continue;
-      }
-      const kbShiftKey = kb.shiftKey;
-      const keyCode = kb.keyCode;
-
-      if (kbShiftKey) {
-        // Ctrl+Shift+Alt+ScanCode => Shift+KeyCode
-        _registerIfUnknown(1, 1, 1, scanCode, 0, 1, 0, keyCode); //       Ctrl+Alt+ScanCode =>          Shift+KeyCode
-      } else {
-        // Ctrl+Shift+Alt+ScanCode => KeyCode
-        _registerIfUnknown(1, 1, 1, scanCode, 0, 0, 0, keyCode); //       Ctrl+Alt+ScanCode =>                KeyCode
-      }
-    }
-    // Handle all `withAltGr` entries
-    for (let i = mappings.length - 1; i >= 0; i--) {
-      const mapping = mappings[i];
-      const scanCode = mapping.scanCode;
-      const withAltGr = mapping.withAltGr;
-      if (withAltGr === mapping.withShift || withAltGr === mapping.value) {
-        // handled below
-        continue;
-      }
-      const kb = MacLinuxKeyboardMapper._charCodeToKb(withAltGr);
-      if (!kb) {
-        continue;
-      }
-      const kbShiftKey = kb.shiftKey;
-      const keyCode = kb.keyCode;
-
-      if (kbShiftKey) {
-        // Ctrl+Alt+ScanCode => Shift+KeyCode
-        _registerIfUnknown(1, 0, 1, scanCode, 0, 1, 0, keyCode); //       Ctrl+Alt+ScanCode =>          Shift+KeyCode
-      } else {
-        // Ctrl+Alt+ScanCode => KeyCode
-        _registerIfUnknown(1, 0, 1, scanCode, 0, 0, 0, keyCode); //       Ctrl+Alt+ScanCode =>                KeyCode
-      }
-    }
-    // Handle all `withShift` entries
-    for (let i = mappings.length - 1; i >= 0; i--) {
-      const mapping = mappings[i];
-      const scanCode = mapping.scanCode;
-      const withShift = mapping.withShift;
-      if (withShift === mapping.value) {
-        // handled below
-        continue;
-      }
-      const kb = MacLinuxKeyboardMapper._charCodeToKb(withShift);
-      if (!kb) {
-        continue;
-      }
-      const kbShiftKey = kb.shiftKey;
-      const keyCode = kb.keyCode;
-
-      if (kbShiftKey) {
-        // Shift+ScanCode => Shift+KeyCode
-        _registerIfUnknown(0, 1, 0, scanCode, 0, 1, 0, keyCode); //          Shift+ScanCode =>          Shift+KeyCode
-        _registerIfUnknown(0, 1, 1, scanCode, 0, 1, 1, keyCode); //      Shift+Alt+ScanCode =>      Shift+Alt+KeyCode
-        _registerIfUnknown(1, 1, 0, scanCode, 1, 1, 0, keyCode); //     Ctrl+Shift+ScanCode =>     Ctrl+Shift+KeyCode
-        _registerIfUnknown(1, 1, 1, scanCode, 1, 1, 1, keyCode); // Ctrl+Shift+Alt+ScanCode => Ctrl+Shift+Alt+KeyCode
-      } else {
-        // Shift+ScanCode => KeyCode
-        _registerIfUnknown(0, 1, 0, scanCode, 0, 0, 0, keyCode); //          Shift+ScanCode =>                KeyCode
-        _registerIfUnknown(0, 1, 0, scanCode, 0, 1, 0, keyCode); //          Shift+ScanCode =>          Shift+KeyCode
-        _registerIfUnknown(0, 1, 1, scanCode, 0, 0, 1, keyCode); //      Shift+Alt+ScanCode =>            Alt+KeyCode
-        _registerIfUnknown(0, 1, 1, scanCode, 0, 1, 1, keyCode); //      Shift+Alt+ScanCode =>      Shift+Alt+KeyCode
-        _registerIfUnknown(1, 1, 0, scanCode, 1, 0, 0, keyCode); //     Ctrl+Shift+ScanCode =>           Ctrl+KeyCode
-        _registerIfUnknown(1, 1, 0, scanCode, 1, 1, 0, keyCode); //     Ctrl+Shift+ScanCode =>     Ctrl+Shift+KeyCode
-        _registerIfUnknown(1, 1, 1, scanCode, 1, 0, 1, keyCode); // Ctrl+Shift+Alt+ScanCode =>       Ctrl+Alt+KeyCode
-        _registerIfUnknown(1, 1, 1, scanCode, 1, 1, 1, keyCode); // Ctrl+Shift+Alt+ScanCode => Ctrl+Shift+Alt+KeyCode
-      }
-    }
     // Handle all `value` entries
     for (let i = mappings.length - 1; i >= 0; i--) {
       const mapping = mappings[i];
@@ -945,74 +838,11 @@ export class MacLinuxKeyboardMapper implements IKeyboardMapper {
     return this._scanCodeToDispatch[binding.scanCode];
   }
 
-  private _getElectronLabelForKeyCode(keyCode: KeyCode): string {
-    if (keyCode >= KeyCode.NUMPAD_0 && keyCode <= KeyCode.NUMPAD_DIVIDE) {
-      // Electron cannot handle numpad keys
-      return null;
-    }
-
-    switch (keyCode) {
-      case KeyCode.UpArrow:
-        return 'Up';
-      case KeyCode.DownArrow:
-        return 'Down';
-      case KeyCode.LeftArrow:
-        return 'Left';
-      case KeyCode.RightArrow:
-        return 'Right';
-    }
-
-    // electron menus always do the correct rendering on Windows
-    return KeyCodeUtils.toString(keyCode);
-  }
-
-  public getElectronAcceleratorLabelForScanCodeBinding(binding: ScanCodeBinding): string {
-    if (!binding) {
-      return null;
-    }
-    if (binding.isDuplicateModifierCase()) {
-      return null;
-    }
-
-    const immutableKeyCode = IMMUTABLE_CODE_TO_KEY_CODE[binding.scanCode];
-    if (immutableKeyCode !== -1) {
-      return this._getElectronLabelForKeyCode(immutableKeyCode);
-    }
-
-    // Check if this scanCode always maps to the same keyCode and back
-    const constantKeyCode: KeyCode = this._scanCodeKeyCodeMapper.guessStableKeyCode(binding.scanCode);
-
-    if (!this._isUSStandard) {
-      // Electron cannot handle these key codes on anything else than standard US
-      const isOEMKey = (
-        constantKeyCode === KeyCode.US_SEMICOLON
-        || constantKeyCode === KeyCode.US_EQUAL
-        || constantKeyCode === KeyCode.US_COMMA
-        || constantKeyCode === KeyCode.US_MINUS
-        || constantKeyCode === KeyCode.US_DOT
-        || constantKeyCode === KeyCode.US_SLASH
-        || constantKeyCode === KeyCode.US_BACKTICK
-        || constantKeyCode === KeyCode.US_OPEN_SQUARE_BRACKET
-        || constantKeyCode === KeyCode.US_BACKSLASH
-        || constantKeyCode === KeyCode.US_CLOSE_SQUARE_BRACKET
-      );
-
-      if (isOEMKey) {
-        return null;
-      }
-    }
-
-    if (constantKeyCode !== -1) {
-      return this._getElectronLabelForKeyCode(constantKeyCode);
-    }
-
-    return null;
-  }
-
   public resolveKeybinding(keybinding: Keybinding): NativeResolvedKeybinding[] {
     let result: NativeResolvedKeybinding[] = [], resultLen = 0;
 
     if (keybinding.type === KeybindingType.Chord) {
+      keybinding = keybinding as ChordKeybinding
       const firstParts = this.simpleKeybindingToScanCodeBinding(keybinding.firstPart);
       const chordParts = this.simpleKeybindingToScanCodeBinding(keybinding.chordPart);
 
@@ -1025,7 +855,7 @@ export class MacLinuxKeyboardMapper implements IKeyboardMapper {
         }
       }
     } else {
-      const firstParts = this.simpleKeybindingToScanCodeBinding(keybinding);
+      const firstParts = this.simpleKeybindingToScanCodeBinding(keybinding as SimpleKeybinding);
 
       for (let i = 0, len = firstParts.length; i < len; i++) {
         const firstPart = firstParts[i];
@@ -1037,7 +867,7 @@ export class MacLinuxKeyboardMapper implements IKeyboardMapper {
     return result;
   }
 
-  public resolveKeyboardEvent(keyboardEvent: IKeyboardEvent): NativeResolvedKeybinding {
+  public resolveKeyboardEvent(keyboardEvent: IKeyboardEventLite): NativeResolvedKeybinding {
     let code = ScanCodeUtils.toEnum(keyboardEvent.code);
 
     // Treat NumpadEnter as Enter

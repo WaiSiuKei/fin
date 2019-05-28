@@ -1,4 +1,4 @@
-import { OperatingSystem } from '@fin/platform/src';
+import { OperatingSystem } from '@fin/platform';
 
 export interface ModifierLabels {
   readonly ctrlKey: string;
@@ -21,9 +21,9 @@ export class ModifierLabelProvider {
 
   constructor(mac: ModifierLabels, windows: ModifierLabels, linux: ModifierLabels = windows) {
     this.modifierLabels = [null];
-    this.modifierLabels['Macintosh'] = mac;
-    this.modifierLabels['Windows'] = windows;
-    this.modifierLabels['Linux'] = linux;
+    this.modifierLabels[OperatingSystem.Macintosh] = mac;
+    this.modifierLabels[OperatingSystem.Windows] = windows;
+    this.modifierLabels[OperatingSystem.Linux] = linux;
   }
 
   public toLabel(firstPartMod: Modifiers, firstPartKey: string, chordPartMod: Modifiers, chordPartKey: string, OS: OperatingSystem): string {

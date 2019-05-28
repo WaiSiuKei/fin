@@ -1,9 +1,10 @@
-import { ChordKeybinding, Keybinding, KeyCodeUtils, SimpleKeybinding } from '@fin/keyboard/src/keyCodes';
-import { ScanCodeBinding, ScanCodeUtils } from '@fin/keybinding/src/scanCode';
-import { ResolvedKeybindingItem } from '@fin/keybinding/src/resolvedKeybindingItem';
-import { OperatingSystem } from '@fin/platform/src';
-import { IUserFriendlyKeybinding } from '@fin/keybinding/src/keybinding';
-import { ContextKeyExpr } from '@fin/contextkey/src/contextKeyExpr';
+import {  KeyCodeUtils } from '@fin/keyboard';
+import { ScanCodeBinding, ScanCodeUtils } from '@fin/keyboard';
+import { OperatingSystem } from '@fin/platform';
+import { ContextKeyExpr } from '@fin/contextkey';
+import { ChordKeybinding, Keybinding, SimpleKeybinding } from '@fin/keyboard';
+import { ResolvedKeybindingItem } from './resolvedKeybindingItem';
+import { IUserFriendlyKeybinding } from './keybinding';
 
 export interface IUserKeybindingItem {
   firstPart: SimpleKeybinding | ScanCodeBinding;

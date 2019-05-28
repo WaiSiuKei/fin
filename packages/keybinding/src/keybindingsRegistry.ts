@@ -1,6 +1,7 @@
-import { createKeybinding, Keybinding, KeybindingType, KeyCode, SimpleKeybinding } from '@fin/keyboard/src/keyCodes';
-import { ContextKeyExpr } from '@fin/contextkey/src/contextKeyExpr';
-import { OperatingSystem, OS } from '@fin/platform/src';
+import { ContextKeyExpr } from '@fin/contextkey';
+import { OperatingSystem, OS } from '@fin/platform';
+import { createKeybinding, Keybinding, KeybindingType, KeyCode, SimpleKeybinding, ChordKeybinding } from '@fin/keyboard';
+import { CommandsRegistry, ICommandHandler } from '@fin/command';
 
 export interface IKeybindingItem {
   keybinding: Keybinding;
@@ -37,6 +38,7 @@ export interface IKeybindingRule extends IKeybindings {
 export interface IKeybindingsRegistry {
   registerKeybindingRule(rule: IKeybindingRule): void;
   getDefaultKeybindings(): IKeybindingItem[];
+  registerCommandAndKeybindingRule(desc: ICommandAndKeybindingRule): void;
 
   // WEIGHT: {
   //   chartCore(importance?: number): number;
@@ -45,6 +47,10 @@ export interface IKeybindingsRegistry {
   //   builtinExtension(importance?: number): number;
   //   externalExtension(importance?: number): number;
   // };
+}
+
+export interface ICommandAndKeybindingRule extends IKeybindingRule {
+  handler: ICommandHandler;
 }
 
 class KeybindingsRegistryImpl implements IKeybindingsRegistry {
@@ -111,6 +117,11 @@ class KeybindingsRegistryImpl implements IKeybindingsRegistry {
     }
   }
 
+  public registerCommandAndKeybindingRule(desc: ICommandAndKeybindingRule): void {
+    this.registerKeybindingRule(desc);
+    CommandsRegistry.registerCommand(desc);
+  }
+
   private static _mightProduceChar(keyCode: KeyCode): boolean {
     if (keyCode >= KeyCode.KEY_0 && keyCode <= KeyCode.KEY_9) {
       return true;
@@ -148,9 +159,10 @@ class KeybindingsRegistryImpl implements IKeybindingsRegistry {
   private _registerDefaultKeybinding(keybinding: Keybinding, commandId: string, weight1: number, weight2: number, when: ContextKeyExpr): void {
     if (OS === OperatingSystem.Windows) {
       if (keybinding.type === KeybindingType.Chord) {
-        this._assertNoCtrlAlt(keybinding.firstPart, commandId);
+        this._assertNoCtrlAlt((<ChordKeybinding>keybinding).firstPart, commandId);
       } else {
-        this._assertNoCtrlAlt(keybinding, commandId);
+
+        this._assertNoCtrlAlt(keybinding as SimpleKeybinding, commandId);
       }
     }
     this._keybindings.push({

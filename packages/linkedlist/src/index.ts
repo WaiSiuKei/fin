@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Iterator, IteratorResult, FIN } from '@fin/iterator/src';
+import { Iterator, IteratorResult, FIN } from '@fin/iterator';
 
 class Node<E> {
   element: E;

@@ -1,14 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "noImplicitAny": false,
-    "removeComments": true,
-    "noLib": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "module": "es6",
+    "moduleResolution": "node",
     "target": "es6",
-    "sourceMap": true,
+    "sourceMap": false,
     "lib": [
       "es6",
       "DOM"

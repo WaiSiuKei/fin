@@ -1,9 +1,11 @@
 /**
  * Do not instantiate. Use KeybindingService to get a ResolvedKeybinding seeded with information about the current kb layout.
  */
-import { Keybinding, KeybindingType, KeyCode, KeyCodeUtils, ResolvedKeybinding, ResolvedKeybindingPart, SimpleKeybinding } from '@fin/keyboard/src/keyCodes';
-import { OperatingSystem } from '@fin/platform/src';
-import { AriaLabelProvider, UILabelProvider, UserSettingsLabelProvider } from '@fin/keybinding/src/keybindingLabels';
+import { OperatingSystem } from '@fin/platform';
+import { ChordKeybinding, Keybinding, KeybindingType, SimpleKeybinding } from '@fin/keyboard';
+import { KeyCode, KeyCodeUtils } from '@fin/keyboard';
+import { ResolvedKeybinding, ResolvedKeybindingPart } from 'resolvedKeybinding';
+import { AriaLabelProvider, UILabelProvider, UserSettingsLabelProvider } from 'keybindingLabels';
 
 export class USLayoutResolvedKeybinding extends ResolvedKeybinding {
 
@@ -17,9 +19,11 @@ export class USLayoutResolvedKeybinding extends ResolvedKeybinding {
     if (actual === null) {
       throw new Error(`Invalid USLayoutResolvedKeybinding`);
     } else if (actual.type === KeybindingType.Chord) {
+      actual = actual as ChordKeybinding;
       this._firstPart = actual.firstPart;
       this._chordPart = actual.chordPart;
     } else {
+      actual = actual as SimpleKeybinding;
       this._firstPart = actual;
       this._chordPart = null;
     }

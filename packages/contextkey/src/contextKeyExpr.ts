@@ -1,5 +1,5 @@
-import { isFalsyOrWhitespace } from '@fin/strings/src';
-import { IContext, IContextKey, IContextKeyService } from '@fin/contextkey/src/contextkey';
+import { isFalsyOrWhitespace } from '@fin/strings';
+import { IContext, IContextKey, IContextKeyService } from './contextkey';
 
 export enum ContextKeyExprType {
   Defined = 1,

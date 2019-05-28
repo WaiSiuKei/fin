@@ -59,14 +59,8 @@
     "webpack-hot-middleware": "^2.24.3"
   },
   "scripts": {
-    "build": "gulp",
-    "watch": "gulp watch",
-    "start": "gulp serve",
-    "lib": "gulp lib",
-    "dist": "npm run lib && cp /Users/wei/bitbucket/nila3/dist/nila.js /Users/wei/Documents/repo/nila3/nila.js && cd /Users/wei/Documents/repo/nila3 && git add . && git commit -m \"update\" && git push",
-    "serve:dist": "gulp serve:dist",
-    "test": "gulp test",
-    "test:auto": "gulp test:auto"
+    "install:all": "lerna exec -- npm install",
+    "build": "lerna run build"
   },
   "eslintConfig": {
     "root": true,

@@ -1,6 +1,6 @@
-import { ResolvedKeybinding } from '@fin/keyboard/src/keyCodes';
-import { ContextKeyExpr } from '@fin/contextkey/src/contextKeyExpr';
-import { CharCode } from '@fin/charcode/src';
+import { ContextKeyExpr } from '@fin/contextkey';
+import { CharCode } from '@fin/charcode';
+import { ResolvedKeybinding } from './resolvedKeybinding';
 
 export class ResolvedKeybindingItem {
 	_resolvedKeybindingItemBrand: void;

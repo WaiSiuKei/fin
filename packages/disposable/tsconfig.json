@@ -1,26 +1,10 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
-    "noImplicitAny": true,
-    "noEmitOnError": true,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "ES5",
-    "outDir": "lib",
-    "lib": [
-      "ES5",
-      "ES2015.Promise",
-      "DOM"
-    ],
-    "types": [],
-    "rootDir": "src"
+    "outDir": "./lib",
+    "baseUrl": "./src"
   },
   "include": [
-    "src/*"
-  ],
-  "references": [
+    "./src"
   ]
 }

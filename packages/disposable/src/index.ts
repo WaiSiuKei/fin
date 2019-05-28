@@ -31,7 +31,7 @@ export function combinedDisposable(disposables: IDisposable[]): IDisposable {
   return { dispose: () => dispose(disposables) };
 }
 
-export abstract class Disposable implements IDisposable {
+export class Disposable implements IDisposable {
 
   static None = Object.freeze<IDisposable>({ dispose() { } });
 
