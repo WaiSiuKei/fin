@@ -1,5 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Do not instantiate. Use KeybindingService to get a ResolvedKeybinding seeded with information about the current kb layout.
+ */
+const platform_1 = require("@fin/platform");
 const keyboard_1 = require("@fin/keyboard");
 const resolvedKeybinding_1 = require("resolvedKeybinding");
 const keybindingLabels_1 = require("keybindingLabels");
@@ -22,7 +26,7 @@ class USLayoutResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybinding
         }
     }
     _keyCodeToUILabel(keyCode) {
-        if (this._os === 2 /* Macintosh */) {
+        if (this._os === platform_1.OperatingSystem.Macintosh) {
             switch (keyCode) {
                 case 15 /* LeftArrow */:
                     return '←';

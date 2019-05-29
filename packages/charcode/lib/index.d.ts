@@ -1,23 +1,81 @@
-export declare const enum CharCode {
+/**
+ * An inlined enum containing useful character codes (to be used with String.charCodeAt).
+ * Please leave the const keyword such that it gets inlined when compiled to JavaScript!
+ */
+export declare enum CharCode {
     Null = 0,
+    /**
+     * The `\t` character.
+     */
     Tab = 9,
+    /**
+     * The `\n` character.
+     */
     LineFeed = 10,
+    /**
+     * The `\r` character.
+     */
     CarriageReturn = 13,
     Space = 32,
+    /**
+     * The `!` character.
+     */
     ExclamationMark = 33,
+    /**
+     * The `"` character.
+     */
     DoubleQuote = 34,
+    /**
+     * The `#` character.
+     */
     Hash = 35,
+    /**
+     * The `$` character.
+     */
     DollarSign = 36,
+    /**
+     * The `%` character.
+     */
     PercentSign = 37,
+    /**
+     * The `&` character.
+     */
     Ampersand = 38,
+    /**
+     * The `'` character.
+     */
     SingleQuote = 39,
+    /**
+     * The `(` character.
+     */
     OpenParen = 40,
+    /**
+     * The `)` character.
+     */
     CloseParen = 41,
+    /**
+     * The `*` character.
+     */
     Asterisk = 42,
+    /**
+     * The `+` character.
+     */
     Plus = 43,
+    /**
+     * The `,` character.
+     */
     Comma = 44,
+    /**
+     * The `-` character.
+     */
     Dash = 45,
+    /**
+     * The `.` character.
+     */
     Period = 46,
+    /**
+     * The `/` character.
+     */
     Slash = 47,
     Digit0 = 48,
     Digit1 = 49,
@@ -29,12 +87,33 @@ export declare const enum CharCode {
     Digit7 = 55,
     Digit8 = 56,
     Digit9 = 57,
+    /**
+     * The `:` character.
+     */
     Colon = 58,
+    /**
+     * The `;` character.
+     */
     Semicolon = 59,
+    /**
+     * The `<` character.
+     */
     LessThan = 60,
+    /**
+     * The `=` character.
+     */
     Equals = 61,
+    /**
+     * The `>` character.
+     */
     GreaterThan = 62,
+    /**
+     * The `?` character.
+     */
     QuestionMark = 63,
+    /**
+     * The `@` character.
+     */
     AtSign = 64,
     A = 65,
     B = 66,
@@ -62,11 +141,29 @@ export declare const enum CharCode {
     X = 88,
     Y = 89,
     Z = 90,
+    /**
+     * The `[` character.
+     */
     OpenSquareBracket = 91,
+    /**
+     * The `\` character.
+     */
     Backslash = 92,
+    /**
+     * The `]` character.
+     */
     CloseSquareBracket = 93,
+    /**
+     * The `^` character.
+     */
     Caret = 94,
+    /**
+     * The `_` character.
+     */
     Underline = 95,
+    /**
+     * The ``(`)`` character.
+     */
     BackTick = 96,
     a = 97,
     b = 98,
@@ -94,9 +191,21 @@ export declare const enum CharCode {
     x = 120,
     y = 121,
     z = 122,
+    /**
+     * The `{` character.
+       */
     OpenCurlyBrace = 123,
+    /**
+     * The `|` character.
+     */
     Pipe = 124,
+    /**
+     * The `}` character.
+     */
     CloseCurlyBrace = 125,
+    /**
+     * The `~` character.
+     */
     Tilde = 126,
     U_Combining_Grave_Accent = 768,
     U_Combining_Acute_Accent = 769,
@@ -210,6 +319,10 @@ export declare const enum CharCode {
     U_Combining_Latin_Small_Letter_T = 877,
     U_Combining_Latin_Small_Letter_V = 878,
     U_Combining_Latin_Small_Letter_X = 879,
+    /**
+     * Unicode Character 'LINE SEPARATOR' (U+2028)
+     * http://www.fileformat.info/info/unicode/char/2028/index.htm
+     */
     LINE_SEPARATOR_2028 = 8232,
     U_CIRCUMFLEX = 94,
     U_GRAVE_ACCENT = 96,
@@ -279,5 +392,10 @@ export declare const enum CharCode {
     U_GREEK_OXIA = 8189,
     U_GREEK_DASIA = 8190,
     U_OVERLINE = 8254,
+    /**
+     * UTF-8 BOM
+     * Unicode Character 'ZERO WIDTH NO-BREAK SPACE' (U+FEFF)
+     * http://www.fileformat.info/info/unicode/char/feff/index.htm
+     */
     UTF8_BOM = 65279
 }

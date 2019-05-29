@@ -2,8 +2,9 @@
   "compilerOptions": {
     "module": "es6",
     "moduleResolution": "node",
-    "target": "es6",
+    "target": "es2015",
     "sourceMap": false,
+    "declaration": true,
     "lib": [
       "es6",
       "DOM"

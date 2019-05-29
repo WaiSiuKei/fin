@@ -1,15 +1,27 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.empty = '';
-function isFalsyOrWhitespace(str) {
+import { CharCode } from '@fin/charcode';
+/**
+ * The empty string.
+ */
+export const empty = '';
+export function isFalsyOrWhitespace(str) {
     if (!str || typeof str !== 'string') {
         return true;
     }
     return str.trim().length === 0;
 }
-exports.isFalsyOrWhitespace = isFalsyOrWhitespace;
 const _formatRegexp = /{(\d+)}/g;
-function format(value, ...args) {
+/**
+ * Helper to produce a string with a variable number of arguments. Insert variable segments
+ * into the string using the {n} notation where N is the index of the argument following the string.
+ * @param value string to which formatting is applied
+ * @param args replacements for {n}-entries
+ */
+export function format(value, ...args) {
     if (args.length === 0) {
         return value;
     }
@@ -20,8 +32,11 @@ function format(value, ...args) {
             args[idx];
     });
 }
-exports.format = format;
-function escape(html) {
+/**
+ * Converts HTML characters inside the string to use entities instead. Makes the string safe from
+ * being used e.g. in HTMLElement.innerHTML.
+ */
+export function escape(html) {
     return html.replace(/[<|>|&]/g, function (match) {
         switch (match) {
             case '<':
@@ -35,17 +50,27 @@ function escape(html) {
         }
     });
 }
-exports.escape = escape;
-function escapeRegExpCharacters(value) {
+/**
+ * Escapes regular expression characters in a given string
+ */
+export function escapeRegExpCharacters(value) {
     return value.replace(/[\-\\\{\}\*\+\?\|\^\$\.\[\]\(\)\#]/g, '\\$&');
 }
-exports.escapeRegExpCharacters = escapeRegExpCharacters;
-function trim(haystack, needle = ' ') {
+/**
+ * Removes all occurrences of needle from the beginning and end of haystack.
+ * @param haystack string to trim
+ * @param needle the thing to trim (default is a blank)
+ */
+export function trim(haystack, needle = ' ') {
     let trimmed = ltrim(haystack, needle);
     return rtrim(trimmed, needle);
 }
-exports.trim = trim;
-function ltrim(haystack, needle) {
+/**
+ * Removes all occurrences of needle from the beginning of haystack.
+ * @param haystack string to trim
+ * @param needle the thing to trim
+ */
+export function ltrim(haystack, needle) {
     if (!haystack || !needle) {
         return haystack;
     }
@@ -54,15 +79,19 @@ function ltrim(haystack, needle) {
         return haystack;
     }
     let offset = 0;
-    let idx = haystack.indexOf(needle, offset);
+    let idx = haystack.indexOf(needle, offset); // tslint:disable-line
     while ((idx) === offset) {
         offset = offset + needleLen;
         idx = haystack.indexOf(needle, offset);
     }
     return haystack.substring(offset);
 }
-exports.ltrim = ltrim;
-function rtrim(haystack, needle) {
+/**
+ * Removes all occurrences of needle from the end of haystack.
+ * @param haystack string to trim
+ * @param needle the thing to trim
+ */
+export function rtrim(haystack, needle) {
     if (!haystack || !needle) {
         return haystack;
     }
@@ -83,12 +112,13 @@ function rtrim(haystack, needle) {
     }
     return haystack.substring(0, offset);
 }
-exports.rtrim = rtrim;
-function convertSimple2RegExpPattern(pattern) {
+export function convertSimple2RegExpPattern(pattern) {
     return pattern.replace(/[\-\\\{\}\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&').replace(/[\*]/g, '.*');
 }
-exports.convertSimple2RegExpPattern = convertSimple2RegExpPattern;
-function startsWith(haystack, needle) {
+/**
+ * Determines if haystack starts with needle.
+ */
+export function startsWith(haystack, needle) {
     if (haystack.length < needle.length) {
         return false;
     }
@@ -102,8 +132,10 @@ function startsWith(haystack, needle) {
     }
     return true;
 }
-exports.startsWith = startsWith;
-function endsWith(haystack, needle) {
+/**
+ * Determines if haystack ends with needle.
+ */
+export function endsWith(haystack, needle) {
     let diff = haystack.length - needle.length;
     if (diff > 0) {
         return haystack.indexOf(needle, diff) === diff;
@@ -115,8 +147,7 @@ function endsWith(haystack, needle) {
         return false;
     }
 }
-exports.endsWith = endsWith;
-function createRegExp(searchString, isRegex, options = {}) {
+export function createRegExp(searchString, isRegex, options = {}) {
     if (!searchString) {
         throw new Error('Cannot create regex from empty string');
     }
@@ -143,8 +174,7 @@ function createRegExp(searchString, isRegex, options = {}) {
     }
     return new RegExp(searchString, modifiers);
 }
-exports.createRegExp = createRegExp;
-function compare(a, b) {
+export function compare(a, b) {
     if (a < b) {
         return -1;
     }
@@ -155,17 +185,16 @@ function compare(a, b) {
         return 0;
     }
 }
-exports.compare = compare;
 function isLowerAsciiLetter(code) {
-    return code >= 97 && code <= 122;
+    return code >= CharCode.a && code <= CharCode.z;
 }
 function isUpperAsciiLetter(code) {
-    return code >= 65 && code <= 90;
+    return code >= CharCode.A && code <= CharCode.Z;
 }
 function isAsciiLetter(code) {
     return isLowerAsciiLetter(code) || isUpperAsciiLetter(code);
 }
-function equalsIgnoreCase(a, b) {
+export function equalsIgnoreCase(a, b) {
     const len1 = a ? a.length : 0;
     const len2 = b ? b.length : 0;
     if (len1 !== len2) {
@@ -173,7 +202,6 @@ function equalsIgnoreCase(a, b) {
     }
     return doEqualsIgnoreCase(a, b);
 }
-exports.equalsIgnoreCase = equalsIgnoreCase;
 function doEqualsIgnoreCase(a, b, stopAt = a.length) {
     if (typeof a !== 'string' || typeof b !== 'string') {
         return false;
@@ -184,12 +212,14 @@ function doEqualsIgnoreCase(a, b, stopAt = a.length) {
         if (codeA === codeB) {
             continue;
         }
+        // a-z A-Z
         if (isAsciiLetter(codeA) && isAsciiLetter(codeB)) {
             let diff = Math.abs(codeA - codeB);
             if (diff !== 0 && diff !== 32) {
                 return false;
             }
         }
+        // Any other charcode
         else {
             if (String.fromCharCode(codeA).toLowerCase() !== String.fromCharCode(codeB).toLowerCase()) {
                 return false;
@@ -198,36 +228,30 @@ function doEqualsIgnoreCase(a, b, stopAt = a.length) {
     }
     return true;
 }
-function startsWithIgnoreCase(str, candidate) {
+export function startsWithIgnoreCase(str, candidate) {
     const candidateLength = candidate.length;
     if (candidate.length > str.length) {
         return false;
     }
     return doEqualsIgnoreCase(str, candidate, candidateLength);
 }
-exports.startsWithIgnoreCase = startsWithIgnoreCase;
-function startsWithUTF8BOM(str) {
-    return (str && str.length > 0 && str.charCodeAt(0) === 65279);
+export function startsWithUTF8BOM(str) {
+    return (str && str.length > 0 && str.charCodeAt(0) === CharCode.UTF8_BOM);
 }
-exports.startsWithUTF8BOM = startsWithUTF8BOM;
-function safeBtoa(str) {
-    return btoa(encodeURIComponent(str));
+export function safeBtoa(str) {
+    return btoa(encodeURIComponent(str)); // we use encodeURIComponent because btoa fails for non Latin 1 values
 }
-exports.safeBtoa = safeBtoa;
-function repeat(s, count) {
+export function repeat(s, count) {
     let result = '';
     for (let i = 0; i < count; i++) {
         result += s;
     }
     return result;
 }
-exports.repeat = repeat;
 var KEBAB_REGEX = /[A-Z\u00C0-\u00D6\u00D8-\u00DE]/g;
-function kebabCase(str) {
+export function kebabCase(str) {
     return str.replace(KEBAB_REGEX, function (match) {
         return '-' + match.toLowerCase();
     });
 }
-exports.kebabCase = kebabCase;
 ;
-//# sourceMappingURL=index.js.map

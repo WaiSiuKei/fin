@@ -1,7 +1,7 @@
 import { Disposable, IDisposable } from '@fin/disposable';
 import { Event, Emitter } from '@fin/event';
 import { IntervalTimer } from '@fin/async';
-import { IContextKeyService, IContextKeyServiceTarget } from '@fin/contextkey';
+import { IContextKeyService } from '@fin/contextkey';
 import { ICommandService } from '@fin/command';
 import { IResolveResult, KeybindingResolver } from './keybindingResolver';
 import { ResolvedKeybindingItem } from './resolvedKeybindingItem';
@@ -173,7 +173,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
     return result.resolvedKeybinding;
   }
 
-  public softDispatch(e: IKeyboardEventLite, target: IContextKeyServiceTarget): IResolveResult {
+  public softDispatch(e: IKeyboardEventLite, target: HTMLElement): IResolveResult {
     const keybinding = this.resolveKeyboardEvent(e);
     if (keybinding.isChord()) {
       console.warn('Unexpected keyboard event mapped to a chord');
@@ -224,7 +224,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
     this._currentChord = null;
   }
 
-  protected _dispatch(e: IKeyboardEventLite, target: IContextKeyServiceTarget): boolean {
+  protected _dispatch(e: IKeyboardEventLite, target: HTMLElement): boolean {
     let shouldPreventDefault = false;
 
     const keybinding = this.resolveKeyboardEvent(e);

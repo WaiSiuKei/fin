@@ -29,12 +29,12 @@ class KeybindingsRegistryImpl {
      * Take current platform into account and reduce to primary & secondary.
      */
     static bindToCurrentPlatform(kb) {
-        if (platform_1.OS === 1 /* Windows */) {
+        if (platform_1.OS === platform_1.OperatingSystem.Windows) {
             if (kb && kb.win) {
                 return kb.win;
             }
         }
-        else if (platform_1.OS === 2 /* Macintosh */) {
+        else if (platform_1.OS === platform_1.OperatingSystem.Macintosh) {
             if (kb && kb.mac) {
                 return kb.mac;
             }
@@ -93,7 +93,7 @@ class KeybindingsRegistryImpl {
         }
     }
     _registerDefaultKeybinding(keybinding, commandId, weight1, weight2, when) {
-        if (platform_1.OS === 1 /* Windows */) {
+        if (platform_1.OS === platform_1.OperatingSystem.Windows) {
             if (keybinding.type === 2 /* Chord */) {
                 this._assertNoCtrlAlt(keybinding.firstPart, commandId);
             }

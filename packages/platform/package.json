@@ -5,9 +5,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc --build"
+    "build": "rimraf ./lib && tsc --build"
   },
   "devDependencies": {
+    "rimraf": "^2.6.3",
     "typescript": "^3.4.5"
   }
 }

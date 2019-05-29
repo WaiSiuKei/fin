@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const platform_1 = require("@fin/platform");
 class ModifierLabelProvider {
     constructor(mac, windows, linux = windows) {
         this.modifierLabels = [null];
-        this.modifierLabels[2 /* Macintosh */] = mac;
-        this.modifierLabels[1 /* Windows */] = windows;
-        this.modifierLabels[3 /* Linux */] = linux;
+        this.modifierLabels[platform_1.OperatingSystem.Macintosh] = mac;
+        this.modifierLabels[platform_1.OperatingSystem.Windows] = windows;
+        this.modifierLabels[platform_1.OperatingSystem.Linux] = linux;
     }
     toLabel(firstPartMod, firstPartKey, chordPartMod, chordPartKey, OS) {
         if (firstPartKey === null && chordPartKey === null) {

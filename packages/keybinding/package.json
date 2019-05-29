@@ -5,10 +5,18 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && node dts.js && rimraf .rpt2_cache"
+    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js"
+  },
+  "dependencies": {
+    "@fin/command": "file:../command",
+    "@fin/contextkey": "file:../contextkey",
+    "@fin/disposable": "file:../disposable",
+    "@fin/event": "file:../event",
+    "@fin/keyboard": "file:../keyboard"
   },
   "devDependencies": {
     "dts-bundle": "^0.7.3",
+    "dts-bundle-generator": "*",
     "rimraf": "^2.6.3",
     "rollup": "^1.12.4",
     "rollup-plugin-commonjs": "^10.0.0",

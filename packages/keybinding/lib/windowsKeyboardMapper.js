@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const platform_1 = require("@fin/platform");
+const charcode_1 = require("@fin/charcode");
 const keyboard_1 = require("@fin/keyboard");
 const resolvedKeybinding_1 = require("./resolvedKeybinding");
 const keybindingLabels_1 = require("./keybindingLabels");
@@ -54,7 +56,7 @@ class WindowsNativeResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybi
     getLabel() {
         let firstPart = this._getUILabelForKeybinding(this._firstPart);
         let chordPart = this._getUILabelForKeybinding(this._chordPart);
-        return keybindingLabels_1.UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, 1 /* Windows */);
+        return keybindingLabels_1.UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, platform_1.OperatingSystem.Windows);
     }
     _getUSLabelForKeybinding(keybinding) {
         if (!keybinding) {
@@ -68,7 +70,7 @@ class WindowsNativeResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybi
     getUSLabel() {
         let firstPart = this._getUSLabelForKeybinding(this._firstPart);
         let chordPart = this._getUSLabelForKeybinding(this._chordPart);
-        return keybindingLabels_1.UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, 1 /* Windows */);
+        return keybindingLabels_1.UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, platform_1.OperatingSystem.Windows);
     }
     _getAriaLabelForKeybinding(keybinding) {
         if (!keybinding) {
@@ -82,7 +84,7 @@ class WindowsNativeResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybi
     getAriaLabel() {
         let firstPart = this._getAriaLabelForKeybinding(this._firstPart);
         let chordPart = this._getAriaLabelForKeybinding(this._chordPart);
-        return keybindingLabels_1.AriaLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, 1 /* Windows */);
+        return keybindingLabels_1.AriaLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, platform_1.OperatingSystem.Windows);
     }
     _getUserSettingsLabelForKeybinding(keybinding) {
         if (!keybinding) {
@@ -96,7 +98,7 @@ class WindowsNativeResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybi
     getUserSettingsLabel() {
         let firstPart = this._getUserSettingsLabelForKeybinding(this._firstPart);
         let chordPart = this._getUserSettingsLabelForKeybinding(this._chordPart);
-        let result = keybindingLabels_1.UserSettingsLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, 1 /* Windows */);
+        let result = keybindingLabels_1.UserSettingsLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, platform_1.OperatingSystem.Windows);
         return (result ? result.toLowerCase() : result);
     }
     isWYSIWYG() {
@@ -235,12 +237,12 @@ class WindowsKeyboardMapper {
                 }
                 else {
                     const charCode = value.charCodeAt(0);
-                    if (charCode >= 97 /* a */ && charCode <= 122 /* z */) {
-                        const upperCaseValue = 65 /* A */ + (charCode - 97 /* a */);
+                    if (charCode >= charcode_1.CharCode.a && charCode <= charcode_1.CharCode.z) {
+                        const upperCaseValue = charcode_1.CharCode.A + (charCode - charcode_1.CharCode.a);
                         producesLetter[upperCaseValue] = true;
-                        this._keyCodeToLabel[keyCode] = String.fromCharCode(65 /* A */ + (charCode - 97 /* a */));
+                        this._keyCodeToLabel[keyCode] = String.fromCharCode(charcode_1.CharCode.A + (charCode - charcode_1.CharCode.a));
                     }
-                    else if (charCode >= 65 /* A */ && charCode <= 90 /* Z */) {
+                    else if (charCode >= charcode_1.CharCode.A && charCode <= charcode_1.CharCode.Z) {
                         producesLetter[charCode] = true;
                         this._keyCodeToLabel[keyCode] = value;
                     }
@@ -256,32 +258,32 @@ class WindowsKeyboardMapper {
                 this._keyCodeToLabel[keyCode] = String.fromCharCode(charCode);
             }
         };
-        _registerLetterIfMissing(65 /* A */, 31 /* KEY_A */);
-        _registerLetterIfMissing(66 /* B */, 32 /* KEY_B */);
-        _registerLetterIfMissing(67 /* C */, 33 /* KEY_C */);
-        _registerLetterIfMissing(68 /* D */, 34 /* KEY_D */);
-        _registerLetterIfMissing(69 /* E */, 35 /* KEY_E */);
-        _registerLetterIfMissing(70 /* F */, 36 /* KEY_F */);
-        _registerLetterIfMissing(71 /* G */, 37 /* KEY_G */);
-        _registerLetterIfMissing(72 /* H */, 38 /* KEY_H */);
-        _registerLetterIfMissing(73 /* I */, 39 /* KEY_I */);
-        _registerLetterIfMissing(74 /* J */, 40 /* KEY_J */);
-        _registerLetterIfMissing(75 /* K */, 41 /* KEY_K */);
-        _registerLetterIfMissing(76 /* L */, 42 /* KEY_L */);
-        _registerLetterIfMissing(77 /* M */, 43 /* KEY_M */);
-        _registerLetterIfMissing(78 /* N */, 44 /* KEY_N */);
-        _registerLetterIfMissing(79 /* O */, 45 /* KEY_O */);
-        _registerLetterIfMissing(80 /* P */, 46 /* KEY_P */);
-        _registerLetterIfMissing(81 /* Q */, 47 /* KEY_Q */);
-        _registerLetterIfMissing(82 /* R */, 48 /* KEY_R */);
-        _registerLetterIfMissing(83 /* S */, 49 /* KEY_S */);
-        _registerLetterIfMissing(84 /* T */, 50 /* KEY_T */);
-        _registerLetterIfMissing(85 /* U */, 51 /* KEY_U */);
-        _registerLetterIfMissing(86 /* V */, 52 /* KEY_V */);
-        _registerLetterIfMissing(87 /* W */, 53 /* KEY_W */);
-        _registerLetterIfMissing(88 /* X */, 54 /* KEY_X */);
-        _registerLetterIfMissing(89 /* Y */, 55 /* KEY_Y */);
-        _registerLetterIfMissing(90 /* Z */, 56 /* KEY_Z */);
+        _registerLetterIfMissing(charcode_1.CharCode.A, 31 /* KEY_A */);
+        _registerLetterIfMissing(charcode_1.CharCode.B, 32 /* KEY_B */);
+        _registerLetterIfMissing(charcode_1.CharCode.C, 33 /* KEY_C */);
+        _registerLetterIfMissing(charcode_1.CharCode.D, 34 /* KEY_D */);
+        _registerLetterIfMissing(charcode_1.CharCode.E, 35 /* KEY_E */);
+        _registerLetterIfMissing(charcode_1.CharCode.F, 36 /* KEY_F */);
+        _registerLetterIfMissing(charcode_1.CharCode.G, 37 /* KEY_G */);
+        _registerLetterIfMissing(charcode_1.CharCode.H, 38 /* KEY_H */);
+        _registerLetterIfMissing(charcode_1.CharCode.I, 39 /* KEY_I */);
+        _registerLetterIfMissing(charcode_1.CharCode.J, 40 /* KEY_J */);
+        _registerLetterIfMissing(charcode_1.CharCode.K, 41 /* KEY_K */);
+        _registerLetterIfMissing(charcode_1.CharCode.L, 42 /* KEY_L */);
+        _registerLetterIfMissing(charcode_1.CharCode.M, 43 /* KEY_M */);
+        _registerLetterIfMissing(charcode_1.CharCode.N, 44 /* KEY_N */);
+        _registerLetterIfMissing(charcode_1.CharCode.O, 45 /* KEY_O */);
+        _registerLetterIfMissing(charcode_1.CharCode.P, 46 /* KEY_P */);
+        _registerLetterIfMissing(charcode_1.CharCode.Q, 47 /* KEY_Q */);
+        _registerLetterIfMissing(charcode_1.CharCode.R, 48 /* KEY_R */);
+        _registerLetterIfMissing(charcode_1.CharCode.S, 49 /* KEY_S */);
+        _registerLetterIfMissing(charcode_1.CharCode.T, 50 /* KEY_T */);
+        _registerLetterIfMissing(charcode_1.CharCode.U, 51 /* KEY_U */);
+        _registerLetterIfMissing(charcode_1.CharCode.V, 52 /* KEY_V */);
+        _registerLetterIfMissing(charcode_1.CharCode.W, 53 /* KEY_W */);
+        _registerLetterIfMissing(charcode_1.CharCode.X, 54 /* KEY_X */);
+        _registerLetterIfMissing(charcode_1.CharCode.Y, 55 /* KEY_Y */);
+        _registerLetterIfMissing(charcode_1.CharCode.Z, 56 /* KEY_Z */);
     }
     dumpDebugInfo() {
         let result = [];

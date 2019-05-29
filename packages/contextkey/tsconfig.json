@@ -3,13 +3,7 @@
   "compilerOptions": {
     "outDir": "./lib",
     "baseUrl": "./src",
-    "declarationDir": "./lib",
-    "declaration": true,
-    "paths": {
-      "@fin/*": [
-        "../../*"
-      ]
-    }
+    "declarationDir": "./lib"
   },
   "include": [
     "./src"

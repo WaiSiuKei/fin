@@ -5,7 +5,12 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && node dts.js && rimraf .rpt2_cache"
+    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && rimraf .rpt2_cache"
+  },
+  "dependencies": {
+    "@fin/disposable": "file:../disposable",
+    "@fin/event": "file:../event",
+    "@fin/linkedlist": "file:../linkedlist"
   },
   "devDependencies": {
     "dts-bundle": "^0.7.3",

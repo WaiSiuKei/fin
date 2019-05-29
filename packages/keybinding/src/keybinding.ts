@@ -1,7 +1,6 @@
 import { Event } from '@fin/event';
 import { KeyCode, Keybinding } from '@fin/keyboard';
 import { ResolvedKeybinding } from './resolvedKeybinding';
-import { IContextKeyServiceTarget } from '@fin/contextkey';
 import { IResolveResult } from './keybindingResolver';
 import { ResolvedKeybindingItem } from './resolvedKeybindingItem';
 
@@ -46,7 +45,7 @@ export interface IKeybindingService {
   /**
    * Resolve and dispatch `keyboardEvent`, but do not invoke the command or change inner state.
    */
-  softDispatch(keyboardEvent: IKeyboardEventLite, target: IContextKeyServiceTarget): IResolveResult;
+  softDispatch(keyboardEvent: IKeyboardEventLite, target: HTMLElement): IResolveResult;
 
   /**
    * Look up keybindings for a command.
