@@ -1,4 +1,4 @@
-import { Emitter, Event } from '@fin/event';
+import { Emitter } from '@fin/event';
 import { dispose, IDisposable } from '@fin/disposable';
 
 export interface IContext {
@@ -11,31 +11,14 @@ export interface IContextKey<T> {
   get(): T;
 }
 
-export interface IContextKeyServiceTarget {
-  parentElement: IContextKeyServiceTarget;
-  setAttribute(attr: string, value: string): void;
-  removeAttribute(attr: string): void;
-  hasAttribute(attr: string): boolean;
-  getAttribute(attr: string): string;
-}
-
-export interface IReadableSet<T> {
-  has(value: T): boolean;
-}
-
-export interface IContextKeyChangeEvent {
-  affectsSome(keys: IReadableSet<string>): boolean;
-}
-
 export interface IContextKeyService {
   dispose(): void;
 
-  onDidChangeContext: Event<IContextKeyChangeEvent>;
   createKey<T>(key: string, defaultValue: T): IContextKey<T>;
   getContextKeyValue<T>(key: string): T;
 
-  createScoped(target?: IContextKeyServiceTarget): IContextKeyService;
-  getContext(target: IContextKeyServiceTarget): IContext;
+  createScoped(target?: HTMLElement): IContextKeyService;
+  getContext(target: HTMLElement): IContext;
 }
 
 
@@ -111,26 +94,7 @@ class ContextKey<T> implements IContextKey<T> {
   }
 }
 
-export class ContextKeyChangeEvent implements IContextKeyChangeEvent {
-
-  private _keys: string[] = [];
-
-  collect(oneOrManyKeys: string | string[]): void {
-    this._keys = this._keys.concat(oneOrManyKeys);
-  }
-
-  affectsSome(keys: IReadableSet<string>): boolean {
-    for (const key of this._keys) {
-      if (keys.has(key)) {
-        return true;
-      }
-    }
-    return false;
-  }
-}
-
 export abstract class AbstractContextKeyService implements IContextKeyService {
-  protected _onDidChangeContext: Event<IContextKeyChangeEvent>;
   protected _onDidChangeContextKey: Emitter<string | string[]>;
   protected _myContextId: number;
 
@@ -145,20 +109,7 @@ export abstract class AbstractContextKeyService implements IContextKeyService {
     return new ContextKey(this, key, defaultValue);
   }
 
-  public get onDidChangeContext(): Event<IContextKeyChangeEvent> {
-    if (!this._onDidChangeContext) {
-      this._onDidChangeContext = Event.debounce<string | string[], ContextKeyChangeEvent>(this._onDidChangeContextKey.event, (prev, cur) => {
-        if (!prev) {
-          prev = new ContextKeyChangeEvent();
-        }
-        prev.collect(cur);
-        return prev;
-      }, 25);
-    }
-    return this._onDidChangeContext;
-  }
-
-  public createScoped(domNode: IContextKeyServiceTarget): IContextKeyService {
+  public createScoped(domNode: HTMLElement): IContextKeyService {
     return new ScopedContextKeyService(this, this._onDidChangeContextKey, domNode);
   }
 
@@ -182,7 +133,7 @@ export abstract class AbstractContextKeyService implements IContextKeyService {
     }
   }
 
-  public getContext(target: IContextKeyServiceTarget): IContext {
+  public getContext(target: HTMLElement): IContext {
     return this.getContextValuesContainer(findContextAttr(target));
   }
 
@@ -241,9 +192,9 @@ export class ContextKeyService extends AbstractContextKeyService implements ICon
 class ScopedContextKeyService extends AbstractContextKeyService {
 
   private _parent: AbstractContextKeyService;
-  private _domNode: IContextKeyServiceTarget;
+  private _domNode: HTMLElement;
 
-  constructor(parent: AbstractContextKeyService, emitter: Emitter<string | string[]>, domNode?: IContextKeyServiceTarget) {
+  constructor(parent: AbstractContextKeyService, emitter: Emitter<string | string[]>, domNode?: HTMLElement) {
     super(parent.createChildContext());
     this._parent = parent;
     this._onDidChangeContextKey = emitter;
@@ -261,10 +212,6 @@ class ScopedContextKeyService extends AbstractContextKeyService {
     }
   }
 
-  public get onDidChangeContext(): Event<IContextKeyChangeEvent> {
-    return this._parent.onDidChangeContext;
-  }
-
   public getContextValuesContainer(contextId: number): Context {
     return this._parent.getContextValuesContainer(contextId);
   }
@@ -278,7 +225,7 @@ class ScopedContextKeyService extends AbstractContextKeyService {
   }
 }
 
-function findContextAttr(domNode: IContextKeyServiceTarget): number {
+function findContextAttr(domNode: HTMLElement): number {
   while (domNode) {
     if (domNode.hasAttribute(KEYBINDING_CONTEXT_ATTR)) {
       return parseInt(domNode.getAttribute(KEYBINDING_CONTEXT_ATTR), 10);

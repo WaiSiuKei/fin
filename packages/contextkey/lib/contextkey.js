@@ -57,23 +57,6 @@ class ContextKey {
         return this._parent.getContextKeyValue(this._key);
     }
 }
-class ContextKeyChangeEvent {
-    constructor() {
-        this._keys = [];
-    }
-    collect(oneOrManyKeys) {
-        this._keys = this._keys.concat(oneOrManyKeys);
-    }
-    affectsSome(keys) {
-        for (const key of this._keys) {
-            if (keys.has(key)) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
-exports.ContextKeyChangeEvent = ContextKeyChangeEvent;
 class AbstractContextKeyService {
     constructor(myContextId) {
         this._myContextId = myContextId;
@@ -81,18 +64,6 @@ class AbstractContextKeyService {
     }
     createKey(key, defaultValue) {
         return new ContextKey(this, key, defaultValue);
-    }
-    get onDidChangeContext() {
-        if (!this._onDidChangeContext) {
-            this._onDidChangeContext = event_1.Event.debounce(this._onDidChangeContextKey.event, (prev, cur) => {
-                if (!prev) {
-                    prev = new ContextKeyChangeEvent();
-                }
-                prev.collect(cur);
-                return prev;
-            }, 25);
-        }
-        return this._onDidChangeContext;
     }
     createScoped(domNode) {
         return new ScopedContextKeyService(this, this._onDidChangeContextKey, domNode);
@@ -168,9 +139,6 @@ class ScopedContextKeyService extends AbstractContextKeyService {
         if (this._domNode) {
             this._domNode.removeAttribute(KEYBINDING_CONTEXT_ATTR);
         }
-    }
-    get onDidChangeContext() {
-        return this._parent.onDidChangeContext;
     }
     getContextValuesContainer(contextId) {
         return this._parent.getContextValuesContainer(contextId);
