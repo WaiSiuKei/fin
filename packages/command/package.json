@@ -1,6 +1,6 @@
 {
   "name": "@fin/command",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -11,11 +11,11 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache"
+    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
   },
   "dependencies": {
     "@fin/disposable": "*",
-    "@fin/event": "0.0.2",
+    "@fin/event": "^0.0.2",
     "@fin/linkedlist": "*"
   },
   "devDependencies": {

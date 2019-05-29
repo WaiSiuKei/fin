@@ -1,6 +1,6 @@
 {
   "name": "@fin/contextkey",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -11,7 +11,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache"
+    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
   },
   "devDependencies": {
     "dts-bundle-generator": "^3.1.0",
@@ -24,8 +24,8 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@fin/strings": "0.0.1",
-    "@fin/event": "0.0.2",
-    "@fin/disposable": "*"
+    "@fin/strings": "^0.0.1",
+    "@fin/event": "^0.0.2",
+    "@fin/disposable": "^0.0.1"
   }
 }

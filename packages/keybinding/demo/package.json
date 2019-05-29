@@ -6,10 +6,10 @@
     "start": "cross-env NODE_ENV=dev webpack-dev-server --progress --mode development --config webpack.dev.js"
   },
   "dependencies": {
-    "@fin/keybinding": "0.0.2",
-    "@fin/keyboard": "0.0.1",
-    "@fin/contextkey": "0.0.2",
-    "@fin/command": "0.0.3"
+    "@fin/keybinding": "^0.0.2",
+    "@fin/keyboard": "^0.0.2",
+    "@fin/contextkey": "^0.0.3",
+    "@fin/command": "^0.0.5"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",

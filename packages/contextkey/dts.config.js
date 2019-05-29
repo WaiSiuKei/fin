@@ -5,7 +5,7 @@ const config = {
 
   entries: [
     {
-      filePath: './lib/index.d.ts',
+      filePath: './out/index.d.ts',
       outFile: './lib/index.d.ts',
       noCheck: false,
     }
