@@ -1,7 +1,7 @@
 import { ScanCodeBinding } from '@fin/keyboard';
 import { Keybinding, SimpleKeybinding } from '@fin/keyboard';
 import { ResolvedKeybinding } from './resolvedKeybinding';
-import { IKeyboardEventLite } from '@fin/keybinding/src/keybinding';
+import { IKeyboardEventLite } from './keybinding';
 export interface IKeyboardMapper {
     dumpDebugInfo(): string;
     resolveKeybinding(keybinding: Keybinding): ResolvedKeybinding[];

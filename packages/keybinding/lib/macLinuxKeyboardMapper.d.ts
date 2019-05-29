@@ -3,7 +3,7 @@ import { OperatingSystem } from '@fin/platform';
 import { Keybinding, SimpleKeybinding } from '@fin/keyboard';
 import { ResolvedKeybinding, ResolvedKeybindingPart } from './resolvedKeybinding';
 import { IKeyboardMapper } from './keyboardMapper';
-import { IKeyboardEventLite } from '@fin/keybinding/src/keybinding';
+import { IKeyboardEventLite } from './keybinding';
 export interface IMacLinuxKeyMapping {
     value: string;
 }

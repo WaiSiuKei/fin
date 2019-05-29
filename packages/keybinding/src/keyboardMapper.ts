@@ -5,7 +5,7 @@ import { ResolvedKeybinding } from './resolvedKeybinding';
 import { getKeyMap, IKeyboardMapping } from './nativeKeymap';
 import { IWindowsKeyboardMapping, WindowsKeyboardMapper, windowsKeyboardMappingEquals } from './windowsKeyboardMapper';
 import { IMacLinuxKeyboardMapping, MacLinuxKeyboardMapper, macLinuxKeyboardMappingEquals } from './macLinuxKeyboardMapper';
-import { IKeyboardEventLite } from '@fin/keybinding/src/keybinding';
+import { IKeyboardEventLite } from './keybinding';
 
 export interface IKeyboardMapper {
 	dumpDebugInfo(): string;

@@ -6,8 +6,10 @@ import { IResolveResult, KeybindingResolver } from './keybindingResolver';
 import { ResolvedKeybindingItem } from './resolvedKeybindingItem';
 import { IKeybindingEvent, IKeybindingService, IKeyboardEventLite } from './keybinding';
 import { Keybinding } from '@fin/keyboard';
+import { KeybindingsRegistry } from './keybindingsRegistry';
 import { ResolvedKeybinding } from './resolvedKeybinding';
 export declare class KeybindingService extends Disposable implements IKeybindingService {
+    private keybindingsRegistry;
     private _currentChord;
     private _currentChordChecker;
     private _currentChordStatusMessage;
@@ -17,7 +19,7 @@ export declare class KeybindingService extends Disposable implements IKeybinding
     private _keyboardMapper;
     private _cachedResolver;
     private _firstTimeComputingResolver;
-    constructor(windowElement: Window, contextKeyService: IContextKeyService, commandService: ICommandService);
+    constructor(windowElement: Window, contextKeyService: IContextKeyService, commandService: ICommandService, keybindingsRegistry: KeybindingsRegistry);
     dispose(): void;
     readonly onDidUpdateKeybindings: Event<IKeybindingEvent>;
     private _safeGetConfig;

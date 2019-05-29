@@ -23,4 +23,9 @@ export interface ICommandRegistry {
     getCommand(id: string): ICommand;
     getCommands(): ICommandsMap;
 }
-export declare const CommandsRegistry: ICommandRegistry;
+export declare class CommandsRegistry implements ICommandRegistry {
+    private _commands;
+    registerCommand(idOrCommand: string | ICommand, handler?: ICommandHandler): IDisposable;
+    getCommand(id: string): ICommand;
+    getCommands(): ICommandsMap;
+}

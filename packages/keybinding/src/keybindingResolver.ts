@@ -1,4 +1,3 @@
-import { CommandsRegistry } from '@fin/command';
 import { ContextKeyAndExpr, ContextKeyExpr } from '@fin/contextkey';
 import { IContext } from '@fin/contextkey';
 import { ResolvedKeybindingItem } from './resolvedKeybindingItem';
@@ -293,22 +292,5 @@ export class KeybindingResolver {
       return true;
     }
     return rules.evaluate(context);
-  }
-
-  public static getAllUnboundCommands(boundCommands: Map<string, boolean>): string[] {
-    const commands = CommandsRegistry.getCommands();
-    const unboundCommands: string[] = [];
-
-    for (let id in commands) {
-      if (id[0] === '_' || id.indexOf('vscode.') === 0) { // private command
-        continue;
-      }
-      if (boundCommands.get(id) === true) {
-        continue;
-      }
-      unboundCommands.push(id);
-    }
-
-    return unboundCommands;
   }
 }

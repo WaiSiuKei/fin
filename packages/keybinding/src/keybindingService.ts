@@ -37,6 +37,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
     windowElement: Window,
     contextKeyService: IContextKeyService,
     commandService: ICommandService,
+    private keybindingsRegistry: KeybindingsRegistry,
   ) {
     super();
     this._contextKeyService = contextKeyService;
@@ -74,7 +75,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
 
   protected _getResolver(): KeybindingResolver {
     if (!this._cachedResolver) {
-      const defaults = this._resolveKeybindingItems(KeybindingsRegistry.getDefaultKeybindings(), true);
+      const defaults = this._resolveKeybindingItems(this.keybindingsRegistry.getDefaultKeybindings(), true);
       const overrides = this._resolveUserKeybindingItems(this._getExtraKeybindings(this._firstTimeComputingResolver), false);
       this._cachedResolver = new KeybindingResolver(defaults, overrides);
       this._firstTimeComputingResolver = false;

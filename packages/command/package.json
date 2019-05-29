@@ -1,19 +1,25 @@
 {
   "name": "@fin/command",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "description": "",
+  "homepage": "https://github.com/WaiSiuKei/fin",
+  "bugs": {
+    "url": "https://github.com/WaiSiuKei/fin/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Wai Siu Kei <wakiki@outlook.com>",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && rimraf .rpt2_cache"
+    "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache"
   },
   "dependencies": {
-    "@fin/disposable": "file:../disposable",
-    "@fin/event": "file:../event",
-    "@fin/linkedlist": "file:../linkedlist"
+    "@fin/disposable": "*",
+    "@fin/event": "0.0.2",
+    "@fin/linkedlist": "*"
   },
   "devDependencies": {
-    "dts-bundle": "^0.7.3",
+    "dts-bundle-generator": "^3.1.0",
     "rimraf": "^2.6.3",
     "rollup": "^1.12.4",
     "rollup-plugin-commonjs": "^10.0.0",

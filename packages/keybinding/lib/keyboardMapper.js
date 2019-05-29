@@ -44,13 +44,13 @@ class KeyboardMapperFactory {
     }
     static _createKeyboardMapper(rawMapping) {
         const isUSStandard = true;
-        if (platform_1.OS === platform_1.OperatingSystem.Windows) {
+        if (platform_1.OS === 1 /* Windows */) {
             return new windowsKeyboardMapper_1.WindowsKeyboardMapper(isUSStandard, rawMapping);
         }
         return new macLinuxKeyboardMapper_1.MacLinuxKeyboardMapper(isUSStandard, rawMapping, platform_1.OS);
     }
     static _equals(a, b) {
-        if (platform_1.OS === platform_1.OperatingSystem.Windows) {
+        if (platform_1.OS === 1 /* Windows */) {
             return windowsKeyboardMapper_1.windowsKeyboardMappingEquals(a, b);
         }
         return macLinuxKeyboardMapper_1.macLinuxKeyboardMappingEquals(a, b);

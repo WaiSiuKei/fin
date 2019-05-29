@@ -2,8 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const platform_1 = require("@fin/platform");
 const keyboard_1 = require("@fin/keyboard");
-const command_1 = require("@fin/command");
-class KeybindingsRegistryImpl {
+class KeybindingsRegistry {
     // public WEIGHT = {
     //   chartCore: (importance: number = 0): number => {
     //     return 0 + importance;
@@ -21,7 +20,8 @@ class KeybindingsRegistryImpl {
     //     return 400 + importance;
     //   }
     // };
-    constructor() {
+    constructor(_commandsRegistry) {
+        this._commandsRegistry = _commandsRegistry;
         this._keybindings = [];
         this._keybindingsSorted = true;
     }
@@ -29,12 +29,12 @@ class KeybindingsRegistryImpl {
      * Take current platform into account and reduce to primary & secondary.
      */
     static bindToCurrentPlatform(kb) {
-        if (platform_1.OS === platform_1.OperatingSystem.Windows) {
+        if (platform_1.OS === 1 /* Windows */) {
             if (kb && kb.win) {
                 return kb.win;
             }
         }
-        else if (platform_1.OS === platform_1.OperatingSystem.Macintosh) {
+        else if (platform_1.OS === 2 /* Macintosh */) {
             if (kb && kb.mac) {
                 return kb.mac;
             }
@@ -47,7 +47,7 @@ class KeybindingsRegistryImpl {
         return kb;
     }
     registerKeybindingRule(rule) {
-        let actualKb = KeybindingsRegistryImpl.bindToCurrentPlatform(rule);
+        let actualKb = KeybindingsRegistry.bindToCurrentPlatform(rule);
         if (actualKb && actualKb.primary) {
             this._registerDefaultKeybinding(keyboard_1.createKeybinding(actualKb.primary, platform_1.OS), rule.id, rule.weight, 0, rule.when);
         }
@@ -60,7 +60,7 @@ class KeybindingsRegistryImpl {
     }
     registerCommandAndKeybindingRule(desc) {
         this.registerKeybindingRule(desc);
-        command_1.CommandsRegistry.registerCommand(desc);
+        this._commandsRegistry.registerCommand(desc);
     }
     static _mightProduceChar(keyCode) {
         if (keyCode >= 21 /* KEY_0 */ && keyCode <= 30 /* KEY_9 */) {
@@ -87,13 +87,13 @@ class KeybindingsRegistryImpl {
     }
     _assertNoCtrlAlt(keybinding, commandId) {
         if (keybinding.ctrlKey && keybinding.altKey && !keybinding.metaKey) {
-            if (KeybindingsRegistryImpl._mightProduceChar(keybinding.keyCode)) {
+            if (KeybindingsRegistry._mightProduceChar(keybinding.keyCode)) {
                 console.warn('Ctrl+Alt+ keybindings should not be used by default under Windows. Offender: ', keybinding, ' for ', commandId);
             }
         }
     }
     _registerDefaultKeybinding(keybinding, commandId, weight1, weight2, when) {
-        if (platform_1.OS === platform_1.OperatingSystem.Windows) {
+        if (platform_1.OS === 1 /* Windows */) {
             if (keybinding.type === 2 /* Chord */) {
                 this._assertNoCtrlAlt(keybinding.firstPart, commandId);
             }
@@ -119,6 +119,7 @@ class KeybindingsRegistryImpl {
         return this._keybindings.slice(0);
     }
 }
+exports.KeybindingsRegistry = KeybindingsRegistry;
 function sorter(a, b) {
     if (a.weight1 !== b.weight1) {
         return a.weight1 - b.weight1;
@@ -131,4 +132,3 @@ function sorter(a, b) {
     }
     return a.weight2 - b.weight2;
 }
-exports.KeybindingsRegistry = new KeybindingsRegistryImpl();

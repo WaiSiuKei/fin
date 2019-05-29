@@ -6,7 +6,7 @@ import { Keybinding, KeybindingType, SimpleKeybinding } from '@fin/keyboard';
 import { ResolvedKeybinding, ResolvedKeybindingPart } from './resolvedKeybinding';
 import { AriaLabelProvider, UILabelProvider, UserSettingsLabelProvider } from './keybindingLabels';
 import { IKeyboardMapper } from './keyboardMapper';
-import { IKeyboardEventLite } from '@fin/keybinding/src/keybinding';
+import { IKeyboardEventLite } from './keybinding';
 
 export interface IMacLinuxKeyMapping {
   value: string;

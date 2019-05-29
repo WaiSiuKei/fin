@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const keyboard_1 = require("@fin/keyboard");
 const keyboard_2 = require("@fin/keyboard");
-const platform_1 = require("@fin/platform");
 const charcode_1 = require("@fin/charcode");
 const keyboard_3 = require("@fin/keyboard");
 const resolvedKeybinding_1 = require("./resolvedKeybinding");
@@ -613,7 +612,7 @@ class MacLinuxKeyboardMapper {
         if (binding.isDuplicateModifierCase()) {
             return '';
         }
-        if (this._OS === platform_1.OperatingSystem.Macintosh) {
+        if (this._OS === 2 /* Macintosh */) {
             switch (binding.scanCode) {
                 case 86 /* ArrowLeft */:
                     return '←';

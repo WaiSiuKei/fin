@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const event_1 = require("@fin/event");
 const disposable_1 = require("@fin/disposable");
-const commands_1 = require("./commands");
 exports.NullCommandService = {
     onWillExecuteCommand: () => ({ dispose: () => { } }),
     executeCommand() {
@@ -10,8 +9,9 @@ exports.NullCommandService = {
     }
 };
 class CommandService extends disposable_1.Disposable {
-    constructor() {
-        super(...arguments);
+    constructor(_commandsRegistry) {
+        super();
+        this._commandsRegistry = _commandsRegistry;
         this._onWillExecuteCommand = this._register(new event_1.Emitter());
         this.onWillExecuteCommand = this._onWillExecuteCommand.event;
     }
@@ -33,7 +33,7 @@ class CommandService extends disposable_1.Disposable {
         }
     }
     _getCommand(id) {
-        return commands_1.CommandsRegistry.getCommand(id);
+        return this._commandsRegistry.getCommand(id);
     }
 }
 exports.CommandService = CommandService;

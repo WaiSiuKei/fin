@@ -1,9 +1,12 @@
 import { KeybindingService, KeybindingsRegistry } from '@fin/keybinding';
 import { KeyCode, KeyMod } from '@fin/keyboard';
 import { ContextKeyService } from '@fin/contextkey';
-import { CommandService } from '@fin/command';
+import { CommandService, CommandsRegistry } from '@fin/command';
 
-KeybindingsRegistry.registerCommandAndKeybindingRule({
+const commandsRegistry = new CommandsRegistry();
+const keybindingsRegistry = new KeybindingsRegistry(commandsRegistry);
+
+keybindingsRegistry.registerCommandAndKeybindingRule({
   id: 'test',
   weight: 100,
   when: undefined,
@@ -15,4 +18,4 @@ KeybindingsRegistry.registerCommandAndKeybindingRule({
   }
 });
 
-const keyBindingService = new KeybindingService(window, new ContextKeyService(), new CommandService());
+const keyBindingService = new KeybindingService(window, new ContextKeyService(), new CommandService(commandsRegistry), keybindingsRegistry);

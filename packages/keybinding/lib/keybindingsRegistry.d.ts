@@ -1,6 +1,6 @@
 import { ContextKeyExpr } from '@fin/contextkey';
 import { Keybinding } from '@fin/keyboard';
-import { ICommandHandler } from '@fin/command';
+import { CommandsRegistry, ICommandHandler } from '@fin/command';
 export interface IKeybindingItem {
     keybinding: Keybinding;
     command: string;
@@ -38,10 +38,11 @@ export interface IKeybindingsRegistry {
 export interface ICommandAndKeybindingRule extends IKeybindingRule {
     handler: ICommandHandler;
 }
-declare class KeybindingsRegistryImpl implements IKeybindingsRegistry {
+export declare class KeybindingsRegistry implements IKeybindingsRegistry {
+    private _commandsRegistry;
     private _keybindings;
     private _keybindingsSorted;
-    constructor();
+    constructor(_commandsRegistry: CommandsRegistry);
     /**
      * Take current platform into account and reduce to primary & secondary.
      */
@@ -53,5 +54,3 @@ declare class KeybindingsRegistryImpl implements IKeybindingsRegistry {
     private _registerDefaultKeybinding;
     getDefaultKeybindings(): IKeybindingItem[];
 }
-export declare const KeybindingsRegistry: KeybindingsRegistryImpl;
-export {};

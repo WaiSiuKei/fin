@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const platform_1 = require("@fin/platform");
 const charcode_1 = require("@fin/charcode");
 const keyboard_1 = require("@fin/keyboard");
 const resolvedKeybinding_1 = require("./resolvedKeybinding");
@@ -56,7 +55,7 @@ class WindowsNativeResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybi
     getLabel() {
         let firstPart = this._getUILabelForKeybinding(this._firstPart);
         let chordPart = this._getUILabelForKeybinding(this._chordPart);
-        return keybindingLabels_1.UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, platform_1.OperatingSystem.Windows);
+        return keybindingLabels_1.UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, 1 /* Windows */);
     }
     _getUSLabelForKeybinding(keybinding) {
         if (!keybinding) {
@@ -70,7 +69,7 @@ class WindowsNativeResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybi
     getUSLabel() {
         let firstPart = this._getUSLabelForKeybinding(this._firstPart);
         let chordPart = this._getUSLabelForKeybinding(this._chordPart);
-        return keybindingLabels_1.UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, platform_1.OperatingSystem.Windows);
+        return keybindingLabels_1.UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, 1 /* Windows */);
     }
     _getAriaLabelForKeybinding(keybinding) {
         if (!keybinding) {
@@ -84,7 +83,7 @@ class WindowsNativeResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybi
     getAriaLabel() {
         let firstPart = this._getAriaLabelForKeybinding(this._firstPart);
         let chordPart = this._getAriaLabelForKeybinding(this._chordPart);
-        return keybindingLabels_1.AriaLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, platform_1.OperatingSystem.Windows);
+        return keybindingLabels_1.AriaLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, 1 /* Windows */);
     }
     _getUserSettingsLabelForKeybinding(keybinding) {
         if (!keybinding) {
@@ -98,7 +97,7 @@ class WindowsNativeResolvedKeybinding extends resolvedKeybinding_1.ResolvedKeybi
     getUserSettingsLabel() {
         let firstPart = this._getUserSettingsLabelForKeybinding(this._firstPart);
         let chordPart = this._getUserSettingsLabelForKeybinding(this._chordPart);
-        let result = keybindingLabels_1.UserSettingsLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, platform_1.OperatingSystem.Windows);
+        let result = keybindingLabels_1.UserSettingsLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, 1 /* Windows */);
         return (result ? result.toLowerCase() : result);
     }
     isWYSIWYG() {

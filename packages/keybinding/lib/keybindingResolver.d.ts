@@ -35,5 +35,4 @@ export declare class KeybindingResolver {
     resolve(context: IContext, currentChord: string, keypress: string): IResolveResult;
     private _findCommand;
     static contextMatchesRules(context: IContext, rules: ContextKeyExpr): boolean;
-    static getAllUnboundCommands(boundCommands: Map<string, boolean>): string[];
 }

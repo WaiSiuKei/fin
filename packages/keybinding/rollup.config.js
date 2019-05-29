@@ -10,7 +10,7 @@ const libraryName = pkg.name;
 export default [{
   input: 'src/index.ts',
   output: [
-    { file: pkg.main, name: libraryName, format: 'umd' },
+    { file: pkg.main, name: libraryName, format: 'es' },
   ],
   external: [],
   watch: {

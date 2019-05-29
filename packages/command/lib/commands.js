@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const linkedlist_1 = require("@fin/linkedlist");
-exports.CommandsRegistry = new class {
+class CommandsRegistry {
     constructor() {
         this._commands = new Map();
     }
@@ -50,4 +50,6 @@ exports.CommandsRegistry = new class {
         });
         return result;
     }
-};
+}
+exports.CommandsRegistry = CommandsRegistry;
+;
