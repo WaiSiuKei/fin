@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const keyboard_1 = require("@fin/keyboard");
 const keyboard_2 = require("@fin/keyboard");
+const charcode_1 = require("@fin/charcode");
 const keyboard_3 = require("@fin/keyboard");
 const resolvedKeybinding_1 = require("./resolvedKeybinding");
 const keybindingLabels_1 = require("./keybindingLabels");
@@ -134,7 +135,7 @@ class ScanCodeCombo {
         if (charCode === 0) {
             return ' --- ';
         }
-        if (charCode >= 768 /* U_Combining_Grave_Accent */ && charCode <= 879 /* U_Combining_Latin_Small_Letter_X */) {
+        if (charCode >= charcode_1.CharCode.U_Combining_Grave_Accent && charCode <= charcode_1.CharCode.U_Combining_Latin_Small_Letter_X) {
             // combining
             return 'U+' + charCode.toString(16);
         }
@@ -384,8 +385,8 @@ class MacLinuxKeyboardMapper {
                     }
                     const rawMapping = rawMappings[strScanCode];
                     const value = MacLinuxKeyboardMapper.getCharCode(rawMapping.value);
-                    if (value >= 97 /* a */ && value <= 122 /* z */) {
-                        const upperCaseValue = 65 /* A */ + (value - 97 /* a */);
+                    if (value >= charcode_1.CharCode.a && value <= charcode_1.CharCode.z) {
+                        const upperCaseValue = charcode_1.CharCode.A + (value - charcode_1.CharCode.a);
                         producesLatinLetter[upperCaseValue] = true;
                     }
                 }
@@ -398,32 +399,32 @@ class MacLinuxKeyboardMapper {
                 }
             };
             // Ensure letters are mapped
-            _registerLetterIfMissing(65 /* A */, 10 /* KeyA */, 'a', 'A');
-            _registerLetterIfMissing(66 /* B */, 11 /* KeyB */, 'b', 'B');
-            _registerLetterIfMissing(67 /* C */, 12 /* KeyC */, 'c', 'C');
-            _registerLetterIfMissing(68 /* D */, 13 /* KeyD */, 'd', 'D');
-            _registerLetterIfMissing(69 /* E */, 14 /* KeyE */, 'e', 'E');
-            _registerLetterIfMissing(70 /* F */, 15 /* KeyF */, 'f', 'F');
-            _registerLetterIfMissing(71 /* G */, 16 /* KeyG */, 'g', 'G');
-            _registerLetterIfMissing(72 /* H */, 17 /* KeyH */, 'h', 'H');
-            _registerLetterIfMissing(73 /* I */, 18 /* KeyI */, 'i', 'I');
-            _registerLetterIfMissing(74 /* J */, 19 /* KeyJ */, 'j', 'J');
-            _registerLetterIfMissing(75 /* K */, 20 /* KeyK */, 'k', 'K');
-            _registerLetterIfMissing(76 /* L */, 21 /* KeyL */, 'l', 'L');
-            _registerLetterIfMissing(77 /* M */, 22 /* KeyM */, 'm', 'M');
-            _registerLetterIfMissing(78 /* N */, 23 /* KeyN */, 'n', 'N');
-            _registerLetterIfMissing(79 /* O */, 24 /* KeyO */, 'o', 'O');
-            _registerLetterIfMissing(80 /* P */, 25 /* KeyP */, 'p', 'P');
-            _registerLetterIfMissing(81 /* Q */, 26 /* KeyQ */, 'q', 'Q');
-            _registerLetterIfMissing(82 /* R */, 27 /* KeyR */, 'r', 'R');
-            _registerLetterIfMissing(83 /* S */, 28 /* KeyS */, 's', 'S');
-            _registerLetterIfMissing(84 /* T */, 29 /* KeyT */, 't', 'T');
-            _registerLetterIfMissing(85 /* U */, 30 /* KeyU */, 'u', 'U');
-            _registerLetterIfMissing(86 /* V */, 31 /* KeyV */, 'v', 'V');
-            _registerLetterIfMissing(87 /* W */, 32 /* KeyW */, 'w', 'W');
-            _registerLetterIfMissing(88 /* X */, 33 /* KeyX */, 'x', 'X');
-            _registerLetterIfMissing(89 /* Y */, 34 /* KeyY */, 'y', 'Y');
-            _registerLetterIfMissing(90 /* Z */, 35 /* KeyZ */, 'z', 'Z');
+            _registerLetterIfMissing(charcode_1.CharCode.A, 10 /* KeyA */, 'a', 'A');
+            _registerLetterIfMissing(charcode_1.CharCode.B, 11 /* KeyB */, 'b', 'B');
+            _registerLetterIfMissing(charcode_1.CharCode.C, 12 /* KeyC */, 'c', 'C');
+            _registerLetterIfMissing(charcode_1.CharCode.D, 13 /* KeyD */, 'd', 'D');
+            _registerLetterIfMissing(charcode_1.CharCode.E, 14 /* KeyE */, 'e', 'E');
+            _registerLetterIfMissing(charcode_1.CharCode.F, 15 /* KeyF */, 'f', 'F');
+            _registerLetterIfMissing(charcode_1.CharCode.G, 16 /* KeyG */, 'g', 'G');
+            _registerLetterIfMissing(charcode_1.CharCode.H, 17 /* KeyH */, 'h', 'H');
+            _registerLetterIfMissing(charcode_1.CharCode.I, 18 /* KeyI */, 'i', 'I');
+            _registerLetterIfMissing(charcode_1.CharCode.J, 19 /* KeyJ */, 'j', 'J');
+            _registerLetterIfMissing(charcode_1.CharCode.K, 20 /* KeyK */, 'k', 'K');
+            _registerLetterIfMissing(charcode_1.CharCode.L, 21 /* KeyL */, 'l', 'L');
+            _registerLetterIfMissing(charcode_1.CharCode.M, 22 /* KeyM */, 'm', 'M');
+            _registerLetterIfMissing(charcode_1.CharCode.N, 23 /* KeyN */, 'n', 'N');
+            _registerLetterIfMissing(charcode_1.CharCode.O, 24 /* KeyO */, 'o', 'O');
+            _registerLetterIfMissing(charcode_1.CharCode.P, 25 /* KeyP */, 'p', 'P');
+            _registerLetterIfMissing(charcode_1.CharCode.Q, 26 /* KeyQ */, 'q', 'Q');
+            _registerLetterIfMissing(charcode_1.CharCode.R, 27 /* KeyR */, 'r', 'R');
+            _registerLetterIfMissing(charcode_1.CharCode.S, 28 /* KeyS */, 's', 'S');
+            _registerLetterIfMissing(charcode_1.CharCode.T, 29 /* KeyT */, 't', 'T');
+            _registerLetterIfMissing(charcode_1.CharCode.U, 30 /* KeyU */, 'u', 'U');
+            _registerLetterIfMissing(charcode_1.CharCode.V, 31 /* KeyV */, 'v', 'V');
+            _registerLetterIfMissing(charcode_1.CharCode.W, 32 /* KeyW */, 'w', 'W');
+            _registerLetterIfMissing(charcode_1.CharCode.X, 33 /* KeyX */, 'x', 'X');
+            _registerLetterIfMissing(charcode_1.CharCode.Y, 34 /* KeyY */, 'y', 'Y');
+            _registerLetterIfMissing(charcode_1.CharCode.Z, 35 /* KeyZ */, 'z', 'Z');
         }
         let mappings = [], mappingsLen = 0;
         for (let strScanCode in rawMappings) {
@@ -444,11 +445,11 @@ class MacLinuxKeyboardMapper {
                 };
                 mappings[mappingsLen++] = mapping;
                 this._scanCodeToDispatch[scanCode] = `[${keyboard_1.ScanCodeUtils.toString(scanCode)}]`;
-                if (value >= 97 /* a */ && value <= 122 /* z */) {
-                    const upperCaseValue = 65 /* A */ + (value - 97 /* a */);
+                if (value >= charcode_1.CharCode.a && value <= charcode_1.CharCode.z) {
+                    const upperCaseValue = charcode_1.CharCode.A + (value - charcode_1.CharCode.a);
                     this._scanCodeToLabel[scanCode] = String.fromCharCode(upperCaseValue);
                 }
-                else if (value >= 65 /* A */ && value <= 90 /* Z */) {
+                else if (value >= charcode_1.CharCode.A && value <= charcode_1.CharCode.Z) {
                     this._scanCodeToLabel[scanCode] = String.fromCharCode(value);
                 }
                 else if (value) {
@@ -796,28 +797,28 @@ class MacLinuxKeyboardMapper {
         }
         const charCode = char.charCodeAt(0);
         switch (charCode) {
-            case 768 /* U_Combining_Grave_Accent */:
-                return 96 /* U_GRAVE_ACCENT */;
-            case 769 /* U_Combining_Acute_Accent */:
-                return 180 /* U_ACUTE_ACCENT */;
-            case 770 /* U_Combining_Circumflex_Accent */:
-                return 94 /* U_CIRCUMFLEX */;
-            case 771 /* U_Combining_Tilde */:
-                return 732 /* U_SMALL_TILDE */;
-            case 772 /* U_Combining_Macron */:
-                return 175 /* U_MACRON */;
-            case 773 /* U_Combining_Overline */:
-                return 8254 /* U_OVERLINE */;
-            case 774 /* U_Combining_Breve */:
-                return 728 /* U_BREVE */;
-            case 775 /* U_Combining_Dot_Above */:
-                return 729 /* U_DOT_ABOVE */;
-            case 776 /* U_Combining_Diaeresis */:
-                return 168 /* U_DIAERESIS */;
-            case 778 /* U_Combining_Ring_Above */:
-                return 730 /* U_RING_ABOVE */;
-            case 779 /* U_Combining_Double_Acute_Accent */:
-                return 733 /* U_DOUBLE_ACUTE_ACCENT */;
+            case charcode_1.CharCode.U_Combining_Grave_Accent:
+                return charcode_1.CharCode.U_GRAVE_ACCENT;
+            case charcode_1.CharCode.U_Combining_Acute_Accent:
+                return charcode_1.CharCode.U_ACUTE_ACCENT;
+            case charcode_1.CharCode.U_Combining_Circumflex_Accent:
+                return charcode_1.CharCode.U_CIRCUMFLEX;
+            case charcode_1.CharCode.U_Combining_Tilde:
+                return charcode_1.CharCode.U_SMALL_TILDE;
+            case charcode_1.CharCode.U_Combining_Macron:
+                return charcode_1.CharCode.U_MACRON;
+            case charcode_1.CharCode.U_Combining_Overline:
+                return charcode_1.CharCode.U_OVERLINE;
+            case charcode_1.CharCode.U_Combining_Breve:
+                return charcode_1.CharCode.U_BREVE;
+            case charcode_1.CharCode.U_Combining_Dot_Above:
+                return charcode_1.CharCode.U_DOT_ABOVE;
+            case charcode_1.CharCode.U_Combining_Diaeresis:
+                return charcode_1.CharCode.U_DIAERESIS;
+            case charcode_1.CharCode.U_Combining_Ring_Above:
+                return charcode_1.CharCode.U_RING_ABOVE;
+            case charcode_1.CharCode.U_Combining_Double_Acute_Accent:
+                return charcode_1.CharCode.U_DOUBLE_ACUTE_ACCENT;
         }
         return charCode;
     }
@@ -830,32 +831,32 @@ exports.MacLinuxKeyboardMapper = MacLinuxKeyboardMapper;
         }
         CHAR_CODE_TO_KEY_CODE[charCode] = { keyCode: keyCode, shiftKey: shiftKey };
     }
-    for (let chCode = 65 /* A */; chCode <= 90 /* Z */; chCode++) {
-        define(chCode, 31 /* KEY_A */ + (chCode - 65 /* A */), true);
+    for (let chCode = charcode_1.CharCode.A; chCode <= charcode_1.CharCode.Z; chCode++) {
+        define(chCode, 31 /* KEY_A */ + (chCode - charcode_1.CharCode.A), true);
     }
-    for (let chCode = 97 /* a */; chCode <= 122 /* z */; chCode++) {
-        define(chCode, 31 /* KEY_A */ + (chCode - 97 /* a */), false);
+    for (let chCode = charcode_1.CharCode.a; chCode <= charcode_1.CharCode.z; chCode++) {
+        define(chCode, 31 /* KEY_A */ + (chCode - charcode_1.CharCode.a), false);
     }
-    define(59 /* Semicolon */, 80 /* US_SEMICOLON */, false);
-    define(58 /* Colon */, 80 /* US_SEMICOLON */, true);
-    define(61 /* Equals */, 81 /* US_EQUAL */, false);
-    define(43 /* Plus */, 81 /* US_EQUAL */, true);
-    define(44 /* Comma */, 82 /* US_COMMA */, false);
-    define(60 /* LessThan */, 82 /* US_COMMA */, true);
-    define(45 /* Dash */, 83 /* US_MINUS */, false);
-    define(95 /* Underline */, 83 /* US_MINUS */, true);
-    define(46 /* Period */, 84 /* US_DOT */, false);
-    define(62 /* GreaterThan */, 84 /* US_DOT */, true);
-    define(47 /* Slash */, 85 /* US_SLASH */, false);
-    define(63 /* QuestionMark */, 85 /* US_SLASH */, true);
-    define(96 /* BackTick */, 86 /* US_BACKTICK */, false);
-    define(126 /* Tilde */, 86 /* US_BACKTICK */, true);
-    define(91 /* OpenSquareBracket */, 87 /* US_OPEN_SQUARE_BRACKET */, false);
-    define(123 /* OpenCurlyBrace */, 87 /* US_OPEN_SQUARE_BRACKET */, true);
-    define(92 /* Backslash */, 88 /* US_BACKSLASH */, false);
-    define(124 /* Pipe */, 88 /* US_BACKSLASH */, true);
-    define(93 /* CloseSquareBracket */, 89 /* US_CLOSE_SQUARE_BRACKET */, false);
-    define(125 /* CloseCurlyBrace */, 89 /* US_CLOSE_SQUARE_BRACKET */, true);
-    define(39 /* SingleQuote */, 90 /* US_QUOTE */, false);
-    define(34 /* DoubleQuote */, 90 /* US_QUOTE */, true);
+    define(charcode_1.CharCode.Semicolon, 80 /* US_SEMICOLON */, false);
+    define(charcode_1.CharCode.Colon, 80 /* US_SEMICOLON */, true);
+    define(charcode_1.CharCode.Equals, 81 /* US_EQUAL */, false);
+    define(charcode_1.CharCode.Plus, 81 /* US_EQUAL */, true);
+    define(charcode_1.CharCode.Comma, 82 /* US_COMMA */, false);
+    define(charcode_1.CharCode.LessThan, 82 /* US_COMMA */, true);
+    define(charcode_1.CharCode.Dash, 83 /* US_MINUS */, false);
+    define(charcode_1.CharCode.Underline, 83 /* US_MINUS */, true);
+    define(charcode_1.CharCode.Period, 84 /* US_DOT */, false);
+    define(charcode_1.CharCode.GreaterThan, 84 /* US_DOT */, true);
+    define(charcode_1.CharCode.Slash, 85 /* US_SLASH */, false);
+    define(charcode_1.CharCode.QuestionMark, 85 /* US_SLASH */, true);
+    define(charcode_1.CharCode.BackTick, 86 /* US_BACKTICK */, false);
+    define(charcode_1.CharCode.Tilde, 86 /* US_BACKTICK */, true);
+    define(charcode_1.CharCode.OpenSquareBracket, 87 /* US_OPEN_SQUARE_BRACKET */, false);
+    define(charcode_1.CharCode.OpenCurlyBrace, 87 /* US_OPEN_SQUARE_BRACKET */, true);
+    define(charcode_1.CharCode.Backslash, 88 /* US_BACKSLASH */, false);
+    define(charcode_1.CharCode.Pipe, 88 /* US_BACKSLASH */, true);
+    define(charcode_1.CharCode.CloseSquareBracket, 89 /* US_CLOSE_SQUARE_BRACKET */, false);
+    define(charcode_1.CharCode.CloseCurlyBrace, 89 /* US_CLOSE_SQUARE_BRACKET */, true);
+    define(charcode_1.CharCode.SingleQuote, 90 /* US_QUOTE */, false);
+    define(charcode_1.CharCode.DoubleQuote, 90 /* US_QUOTE */, true);
 })();

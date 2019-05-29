@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const command_1 = require("@fin/command");
 const contextkey_1 = require("@fin/contextkey");
 class KeybindingResolver {
     constructor(defaultKeybindings, overrides) {
@@ -236,20 +235,6 @@ class KeybindingResolver {
             return true;
         }
         return rules.evaluate(context);
-    }
-    static getAllUnboundCommands(boundCommands) {
-        const commands = command_1.CommandsRegistry.getCommands();
-        const unboundCommands = [];
-        for (let id in commands) {
-            if (id[0] === '_' || id.indexOf('vscode.') === 0) { // private command
-                continue;
-            }
-            if (boundCommands.get(id) === true) {
-                continue;
-            }
-            unboundCommands.push(id);
-        }
-        return unboundCommands;
     }
 }
 exports.KeybindingResolver = KeybindingResolver;

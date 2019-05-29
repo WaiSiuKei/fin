@@ -53,7 +53,7 @@ export interface ICommandAndKeybindingRule extends IKeybindingRule {
   handler: ICommandHandler;
 }
 
-class KeybindingsRegistryImpl implements IKeybindingsRegistry {
+export class KeybindingsRegistry implements IKeybindingsRegistry {
 
   private _keybindings: IKeybindingItem[];
   private _keybindingsSorted: boolean;
@@ -76,7 +76,7 @@ class KeybindingsRegistryImpl implements IKeybindingsRegistry {
   //   }
   // };
 
-  constructor() {
+  constructor(private _commandsRegistry: CommandsRegistry) {
     this._keybindings = [];
     this._keybindingsSorted = true;
   }
@@ -103,7 +103,7 @@ class KeybindingsRegistryImpl implements IKeybindingsRegistry {
   }
 
   public registerKeybindingRule(rule: IKeybindingRule): void {
-    let actualKb = KeybindingsRegistryImpl.bindToCurrentPlatform(rule);
+    let actualKb = KeybindingsRegistry.bindToCurrentPlatform(rule);
 
     if (actualKb && actualKb.primary) {
       this._registerDefaultKeybinding(createKeybinding(actualKb.primary, OS), rule.id, rule.weight, 0, rule.when);
@@ -119,7 +119,7 @@ class KeybindingsRegistryImpl implements IKeybindingsRegistry {
 
   public registerCommandAndKeybindingRule(desc: ICommandAndKeybindingRule): void {
     this.registerKeybindingRule(desc);
-    CommandsRegistry.registerCommand(desc);
+    this._commandsRegistry.registerCommand(desc);
   }
 
   private static _mightProduceChar(keyCode: KeyCode): boolean {
@@ -150,7 +150,7 @@ class KeybindingsRegistryImpl implements IKeybindingsRegistry {
 
   private _assertNoCtrlAlt(keybinding: SimpleKeybinding, commandId: string): void {
     if (keybinding.ctrlKey && keybinding.altKey && !keybinding.metaKey) {
-      if (KeybindingsRegistryImpl._mightProduceChar(keybinding.keyCode)) {
+      if (KeybindingsRegistry._mightProduceChar(keybinding.keyCode)) {
         console.warn('Ctrl+Alt+ keybindings should not be used by default under Windows. Offender: ', keybinding, ' for ', commandId);
       }
     }
@@ -197,5 +197,3 @@ function sorter(a: IKeybindingItem, b: IKeybindingItem): number {
   }
   return a.weight2 - b.weight2;
 }
-
-export const KeybindingsRegistry = new KeybindingsRegistryImpl();

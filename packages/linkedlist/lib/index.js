@@ -1,109 +1,115 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import { FIN } from '@fin/iterator';
-var Node = (function () {
-    function Node(element) {
+class Node {
+    constructor(element) {
         this.element = element;
     }
-    return Node;
-}());
-var LinkedList = (function () {
-    function LinkedList() {
+}
+export class LinkedList {
+    constructor() {
         this._size = 0;
     }
-    Object.defineProperty(LinkedList.prototype, "size", {
-        get: function () {
-            return this._size;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    LinkedList.prototype.isEmpty = function () {
+    get size() {
+        return this._size;
+    }
+    isEmpty() {
         return !this._first;
-    };
-    LinkedList.prototype.clear = function () {
+    }
+    clear() {
         this._first = undefined;
         this._last = undefined;
         this._size = 0;
-    };
-    LinkedList.prototype.unshift = function (element) {
+    }
+    unshift(element) {
         return this._insert(element, false);
-    };
-    LinkedList.prototype.push = function (element) {
+    }
+    push(element) {
         return this._insert(element, true);
-    };
-    LinkedList.prototype._insert = function (element, atTheEnd) {
-        var newNode = new Node(element);
+    }
+    _insert(element, atTheEnd) {
+        const newNode = new Node(element);
         if (!this._first) {
             this._first = newNode;
             this._last = newNode;
         }
         else if (atTheEnd) {
-            var oldLast = this._last;
+            // push
+            const oldLast = this._last;
             this._last = newNode;
             newNode.prev = oldLast;
             oldLast.next = newNode;
         }
         else {
-            var oldFirst = this._first;
+            // unshift
+            const oldFirst = this._first;
             this._first = newNode;
             newNode.next = oldFirst;
             oldFirst.prev = newNode;
         }
         this._size += 1;
         return this._remove.bind(this, newNode);
-    };
-    LinkedList.prototype.shift = function () {
+    }
+    shift() {
         if (!this._first) {
             return undefined;
         }
         else {
-            var res = this._first.element;
+            const res = this._first.element;
             this._remove(this._first);
             return res;
         }
-    };
-    LinkedList.prototype.pop = function () {
+    }
+    pop() {
         if (!this._last) {
             return undefined;
         }
         else {
-            var res = this._last.element;
+            const res = this._last.element;
             this._remove(this._last);
             return res;
         }
-    };
-    LinkedList.prototype._remove = function (node) {
-        var candidate = this._first;
+    }
+    _remove(node) {
+        let candidate = this._first;
         while (candidate instanceof Node) {
             if (candidate !== node) {
                 candidate = candidate.next;
                 continue;
             }
             if (candidate.prev && candidate.next) {
-                var anchor = candidate.prev;
+                // middle
+                let anchor = candidate.prev;
                 anchor.next = candidate.next;
                 candidate.next.prev = anchor;
             }
             else if (!candidate.prev && !candidate.next) {
+                // only node
                 this._first = undefined;
                 this._last = undefined;
             }
             else if (!candidate.next) {
+                // last
                 this._last = this._last.prev;
                 this._last.next = undefined;
             }
             else if (!candidate.prev) {
+                // first
                 this._first = this._first.next;
                 this._first.prev = undefined;
             }
+            // done
             this._size -= 1;
             break;
         }
-    };
-    LinkedList.prototype.iterator = function () {
-        var element;
-        var node = this._first;
+    }
+    iterator() {
+        let element;
+        let node = this._first;
         return {
-            next: function () {
+            next() {
                 if (!node) {
                     return FIN;
                 }
@@ -117,14 +123,12 @@ var LinkedList = (function () {
                 return element;
             }
         };
-    };
-    LinkedList.prototype.toArray = function () {
-        var result = [];
-        for (var node = this._first; node instanceof Node; node = node.next) {
+    }
+    toArray() {
+        let result = [];
+        for (let node = this._first; node instanceof Node; node = node.next) {
             result.push(node.element);
         }
         return result;
-    };
-    return LinkedList;
-}());
-export { LinkedList };
+    }
+}

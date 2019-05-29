@@ -36,7 +36,7 @@ export interface ICommandRegistry {
     getCommands(): ICommandsMap;
 }
 
-export const CommandsRegistry: ICommandRegistry = new class implements ICommandRegistry {
+export class CommandsRegistry implements ICommandRegistry {
     private _commands = new Map<string, LinkedList<ICommand>>();
 
     registerCommand(idOrCommand: string | ICommand, handler?: ICommandHandler): IDisposable {

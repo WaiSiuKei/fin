@@ -9,11 +9,11 @@ const dom_1 = require("@fin/dom");
 const keyboard_1 = require("@fin/keyboard");
 const platform_1 = require("@fin/platform");
 const keyboardMapper_1 = require("./keyboardMapper");
-const keybindingsRegistry_1 = require("./keybindingsRegistry");
 const keybindingIO_1 = require("./keybindingIO");
 class KeybindingService extends disposable_1.Disposable {
-    constructor(windowElement, contextKeyService, commandService) {
+    constructor(windowElement, contextKeyService, commandService, keybindingsRegistry) {
         super();
+        this.keybindingsRegistry = keybindingsRegistry;
         this._contextKeyService = contextKeyService;
         this._commandService = commandService;
         this._currentChord = null;
@@ -42,7 +42,7 @@ class KeybindingService extends disposable_1.Disposable {
     }
     _getResolver() {
         if (!this._cachedResolver) {
-            const defaults = this._resolveKeybindingItems(keybindingsRegistry_1.KeybindingsRegistry.getDefaultKeybindings(), true);
+            const defaults = this._resolveKeybindingItems(this.keybindingsRegistry.getDefaultKeybindings(), true);
             const overrides = this._resolveUserKeybindingItems(this._getExtraKeybindings(this._firstTimeComputingResolver), false);
             this._cachedResolver = new keybindingResolver_1.KeybindingResolver(defaults, overrides);
             this._firstTimeComputingResolver = false;

@@ -1,13 +1,20 @@
 {
   "name": "@fin/charcode",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
+  "homepage": "https://github.com/WaiSiuKei/fin",
+  "bugs": {
+    "url": "https://github.com/WaiSiuKei/fin/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Wai Siu Kei <wakiki@outlook.com>",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc --build"
+    "build": "rimraf ./lib && tsc --build"
   },
   "devDependencies": {
+    "rimraf": "^2.6.3",
     "typescript": "^3.4.5"
   }
 }

@@ -1,7 +1,7 @@
 import { Disposable, IDisposable } from '@fin/disposable';
 import { Event, Emitter } from '@fin/event';
 import { IntervalTimer } from '@fin/async';
-import { IContextKeyService, IContextKeyServiceTarget } from '@fin/contextkey';
+import { IContextKeyService } from '@fin/contextkey';
 import { ICommandService } from '@fin/command';
 import { IResolveResult, KeybindingResolver } from './keybindingResolver';
 import { ResolvedKeybindingItem } from './resolvedKeybindingItem';
@@ -37,6 +37,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
     windowElement: Window,
     contextKeyService: IContextKeyService,
     commandService: ICommandService,
+    private keybindingsRegistry: KeybindingsRegistry,
   ) {
     super();
     this._contextKeyService = contextKeyService;
@@ -74,7 +75,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
 
   protected _getResolver(): KeybindingResolver {
     if (!this._cachedResolver) {
-      const defaults = this._resolveKeybindingItems(KeybindingsRegistry.getDefaultKeybindings(), true);
+      const defaults = this._resolveKeybindingItems(this.keybindingsRegistry.getDefaultKeybindings(), true);
       const overrides = this._resolveUserKeybindingItems(this._getExtraKeybindings(this._firstTimeComputingResolver), false);
       this._cachedResolver = new KeybindingResolver(defaults, overrides);
       this._firstTimeComputingResolver = false;
@@ -173,7 +174,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
     return result.resolvedKeybinding;
   }
 
-  public softDispatch(e: IKeyboardEventLite, target: IContextKeyServiceTarget): IResolveResult {
+  public softDispatch(e: IKeyboardEventLite, target: HTMLElement): IResolveResult {
     const keybinding = this.resolveKeyboardEvent(e);
     if (keybinding.isChord()) {
       console.warn('Unexpected keyboard event mapped to a chord');
@@ -224,7 +225,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
     this._currentChord = null;
   }
 
-  protected _dispatch(e: IKeyboardEventLite, target: IContextKeyServiceTarget): boolean {
+  protected _dispatch(e: IKeyboardEventLite, target: HTMLElement): boolean {
     let shouldPreventDefault = false;
 
     const keybinding = this.resolveKeyboardEvent(e);

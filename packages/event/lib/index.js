@@ -1,7 +1,264 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const disposable_1 = require("@fin/disposable");
-const linkedlist_1 = require("@fin/linkedlist");
+function dispose(first, ...rest) {
+    if (Array.isArray(first)) {
+        first.forEach(d => d && d.dispose());
+        return [];
+    }
+    else if (rest.length === 0) {
+        if (first) {
+            first.dispose();
+            return first;
+        }
+        return undefined;
+    }
+    else {
+        dispose(first);
+        dispose(rest);
+        return [];
+    }
+}
+function combinedDisposable(disposables) {
+    return { dispose: () => dispose(disposables) };
+}
+class Disposable {
+    constructor() {
+        this._toDispose = [];
+        this._lifecycle_disposable_isDisposed = false;
+    }
+    get toDispose() { return this._toDispose; }
+    dispose() {
+        this._lifecycle_disposable_isDisposed = true;
+        this._toDispose = dispose(this._toDispose);
+    }
+    _register(t) {
+        if (this._lifecycle_disposable_isDisposed) {
+            console.warn('Registering disposable on object that has already been disposed.');
+            t.dispose();
+        }
+        else {
+            this._toDispose.push(t);
+        }
+        return t;
+    }
+}
+Disposable.None = Object.freeze({ dispose() { } });
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+const FIN = { done: true, value: undefined };
+var Iterator;
+(function (Iterator) {
+    const _empty = {
+        next() {
+            return FIN;
+        }
+    };
+    function empty() {
+        return _empty;
+    }
+    Iterator.empty = empty;
+    function fromArray(array, index = 0, length = array.length) {
+        return {
+            next() {
+                if (index >= length) {
+                    return FIN;
+                }
+                return { done: false, value: array[index++] };
+            }
+        };
+    }
+    Iterator.fromArray = fromArray;
+    function from(elements) {
+        if (!elements) {
+            return Iterator.empty();
+        }
+        else if (Array.isArray(elements)) {
+            return Iterator.fromArray(elements);
+        }
+        else {
+            return elements;
+        }
+    }
+    Iterator.from = from;
+    function map(iterator, fn) {
+        return {
+            next() {
+                const element = iterator.next();
+                if (element.done) {
+                    return FIN;
+                }
+                else {
+                    return { done: false, value: fn(element.value) };
+                }
+            }
+        };
+    }
+    Iterator.map = map;
+    function filter(iterator, fn) {
+        return {
+            next() {
+                while (true) {
+                    const element = iterator.next();
+                    if (element.done) {
+                        return FIN;
+                    }
+                    if (fn(element.value)) {
+                        return { done: false, value: element.value };
+                    }
+                }
+            }
+        };
+    }
+    Iterator.filter = filter;
+    function forEach(iterator, fn) {
+        for (let next = iterator.next(); !next.done; next = iterator.next()) {
+            fn(next.value);
+        }
+    }
+    Iterator.forEach = forEach;
+    function collect(iterator) {
+        const result = [];
+        forEach(iterator, value => result.push(value));
+        return result;
+    }
+    Iterator.collect = collect;
+})(Iterator || (Iterator = {}));
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+class Node {
+    constructor(element) {
+        this.element = element;
+    }
+}
+class LinkedList {
+    constructor() {
+        this._size = 0;
+    }
+    get size() {
+        return this._size;
+    }
+    isEmpty() {
+        return !this._first;
+    }
+    clear() {
+        this._first = undefined;
+        this._last = undefined;
+        this._size = 0;
+    }
+    unshift(element) {
+        return this._insert(element, false);
+    }
+    push(element) {
+        return this._insert(element, true);
+    }
+    _insert(element, atTheEnd) {
+        const newNode = new Node(element);
+        if (!this._first) {
+            this._first = newNode;
+            this._last = newNode;
+        }
+        else if (atTheEnd) {
+            // push
+            const oldLast = this._last;
+            this._last = newNode;
+            newNode.prev = oldLast;
+            oldLast.next = newNode;
+        }
+        else {
+            // unshift
+            const oldFirst = this._first;
+            this._first = newNode;
+            newNode.next = oldFirst;
+            oldFirst.prev = newNode;
+        }
+        this._size += 1;
+        return this._remove.bind(this, newNode);
+    }
+    shift() {
+        if (!this._first) {
+            return undefined;
+        }
+        else {
+            const res = this._first.element;
+            this._remove(this._first);
+            return res;
+        }
+    }
+    pop() {
+        if (!this._last) {
+            return undefined;
+        }
+        else {
+            const res = this._last.element;
+            this._remove(this._last);
+            return res;
+        }
+    }
+    _remove(node) {
+        let candidate = this._first;
+        while (candidate instanceof Node) {
+            if (candidate !== node) {
+                candidate = candidate.next;
+                continue;
+            }
+            if (candidate.prev && candidate.next) {
+                // middle
+                let anchor = candidate.prev;
+                anchor.next = candidate.next;
+                candidate.next.prev = anchor;
+            }
+            else if (!candidate.prev && !candidate.next) {
+                // only node
+                this._first = undefined;
+                this._last = undefined;
+            }
+            else if (!candidate.next) {
+                // last
+                this._last = this._last.prev;
+                this._last.next = undefined;
+            }
+            else if (!candidate.prev) {
+                // first
+                this._first = this._first.next;
+                this._first.prev = undefined;
+            }
+            // done
+            this._size -= 1;
+            break;
+        }
+    }
+    iterator() {
+        let element;
+        let node = this._first;
+        return {
+            next() {
+                if (!node) {
+                    return FIN;
+                }
+                if (!element) {
+                    element = { done: false, value: node.element };
+                }
+                else {
+                    element.value = node.element;
+                }
+                node = node.next;
+                return element;
+            }
+        };
+    }
+    toArray() {
+        let result = [];
+        for (let node = this._first; node instanceof Node; node = node.next) {
+            result.push(node.element);
+        }
+        return result;
+    }
+}
+
 var Event;
 (function (Event) {
     const _disposable = { dispose() { } };
@@ -68,7 +325,7 @@ var Event;
      * whenever any of the provided events emit.
      */
     function any(...events) {
-        return (listener, thisArgs = null, disposables) => disposable_1.combinedDisposable(events.map(event => event(e => listener.call(thisArgs, e), null, disposables)));
+        return (listener, thisArgs = null, disposables) => combinedDisposable(events.map(event => event(e => listener.call(thisArgs, e), null, disposables)));
     }
     Event.any = any;
     /**
@@ -289,7 +546,7 @@ var Event;
         return new Promise(c => once(event)(c));
     }
     Event.toPromise = toPromise;
-})(Event = exports.Event || (exports.Event = {}));
+})(Event || (Event = {}));
 let _globalLeakWarningThreshold = -1;
 function setGlobalLeakWarningThreshold(n) {
     let oldValue = _globalLeakWarningThreshold;
@@ -300,7 +557,6 @@ function setGlobalLeakWarningThreshold(n) {
         }
     };
 }
-exports.setGlobalLeakWarningThreshold = setGlobalLeakWarningThreshold;
 class LeakageMonitor {
     constructor(customThreshold, name = Math.random().toString(18).slice(2, 5)) {
         this.customThreshold = customThreshold;
@@ -386,7 +642,7 @@ class Emitter {
         if (!this._event) {
             this._event = (listener, thisArgs, disposables) => {
                 if (!this._listeners) {
-                    this._listeners = new linkedlist_1.LinkedList();
+                    this._listeners = new LinkedList();
                 }
                 const firstListener = this._listeners.isEmpty();
                 if (firstListener && this._options && this._options.onFirstListenerAdd) {
@@ -475,4 +731,5 @@ class Emitter {
     }
 }
 Emitter._noop = function () { };
-exports.Emitter = Emitter;
+
+export { Emitter, Event, setGlobalLeakWarningThreshold };
