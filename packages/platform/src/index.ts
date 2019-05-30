@@ -9,26 +9,12 @@
 let _isWindows = false;
 let _isMacintosh = false;
 let _isLinux = false;
-let _isRootUser = false;
-let _isNative = false;
-let _isWeb = false;
-let _isQunit = false;
-let _locale: string = undefined;
-let _language: string = undefined;
-
-declare let self: any;
-
-export const LANGUAGE_DEFAULT = 'en';
 
 // OS detection
 let { userAgent } = navigator;
 _isWindows = userAgent.indexOf('Windows') >= 0;
 _isMacintosh = userAgent.indexOf('Macintosh') >= 0;
 _isLinux = userAgent.indexOf('Linux') >= 0;
-_isWeb = true;
-_locale = navigator.language;
-_language = _locale;
-_isQunit = !!(<any>self).QUnit;
 
 export enum Platform {
   Web,
@@ -38,22 +24,10 @@ export enum Platform {
 }
 
 export let _platform: Platform = Platform.Web;
-if (_isNative) {
-  if (_isMacintosh) {
-    _platform = Platform.Mac;
-  } else if (_isWindows) {
-    _platform = Platform.Windows;
-  } else if (_isLinux) {
-    _platform = Platform.Linux;
-  }
-}
 
 export const isWindows = _isWindows;
 export const isMacintosh = _isMacintosh;
 export const isLinux = _isLinux;
-export const isRootUser = _isRootUser;
-export const isNative = _isNative;
-export const isWeb = _isWeb;
 export const platform = _platform;
 
 export const enum OperatingSystem {
