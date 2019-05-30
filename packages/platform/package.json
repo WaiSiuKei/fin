@@ -11,7 +11,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc --build"
+    "build": "rimraf ./lib && tsc"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",

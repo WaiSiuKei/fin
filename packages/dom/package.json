@@ -11,7 +11,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc --build"
+    "build": "rimraf ./lib && tsc"
   },
   "dependencies": {
     "@fin/disposable": "^0.0.5"

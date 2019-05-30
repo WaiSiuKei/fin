@@ -2,23 +2,6 @@
 # yarn lockfile v1
 
 
-"@fin/disposable@*":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@fin/disposable/-/disposable-0.0.1.tgz#cd4678ba3fe8f06cf608f4e7dbb87d2e8ed17f02"
-  integrity sha512-df6PexgzXw+slcwGtEPngOCLgFQBepstjvLP06J4PtmpOwxKKpjbq4g24xu+UON9CJNvdCiAkcNBnCuWgSNMcg==
-
-"@fin/iterator@*":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@fin/iterator/-/iterator-0.0.1.tgz#c54a27c890285c02780ef64521527a79d5b51a2c"
-  integrity sha512-vdd76ofrnb3jOWkUaYIUmpCTZYo/Kutgf8dmn6idjMiF9lG3dGvkxpNeU9kWttBX8MLJNHijKJ0zvBPSfB8MDw==
-
-"@fin/linkedlist@*":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@fin/linkedlist/-/linkedlist-0.0.1.tgz#f0ceefec653f0bb770a04eb2a9b20af40f64b85b"
-  integrity sha512-zQEAGvNDSBNuOKtvMDu1DgINnY572JaBd1ykmx5yhknEb8w6H+UidPqxK6gANwNQYA0ITMtkENWjPnys8xxh9g==
-  dependencies:
-    "@fin/iterator" "*"
-
 "@types/estree@0.0.39":
   version "0.0.39"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
@@ -676,13 +659,6 @@ rollup-plugin-commonjs@^10.0.0:
     resolve "^1.10.1"
     rollup-pluginutils "^2.7.0"
 
-rollup-plugin-json@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-json/-/rollup-plugin-json-4.0.0.tgz#a18da0a4b30bf5ca1ee76ddb1422afbb84ae2b9e"
-  integrity sha512-hgb8N7Cgfw5SZAkb3jf0QXii6QX/FOkiIq2M7BAQIEydjHvTyxXHQiIzZaTFgx1GK0cRCHOCBHIyEkkLdWKxow==
-  dependencies:
-    rollup-pluginutils "^2.5.0"
-
 rollup-plugin-node-resolve@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-5.0.0.tgz#754abf4841ed4bab2241551cba0a11d04c57f290"
@@ -712,7 +688,7 @@ rollup-pluginutils@2.6.0:
     estree-walker "^0.6.0"
     micromatch "^3.1.10"
 
-rollup-pluginutils@^2.5.0, rollup-pluginutils@^2.7.0:
+rollup-pluginutils@^2.7.0:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/rollup-pluginutils/-/rollup-pluginutils-2.7.1.tgz#a7915ce8b12c177364784bf38a1590cc6c2c8250"
   integrity sha512-3nRf3buQGR9qz/IsSzhZAJyoK663kzseps8itkYHr+Z7ESuaffEPfgRinxbCRA0pf0gzLqkNKkSb8aNVTq75NA==

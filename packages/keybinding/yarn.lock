@@ -2,28 +2,7 @@
 # yarn lockfile v1
 
 
-"@fin/async@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@fin/async/-/async-0.0.1.tgz#71738c917255ff34ba66be444139e40cb751f5fa"
-  integrity sha512-waXWVot6CMMrC5FgtIExg2T1UJcXvU4dL17EbdGTw9QBVIYXrK892RE7Is73YxAQSg1wE50yNzU9SuY+HWgYMQ==
-  dependencies:
-    "@fin/disposable" "*"
-
-"@fin/charcode@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@fin/charcode/-/charcode-0.0.1.tgz#fefce50679b0d3a8754e424a664a96f9a9ccb0b0"
-  integrity sha512-Oli5BFxWNcllEtNNwh7r41U1z0jdVUFB9WPP0yuYOjKOv2ydiAL28ubhTl9lw7US+7tOkEDdf/QX0CPC+EoHXg==
-
-"@fin/command@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@fin/command/-/command-0.0.3.tgz#bc585fc4770e5d7e83b851c45dbbc81d6c0d065f"
-  integrity sha512-NiWJBPU/xXr9IY5HT2oHT3hIAM67orAkABUwLrUPOecPBL6hbvOezrkLYGyHGnDsl8uev6hq2CrfecZyHDtVyA==
-  dependencies:
-    "@fin/disposable" "*"
-    "@fin/event" "0.0.2"
-    "@fin/linkedlist" "*"
-
-"@fin/contextkey@0.0.2":
+"@fin/contextkey@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@fin/contextkey/-/contextkey-0.0.2.tgz#8e183a0bc627974978708aca86aaa85fc11859e7"
   integrity sha512-pFqm7dhAUDCKXNikaTutm5gbB3n6Io3zZ/hPMT9qNC6lW/EF/0Mj9NzGXrbZ2/xCemNlAVeWQK0K9PyME7ZPsg==
@@ -32,17 +11,10 @@
     "@fin/event" "0.0.2"
     "@fin/strings" "0.0.1"
 
-"@fin/disposable@*", "@fin/disposable@0.0.1":
+"@fin/disposable@*":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@fin/disposable/-/disposable-0.0.1.tgz#cd4678ba3fe8f06cf608f4e7dbb87d2e8ed17f02"
   integrity sha512-df6PexgzXw+slcwGtEPngOCLgFQBepstjvLP06J4PtmpOwxKKpjbq4g24xu+UON9CJNvdCiAkcNBnCuWgSNMcg==
-
-"@fin/dom@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@fin/dom/-/dom-0.0.1.tgz#db9666bcc7073381928152231521be8b70309656"
-  integrity sha512-EkyHQd/J8J6mnNU+zbjrjbvIvqoUJXED1m4MkA5LTfsfcIuceGA8U3vVOS8AIDY5bfOBUa3uO/ZksBKmXdyYuw==
-  dependencies:
-    "@fin/disposable" "*"
 
 "@fin/event@0.0.2":
   version "0.0.2"
@@ -57,24 +29,12 @@
   resolved "https://registry.yarnpkg.com/@fin/iterator/-/iterator-0.0.1.tgz#c54a27c890285c02780ef64521527a79d5b51a2c"
   integrity sha512-vdd76ofrnb3jOWkUaYIUmpCTZYo/Kutgf8dmn6idjMiF9lG3dGvkxpNeU9kWttBX8MLJNHijKJ0zvBPSfB8MDw==
 
-"@fin/keyboard@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@fin/keyboard/-/keyboard-0.0.1.tgz#51c91fa6dd8c85bbf47b69e21b14fa2c37dfbcc3"
-  integrity sha512-yNt6cF6OxDCNIDsQfkOo7eABAnKjwKztvabIpbN7AdYOkBHheB4LHJwFaY0jYSj/+Ynjm7cnIyjNtLzRpAivmQ==
-  dependencies:
-    "@fin/platform" "*"
-
 "@fin/linkedlist@*":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@fin/linkedlist/-/linkedlist-0.0.1.tgz#f0ceefec653f0bb770a04eb2a9b20af40f64b85b"
   integrity sha512-zQEAGvNDSBNuOKtvMDu1DgINnY572JaBd1ykmx5yhknEb8w6H+UidPqxK6gANwNQYA0ITMtkENWjPnys8xxh9g==
   dependencies:
     "@fin/iterator" "*"
-
-"@fin/platform@*":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@fin/platform/-/platform-0.0.1.tgz#575fab0b4d1ac5326c7ff0f5a1bf3fe92598adba"
-  integrity sha512-/cNQdSCR/unZPPa/S3F4FLw9y1BqRpQu8i87LWqj+u1UUUY+NecE7RQKF2n+OrviKtx1eLiq+MMwwn+T/r0MfA==
 
 "@fin/strings@0.0.1":
   version "0.0.1"
@@ -983,13 +943,6 @@ rollup-plugin-commonjs@^10.0.0:
     resolve "^1.10.1"
     rollup-pluginutils "^2.7.0"
 
-rollup-plugin-json@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-json/-/rollup-plugin-json-4.0.0.tgz#a18da0a4b30bf5ca1ee76ddb1422afbb84ae2b9e"
-  integrity sha512-hgb8N7Cgfw5SZAkb3jf0QXii6QX/FOkiIq2M7BAQIEydjHvTyxXHQiIzZaTFgx1GK0cRCHOCBHIyEkkLdWKxow==
-  dependencies:
-    rollup-pluginutils "^2.5.0"
-
 rollup-plugin-node-resolve@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-5.0.0.tgz#754abf4841ed4bab2241551cba0a11d04c57f290"
@@ -1019,7 +972,7 @@ rollup-pluginutils@2.6.0:
     estree-walker "^0.6.0"
     micromatch "^3.1.10"
 
-rollup-pluginutils@^2.5.0, rollup-pluginutils@^2.7.0:
+rollup-pluginutils@^2.7.0:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/rollup-pluginutils/-/rollup-pluginutils-2.7.1.tgz#a7915ce8b12c177364784bf38a1590cc6c2c8250"
   integrity sha512-3nRf3buQGR9qz/IsSzhZAJyoK663kzseps8itkYHr+Z7ESuaffEPfgRinxbCRA0pf0gzLqkNKkSb8aNVTq75NA==

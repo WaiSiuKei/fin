@@ -2,10 +2,11 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "./out",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "declarationDir": "./out"
   },
   "include": [
-    "./src"
+    "./src",
+    "../packages/**/*"
   ]
 }
