@@ -8,7 +8,7 @@
     "newLine": "LF",
     "lib": [
       "es2015",
-      "DOM"
+      "dom"
     ]
   },
   "exclude": [
