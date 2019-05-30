@@ -64,6 +64,4 @@ export interface IKeybindingService {
   getDefaultKeybindings(): ResolvedKeybindingItem[];
 
   getKeybindings(): ResolvedKeybindingItem[];
-
-  customKeybindingsCount(): number;
 }

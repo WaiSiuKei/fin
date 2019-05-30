@@ -14,7 +14,7 @@
     "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
   },
   "dependencies": {
-    "@fin/command": "^0.0.3",
+    "@fin/command": "^0.0.5",
     "@fin/contextkey": "^0.0.2",
     "@fin/disposable": "^0.0.1",
     "@fin/event": "^0.0.2",

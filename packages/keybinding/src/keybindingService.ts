@@ -158,10 +158,6 @@ export class KeybindingService extends Disposable implements IKeybindingService 
     return this._getResolver().getKeybindings();
   }
 
-  public customKeybindingsCount(): number {
-    return 0;
-  }
-
   public lookupKeybindings(commandId: string): ResolvedKeybinding[] {
     return this._getResolver().lookupKeybindings(commandId).map(item => item.resolvedKeybinding);
   }
