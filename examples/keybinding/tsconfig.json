@@ -8,7 +8,12 @@
       "DOM"
     ],
     "outDir": "./out",
-    "baseUrl": "./src"
+    "baseUrl": ".",
+    "paths": {
+      "@fin/*": [
+        "../../../packages/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules",

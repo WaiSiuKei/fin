@@ -4,8 +4,8 @@ const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
-const packages = path.join(__dirname, '../..');
-
+const packages = path.join(__dirname, '../../packages');
+console.log(packages);
 let config = {
   module: {
     rules: [
