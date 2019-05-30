@@ -1,6 +1,6 @@
 {
   "name": "@fin/linkedlist",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -14,7 +14,7 @@
     "build": "rimraf ./lib && tsc --build"
   },
   "dependencies": {
-    "@fin/iterator": "*"
+    "@fin/iterator": "^0.0.5"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",

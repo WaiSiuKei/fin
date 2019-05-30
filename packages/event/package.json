@@ -1,6 +1,6 @@
 {
   "name": "@fin/event",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -8,8 +8,8 @@
     "build": "rimraf ./lib && tsc --module commonjs && rollup -c rollup.config.js && rimraf .rpt2_cache"
   },
   "dependencies": {
-    "@fin/disposable": "*",
-    "@fin/linkedlist": "*"
+    "@fin/disposable": "^0.0.5",
+    "@fin/linkedlist": "^0.0.5"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",
