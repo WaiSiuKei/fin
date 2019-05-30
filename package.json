@@ -1,6 +1,4 @@
 {
-  "name": "nila",
-  "version": "3.0.0",
   "devDependencies": {
     "lerna": "^3.14.1"
   },
@@ -10,6 +8,6 @@
   },
   "workspaces": [
     "packages/*",
-    "demo/*"
+    "examples/*"
   ]
 }
