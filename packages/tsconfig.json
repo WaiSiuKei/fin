@@ -5,6 +5,7 @@
     "target": "es2015",
     "sourceMap": false,
     "declaration": true,
+    "newLine": "LF",
     "lib": [
       "es2015",
       "DOM"
