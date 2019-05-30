@@ -26,10 +26,6 @@ export abstract class ResolvedKeybinding {
    */
   public abstract getLabel(): string;
   /**
-   * This prints the binding in a format suitable for ARIA.
-   */
-  public abstract getAriaLabel(): string;
-  /**
    * This prints the binding in a format suitable for user settings.
    */
   public abstract getUserSettingsLabel(): string;

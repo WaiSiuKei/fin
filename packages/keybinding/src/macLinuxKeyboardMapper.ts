@@ -1,10 +1,10 @@
-import { IMMUTABLE_CODE_TO_KEY_CODE, IMMUTABLE_KEY_CODE_TO_CODE, ScanCode, ScanCodeBinding, ScanCodeUtils, IKeyboardEvent, ChordKeybinding } from '@fin/keyboard';
+import { IMMUTABLE_CODE_TO_KEY_CODE, IMMUTABLE_KEY_CODE_TO_CODE, ScanCode, ScanCodeBinding, ScanCodeUtils, ChordKeybinding } from '@fin/keyboard';
 import { KeyCode, KeyCodeUtils, } from '@fin/keyboard';
 import { OperatingSystem } from '@fin/platform';
 import { CharCode } from '@fin/charcode';
 import { Keybinding, KeybindingType, SimpleKeybinding } from '@fin/keyboard';
 import { ResolvedKeybinding, ResolvedKeybindingPart } from './resolvedKeybinding';
-import { AriaLabelProvider, UILabelProvider, UserSettingsLabelProvider } from './keybindingLabels';
+import {  UILabelProvider, UserSettingsLabelProvider } from './keybindingLabels';
 import { IKeyboardMapper } from './keyboardMapper';
 import { IKeyboardEventLite } from './keybinding';
 
@@ -12,38 +12,8 @@ export interface IMacLinuxKeyMapping {
   value: string;
 }
 
-function macLinuxKeyMappingEquals(a: IMacLinuxKeyMapping, b: IMacLinuxKeyMapping): boolean {
-  if (!a && !b) {
-    return true;
-  }
-  if (!a || !b) {
-    return false;
-  }
-  return (
-    a.value === b.value
-  );
-}
-
 export interface IMacLinuxKeyboardMapping {
   [scanCode: string]: IMacLinuxKeyMapping;
-}
-
-export function macLinuxKeyboardMappingEquals(a: IMacLinuxKeyboardMapping, b: IMacLinuxKeyboardMapping): boolean {
-  if (!a && !b) {
-    return true;
-  }
-  if (!a || !b) {
-    return false;
-  }
-  for (let scanCode = 0; scanCode < ScanCode.MAX_VALUE; scanCode++) {
-    const strScanCode = ScanCodeUtils.toString(scanCode);
-    const aEntry = a[strScanCode];
-    const bEntry = b[strScanCode];
-    if (!macLinuxKeyMappingEquals(aEntry, bEntry)) {
-      return false;
-    }
-  }
-  return true;
 }
 
 /**
@@ -76,12 +46,6 @@ export class NativeResolvedKeybinding extends ResolvedKeybinding {
     let firstPart = this._mapper.getUILabelForScanCodeBinding(this._firstPart);
     let chordPart = this._mapper.getUILabelForScanCodeBinding(this._chordPart);
     return UILabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, this._OS);
-  }
-
-  public getAriaLabel(): string {
-    let firstPart = this._mapper.getAriaLabelForScanCodeBinding(this._firstPart);
-    let chordPart = this._mapper.getAriaLabelForScanCodeBinding(this._chordPart);
-    return AriaLabelProvider.toLabel(this._firstPart, firstPart, this._chordPart, chordPart, this._OS);
   }
 
   public getUserSettingsLabel(): string {
@@ -634,107 +598,6 @@ export class MacLinuxKeyboardMapper implements IKeyboardMapper {
     this._scanCodeKeyCodeMapper.registrationComplete();
   }
 
-  public dumpDebugInfo(): string {
-    let result: string[] = [];
-
-    let immutableSamples = [
-      ScanCode.ArrowUp,
-      ScanCode.Numpad0
-    ];
-
-    let cnt = 0;
-    result.push(`isUSStandard: ${this._isUSStandard}`);
-    result.push(`----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
-    for (let scanCode = ScanCode.None; scanCode < ScanCode.MAX_VALUE; scanCode++) {
-      if (IMMUTABLE_CODE_TO_KEY_CODE[scanCode] !== -1) {
-        if (immutableSamples.indexOf(scanCode) === -1) {
-          continue;
-        }
-      }
-
-      if (cnt % 4 === 0) {
-        result.push(`|       HW Code combination      |  Key  |    KeyCode combination    | Pri |          UI label         |         User settings          |    Electron accelerator   |       Dispatching string       | WYSIWYG |`);
-        result.push(`----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
-      }
-      cnt++;
-
-      const mapping = this._codeInfo[scanCode];
-
-      for (let mod = 0; mod < 8; mod++) {
-        const hwCtrlKey = (mod & 0b001) ? true : false;
-        const hwShiftKey = (mod & 0b010) ? true : false;
-        const hwAltKey = (mod & 0b100) ? true : false;
-        const scanCodeCombo = new ScanCodeCombo(hwCtrlKey, hwShiftKey, hwAltKey, scanCode);
-        const resolvedKb = this.resolveKeyboardEvent({
-          ctrlKey: scanCodeCombo.ctrlKey,
-          shiftKey: scanCodeCombo.shiftKey,
-          altKey: scanCodeCombo.altKey,
-          metaKey: false,
-          keyCode: -1,
-          code: ScanCodeUtils.toString(scanCode)
-        });
-
-        const outScanCodeCombo = scanCodeCombo.toString();
-        const outKey = scanCodeCombo.getProducedChar(mapping);
-        const ariaLabel = resolvedKb.getAriaLabel();
-        const outUILabel = (ariaLabel ? ariaLabel.replace(/Control\+/, 'Ctrl+') : null);
-        const outUserSettings = resolvedKb.getUserSettingsLabel();
-        const outDispatchStr = resolvedKb.getDispatchParts()[0];
-
-        const isWYSIWYG = (resolvedKb ? resolvedKb.isWYSIWYG() : false);
-        const outWYSIWYG = (isWYSIWYG ? '       ' : '   NO  ');
-
-        const kbCombos = this._scanCodeKeyCodeMapper.lookupScanCodeCombo(scanCodeCombo);
-        if (kbCombos.length === 0) {
-          result.push(`| ${this._leftPad(outScanCodeCombo, 30)} | ${outKey} | ${this._leftPad('', 25)} | ${this._leftPad('', 3)} | ${this._leftPad(outUILabel, 25)} | ${this._leftPad(outUserSettings, 30)}  | ${this._leftPad(outDispatchStr, 30)} | ${outWYSIWYG} |`);
-        } else {
-          for (let i = 0, len = kbCombos.length; i < len; i++) {
-            const kbCombo = kbCombos[i];
-            // find out the priority of this scan code for this key code
-            let colPriority = '-';
-
-            const scanCodeCombos = this._scanCodeKeyCodeMapper.lookupKeyCodeCombo(kbCombo);
-            if (scanCodeCombos.length === 1) {
-              // no need for priority, this key code combo maps to precisely this scan code combo
-              colPriority = '';
-            } else {
-              let priority = -1;
-              for (let j = 0; j < scanCodeCombos.length; j++) {
-                if (scanCodeCombos[j].equals(scanCodeCombo)) {
-                  priority = j + 1;
-                  break;
-                }
-              }
-              colPriority = String(priority);
-            }
-
-            const outKeybinding = kbCombo.toString();
-            if (i === 0) {
-              result.push(`| ${this._leftPad(outScanCodeCombo, 30)} | ${outKey} | ${this._leftPad(outKeybinding, 25)} | ${this._leftPad(colPriority, 3)} | ${this._leftPad(outUILabel, 25)} | ${this._leftPad(outUserSettings, 30)} | ${this._leftPad(outDispatchStr, 30)} | ${outWYSIWYG} |`);
-            } else {
-              // secondary keybindings
-              result.push(`| ${this._leftPad('', 30)} |       | ${this._leftPad(outKeybinding, 25)} | ${this._leftPad(colPriority, 3)} | ${this._leftPad('', 25)} | ${this._leftPad('', 30)} | ${this._leftPad('', 25)} | ${this._leftPad('', 30)} |         |`);
-            }
-          }
-        }
-
-      }
-      result.push(`----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
-    }
-
-    return result.join('\n');
-  }
-
-  private _leftPad(str: string, cnt: number): string {
-    if (str === null) {
-      str = 'null';
-    }
-    while (str.length < cnt) {
-      str = ' ' + str;
-    }
-    return str;
-  }
-
   public simpleKeybindingToScanCodeBinding(keybinding: SimpleKeybinding): ScanCodeBinding[] {
     // Avoid double Enter bindings (both ScanCode.NumpadEnter and ScanCode.Enter point to KeyCode.Enter)
     if (keybinding.keyCode === KeyCode.Enter) {
@@ -842,7 +705,7 @@ export class MacLinuxKeyboardMapper implements IKeyboardMapper {
     let result: NativeResolvedKeybinding[] = [], resultLen = 0;
 
     if (keybinding.type === KeybindingType.Chord) {
-      keybinding = keybinding as ChordKeybinding
+      keybinding = keybinding as ChordKeybinding;
       const firstParts = this.simpleKeybindingToScanCodeBinding(keybinding.firstPart);
       const chordParts = this.simpleKeybindingToScanCodeBinding(keybinding.chordPart);
 

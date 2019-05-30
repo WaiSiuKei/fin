@@ -187,10 +187,6 @@ export class KeybindingResolver {
     return true;
   }
 
-  public getDefaultBoundCommands(): Map<string, boolean> {
-    return this._defaultBoundCommands;
-  }
-
   public getDefaultKeybindings(): ResolvedKeybindingItem[] {
     return this._defaultKeybindings;
   }

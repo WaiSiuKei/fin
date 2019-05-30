@@ -3,48 +3,42 @@ import { OperatingSystem, OS } from '@fin/platform';
 import { Keybinding, SimpleKeybinding } from '@fin/keyboard';
 import { ResolvedKeybinding } from './resolvedKeybinding';
 import { getKeyMap, IKeyboardMapping } from './nativeKeymap';
-import { IWindowsKeyboardMapping, WindowsKeyboardMapper, windowsKeyboardMappingEquals } from './windowsKeyboardMapper';
-import { IMacLinuxKeyboardMapping, MacLinuxKeyboardMapper, macLinuxKeyboardMappingEquals } from './macLinuxKeyboardMapper';
+import { IMacLinuxKeyboardMapping, MacLinuxKeyboardMapper } from './macLinuxKeyboardMapper';
 import { IKeyboardEventLite } from './keybinding';
 
 export interface IKeyboardMapper {
-	dumpDebugInfo(): string;
-	resolveKeybinding(keybinding: Keybinding): ResolvedKeybinding[];
-	resolveKeyboardEvent(keyboardEvent: IKeyboardEventLite): ResolvedKeybinding;
-	resolveUserBinding(firstPart: SimpleKeybinding | ScanCodeBinding, chordPart: SimpleKeybinding | ScanCodeBinding): ResolvedKeybinding[];
+  resolveKeybinding(keybinding: Keybinding): ResolvedKeybinding[];
+  resolveKeyboardEvent(keyboardEvent: IKeyboardEventLite): ResolvedKeybinding;
+  resolveUserBinding(firstPart: SimpleKeybinding | ScanCodeBinding, chordPart: SimpleKeybinding | ScanCodeBinding): ResolvedKeybinding[];
 }
 
 export class CachedKeyboardMapper implements IKeyboardMapper {
 
-	private _actual: IKeyboardMapper;
-	private _cache: Map<string, ResolvedKeybinding[]>;
+  private _actual: IKeyboardMapper;
+  private _cache: Map<string, ResolvedKeybinding[]>;
 
-	constructor(actual: IKeyboardMapper) {
-		this._actual = actual;
-		this._cache = new Map<string, ResolvedKeybinding[]>();
-	}
+  constructor(actual: IKeyboardMapper) {
+    this._actual = actual;
+    this._cache = new Map<string, ResolvedKeybinding[]>();
+  }
 
-	public dumpDebugInfo(): string {
-		return this._actual.dumpDebugInfo();
-	}
+  public resolveKeybinding(keybinding: Keybinding): ResolvedKeybinding[] {
+    let hashCode = keybinding.getHashCode();
+    if (!this._cache.has(hashCode)) {
+      let r = this._actual.resolveKeybinding(keybinding);
+      this._cache.set(hashCode, r);
+      return r;
+    }
+    return this._cache.get(hashCode);
+  }
 
-	public resolveKeybinding(keybinding: Keybinding): ResolvedKeybinding[] {
-		let hashCode = keybinding.getHashCode();
-		if (!this._cache.has(hashCode)) {
-			let r = this._actual.resolveKeybinding(keybinding);
-			this._cache.set(hashCode, r);
-			return r;
-		}
-		return this._cache.get(hashCode);
-	}
+  public resolveKeyboardEvent(keyboardEvent: IKeyboardEventLite): ResolvedKeybinding {
+    return this._actual.resolveKeyboardEvent(keyboardEvent);
+  }
 
-	public resolveKeyboardEvent(keyboardEvent: IKeyboardEventLite): ResolvedKeybinding {
-		return this._actual.resolveKeyboardEvent(keyboardEvent);
-	}
-
-	public resolveUserBinding(firstPart: SimpleKeybinding | ScanCodeBinding, chordPart: SimpleKeybinding | ScanCodeBinding): ResolvedKeybinding[] {
-		return this._actual.resolveUserBinding(firstPart, chordPart);
-	}
+  public resolveUserBinding(firstPart: SimpleKeybinding | ScanCodeBinding, chordPart: SimpleKeybinding | ScanCodeBinding): ResolvedKeybinding[] {
+    return this._actual.resolveUserBinding(firstPart, chordPart);
+  }
 }
 
 export class KeyboardMapperFactory {
@@ -72,18 +66,6 @@ export class KeyboardMapperFactory {
 
   private static _createKeyboardMapper(rawMapping: IKeyboardMapping): IKeyboardMapper {
     const isUSStandard = true;
-    if (OS === OperatingSystem.Windows) {
-      return new WindowsKeyboardMapper(isUSStandard, <IWindowsKeyboardMapping>rawMapping);
-    }
-
     return new MacLinuxKeyboardMapper(isUSStandard, <IMacLinuxKeyboardMapping>rawMapping, OS);
-  }
-
-  private static _equals(a: IKeyboardMapping, b: IKeyboardMapping): boolean {
-    if (OS === OperatingSystem.Windows) {
-      return windowsKeyboardMappingEquals(<IWindowsKeyboardMapping>a, <IWindowsKeyboardMapping>b);
-    }
-
-    return macLinuxKeyboardMappingEquals(<IMacLinuxKeyboardMapping>a, <IMacLinuxKeyboardMapping>b);
   }
 }

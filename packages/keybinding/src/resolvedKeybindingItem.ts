@@ -3,8 +3,6 @@ import { CharCode } from '@fin/charcode';
 import { ResolvedKeybinding } from './resolvedKeybinding';
 
 export class ResolvedKeybindingItem {
-	_resolvedKeybindingItemBrand: void;
-
 	public readonly resolvedKeybinding: ResolvedKeybinding;
 	public readonly keypressFirstPart: string;
 	public readonly keypressChordPart: string;

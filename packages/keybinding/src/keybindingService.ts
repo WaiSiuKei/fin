@@ -130,7 +130,7 @@ export class KeybindingService extends Disposable implements IKeybindingService 
 
   private _getExtraKeybindings(isFirstTime: boolean): IUserKeybindingItem[] {
     let extraUserKeybindings: IUserFriendlyKeybinding[] = this._safeGetConfig();
-    return extraUserKeybindings.map((k) => KeybindingIO.readUserKeybindingItem(k, OS));
+    return extraUserKeybindings.map((k) => KeybindingIO.readUserKeybindingItem(k));
   }
 
   public resolveKeybinding(kb: Keybinding): ResolvedKeybinding[] {

@@ -147,24 +147,3 @@ export interface IMacKeyboardMapping {
 }
 
 export type IKeyboardMapping = IWindowsKeyboardMapping | ILinuxKeyboardMapping | IMacKeyboardMapping;
-
-export interface IWindowsKeyboardLayoutInfo {
-  name: string;
-  id: string;
-  text: string;
-}
-
-export interface ILinuxKeyboardLayoutInfo {
-  model: string;
-  layout: string;
-  variant: string;
-  options: string;
-  rules: string;
-}
-
-export interface IMacKeyboardLayoutInfo {
-  id: string;
-  lang: string;
-}
-
-export type IKeyboardLayoutInfo = IWindowsKeyboardLayoutInfo | ILinuxKeyboardLayoutInfo | IMacKeyboardLayoutInfo;

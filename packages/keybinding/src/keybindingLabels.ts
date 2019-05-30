@@ -55,26 +55,6 @@ export const UILabelProvider = new ModifierLabelProvider(
 );
 
 /**
- * A label provider that prints modifiers in a suitable format for ARIA.
- */
-export const AriaLabelProvider = new ModifierLabelProvider(
-  {
-    ctrlKey: 'Control',
-    shiftKey: 'Shift',
-    altKey: 'Alt',
-    metaKey: 'Command',
-    separator: '+',
-  },
-  {
-    ctrlKey: 'Control',
-    shiftKey: 'Shift',
-    altKey: 'Alt',
-    metaKey: 'Windows',
-    separator: '+',
-  }
-);
-
-/**
  * A label provider that prints modifiers in a suitable format for user settings.
  */
 export const UserSettingsLabelProvider = new ModifierLabelProvider(
