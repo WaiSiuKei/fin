@@ -1,20 +1,4 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-'use strict';
-
-// --- THIS FILE IS TEMPORARY UNTIL ENV.TS IS CLEANED UP. IT CAN SAFELY BE USED IN ALL TARGET EXECUTION ENVIRONMENTS (node & dom) ---
-
-let _isWindows = false;
-let _isMacintosh = false;
-let _isLinux = false;
-
-// OS detection
 let { userAgent } = navigator;
-_isWindows = userAgent.indexOf('Windows') >= 0;
-_isMacintosh = userAgent.indexOf('Macintosh') >= 0;
-_isLinux = userAgent.indexOf('Linux') >= 0;
 
 export enum Platform {
   Web,
@@ -25,9 +9,9 @@ export enum Platform {
 
 export let _platform: Platform = Platform.Web;
 
-export const isWindows = _isWindows;
-export const isMacintosh = _isMacintosh;
-export const isLinux = _isLinux;
+export const isWindows = userAgent.indexOf('Windows') >= 0;
+export const isMacintosh = userAgent.indexOf('Macintosh') >= 0;
+export const isLinux = userAgent.indexOf('Linux') >= 0;
 export const platform = _platform;
 
 export const enum OperatingSystem {
@@ -36,7 +20,7 @@ export const enum OperatingSystem {
   Linux = 3
 }
 
-export const OS: OperatingSystem = (_isMacintosh ? OperatingSystem.Macintosh : (_isWindows ? OperatingSystem.Windows : OperatingSystem.Linux));
+export const OS: OperatingSystem = (isMacintosh ? OperatingSystem.Macintosh : (isWindows ? OperatingSystem.Windows : OperatingSystem.Linux));
 
 export const isIE = (userAgent.indexOf('Trident') >= 0);
 export const isEdge = (userAgent.indexOf('Edge/') >= 0);
