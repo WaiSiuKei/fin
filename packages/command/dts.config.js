@@ -1,5 +1,6 @@
 const config = {
   compilationOptions: {
+    followSymlinks: false,
     preferredConfigPath: './tsconfig.json',
   },
 
