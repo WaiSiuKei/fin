@@ -1,5 +1,5 @@
 {
-  "name": "@fin/collections",
+  "name": "@fin/svg",
   "version": "0.0.5",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
@@ -14,10 +14,11 @@
     "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
   },
   "dependencies": {
-    "@fin/iterator": "^0.0.5"
+    "@fin/geometry": "^0.0.5",
+    "@fin/types": "^0.0.5"
   },
   "devDependencies": {
-    "dts-bundle-generator": "^3.1.0",
+    "dts-bundle-generator": "*",
     "rimraf": "^2.6.3",
     "rollup": "^1.12.4",
     "rollup-plugin-commonjs": "^10.0.0",

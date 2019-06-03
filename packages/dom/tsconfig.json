@@ -1,11 +1,11 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./lib",
-    "baseUrl": "./src",
-    "declarationDir": "./lib"
+    "outDir": "./out",
+    "declarationDir": "./out"
   },
   "include": [
-    "./src"
+    "./src",
+    "../packages/**/*"
   ]
 }
