@@ -5,7 +5,7 @@
 
 import { IDisposable } from '@fin/disposable';
 import { Event } from '@fin/event';
-import { LinkedList } from '@fin/linkedlist';
+import { LinkedList } from '@fin/collections';
 
 export interface ICommandEvent {
     commandId: string;

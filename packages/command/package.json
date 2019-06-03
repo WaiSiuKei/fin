@@ -16,7 +16,7 @@
   "dependencies": {
     "@fin/disposable": "^0.0.5",
     "@fin/event": "^0.0.5",
-    "@fin/linkedlist": "^0.0.5"
+    "@fin/collections": "^0.0.5"
   },
   "devDependencies": {
     "dts-bundle-generator": "^3.1.0",

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@fin/disposable": "^0.0.5",
-    "@fin/linkedlist": "^0.0.5"
+    "@fin/collections": "^0.0.5"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",

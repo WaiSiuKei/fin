@@ -19,6 +19,13 @@
     "@fin/disposable" "*"
     "@fin/linkedlist" "*"
 
+"@fin/linkedlist@*":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@fin/linkedlist/-/linkedlist-0.0.5.tgz#3ec3c838d252f75e1ab45858e946a699d4aed006"
+  integrity sha512-TNERqXrnZ30p0fnZL8k+ckrkBghGiFPJqRP5/c00D0Zs4G6bZ6BWfsTWwzDp4EI/iWLgKSjFv3XX8V7VPpf6Jw==
+  dependencies:
+    "@fin/iterator" "^0.0.5"
+
 "@fin/strings@0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@fin/strings/-/strings-0.0.1.tgz#ea31b985f692a8159e44aec6fecaf0c7d49785c4"
