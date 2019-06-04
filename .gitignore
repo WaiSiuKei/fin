@@ -2,6 +2,7 @@ node_modules/
 .idea/
 .rpt2_cache/
 yarn-error.log
+lerna-debug.log
 lib/
 out/
 package-lock.json

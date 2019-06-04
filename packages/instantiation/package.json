@@ -1,5 +1,5 @@
 {
-  "name": "@fin/mindmap-core",
+  "name": "@fin/instantiation",
   "version": "0.0.5",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
@@ -11,15 +11,19 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc"
+    "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
   },
   "devDependencies": {
-    "dts-bundle-generator": "*",
+    "dts-bundle-generator": "^3.1.0",
     "rimraf": "^2.6.3",
     "rollup": "^1.12.4",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-typescript2": "^0.21.1",
     "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "@fin/disposable": "^0.0.5",
+    "@fin/async": "^0.0.5"
   }
 }

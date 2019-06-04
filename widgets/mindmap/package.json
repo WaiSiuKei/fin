@@ -1,0 +1,28 @@
+{
+  "name": "@fin/mindmap",
+  "version": "0.0.5",
+  "description": "",
+  "homepage": "https://github.com/WaiSiuKei/fin",
+  "bugs": {
+    "url": "https://github.com/WaiSiuKei/fin/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Wai Siu Kei <wakiki@outlook.com>",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "rimraf ./lib && tsc"
+  },
+  "devDependencies": {
+    "dts-bundle-generator": "*",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.12.4",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.0.0",
+    "rollup-plugin-typescript2": "^0.21.1",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "xmind": "^0.5.0"
+  }
+}
