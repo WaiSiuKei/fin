@@ -1,6 +1,6 @@
 import { Path } from './path';
 import { MoveToCommand } from '../consts';
-import { Rectangle, Vector } from '@fin/geometry';
+import { IRectangle, Rectangle, Vector } from '@fin/geometry';
 
 //根据传递进来的width、height和radius属性，
 //获取最适合的radius值
@@ -66,27 +66,26 @@ export class Rect extends Path {
 
   }
 
-  setWidth(width) {
+  setWidth(width: number) {
     this.width = width;
 
     return this.update();
   }
 
-
-  setHeight(height) {
+  setHeight(height: number) {
     this.height = height;
 
     return this.update();
   }
 
-  setSize(width, height) {
+  setSize(width: number, height: number) {
     this.width = width;
     this.height = height;
 
     return this.update();
   }
 
-  setBox(box) {
+  setBox(box: IRectangle) {
     this.x = box.x;
     this.y = box.y;
     this.width = box.width;
@@ -103,7 +102,7 @@ export class Rect extends Path {
     return this.radius;
   }
 
-  setRadius(radius) {
+  setRadius(radius: number) {
     this.radius = formatRadius(this.width, this.height, radius || 0);
     return this.update();
   }
@@ -112,7 +111,7 @@ export class Rect extends Path {
     return new Vector({ x: this.x, y: this.y });
   }
 
-  setPosition(x, y) {
+  setPosition(x: number, y: number) {
     this.x = x;
     this.y = y;
 
@@ -135,12 +134,12 @@ export class Rect extends Path {
     return this.y;
   }
 
-  setPositionX(x) {
+  setPositionX(x: number) {
     this.x = x;
     return this.update();
   }
 
-  setPositionY(y) {
+  setPositionY(y: number) {
     this.y = y;
     return this.update();
   }

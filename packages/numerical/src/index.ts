@@ -66,7 +66,7 @@ export function approximately(a: number, b: number, precision = EPSILON): boolea
  * Checks if the value is 0, within a tolerance defined by
  * Numerical.EPSILON.
  */
-export function isZero(val) {
+export function isZero(val: number) {
   return val >= -EPSILON && val <= EPSILON;
 }
 

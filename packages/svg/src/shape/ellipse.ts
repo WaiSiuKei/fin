@@ -16,7 +16,7 @@ export class Ellipse extends Path {
   }
 
   update() {
-    var rx = this.rx,
+    let rx = this.rx,
       ry = this.ry,
       x1 = this.cx + rx,
       x2 = this.cx - rx,
@@ -26,13 +26,6 @@ export class Ellipse extends Path {
     this.arcTo(rx, ry, 0, 1, 1, x2, y);
     this.arcTo(rx, ry, 0, 1, 1, x1, y);
     return this;
-  }
-
-  getRadius() {
-    return {
-      x: this.rx,
-      y: this.ry
-    };
   }
 
   getRadiusX() {
@@ -58,34 +51,28 @@ export class Ellipse extends Path {
     return this.cy;
   }
 
-  setRadius(rx, ry) {
-    this.rx = rx;
-    this.ry = ry;
-    return this.update();
-  }
-
-  setRadiusX(rx) {
+  setRadiusX(rx: number) {
     this.rx = rx;
     return this.update();
   }
 
-  setRadiusY(ry) {
+  setRadiusY(ry: number) {
     this.ry = ry;
     return this.update();
   }
 
-  setCenter(cx, cy) {
+  setCenter(cx: number, cy: number) {
     this.cx = cx;
     this.cy = cy;
     return this.update();
   }
 
-  setCenterX(cx) {
+  setCenterX(cx: number) {
     this.cx = cx;
     return this.update();
   }
 
-  setCenterY(cy) {
+  setCenterY(cy: number) {
     this.cy = cy;
     return this.update();
   }

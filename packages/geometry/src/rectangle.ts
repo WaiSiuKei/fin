@@ -37,12 +37,12 @@ export class Rectangle {
 
   clone() {return new Rectangle(this);}
   equals(rect: IRectangle): boolean {return Rectangle.equals(this, rect);}
-  contains(v: IVector)
-  contains(r: IRectangle)
-  contains(arg) {
+  contains(v: IVector): boolean
+  contains(r: IRectangle): boolean
+  contains(arg: any): boolean {
     return Rectangle.contains(this, arg);
   }
-  intersects(rect: IRectangle, eplison) {return Rectangle.intersects(this, rect, eplison);}
+  intersects(rect: IRectangle, eplison: number) {return Rectangle.intersects(this, rect, eplison);}
 
   intersect(rect: IRectangle): IRectangle {return new Rectangle(Rectangle.intersect(this, rect));}
   unite(rect: IRectangle): IRectangle {return new Rectangle(Rectangle.unite(this, rect));}
@@ -70,8 +70,8 @@ export class Rectangle {
   }
   static contains(rect: IRectangle, v: IVector): boolean
   static contains(rect: IRectangle, r: IRectangle): boolean
-  static contains(rect: IRectangle, arg): boolean {
-    const { x, y, width = 0, height = 0 } = arg;
+  static contains(rect: IRectangle, arg: IVector | IRectangle): boolean {
+    const { x, y, width = 0, height = 0 } = arg as IRectangle;
     return x >= rect.x && y >= rect.y
       && x + width <= rect.x + rect.width
       && y + height <= rect.y + rect.height;
@@ -92,7 +92,7 @@ export class Rectangle {
     return { x: x1, y: y1, width: x2 - x1, height: y2 - y1 };
   }
   static unite(...rects: IRectangle[]): IRectangle {
-    let points = [];
+    let points: IVector[] = [];
     rects.forEach(rect => {
       points.push(Rectangle.topLeft(rect));
       points.push(Rectangle.bottomRight(rect));

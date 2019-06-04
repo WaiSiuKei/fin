@@ -9,7 +9,8 @@
     "lib": [
       "es2015",
       "dom"
-    ]
+    ],
+    "noImplicitAny": true
   },
   "exclude": [
     "**/*.spec.ts"

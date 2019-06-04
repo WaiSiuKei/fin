@@ -57,15 +57,14 @@ export class Container<T> {
     return this.addItem(item, 0);
   }
 
-  removeItem(pos: T)
-  removeItem(pos: number)
-  removeItem(pos: any) {
+  removeItem(pos: T): this
+  removeItem(pos: number): this
+  removeItem(pos: any): this {
     if (!isNumber(pos)) {
       return this.removeItem(this.indexOf(pos));
     }
 
     let items = this.getItems(),
-      length = items.length,
       item = items[pos];
 
     if (item === undefined) {

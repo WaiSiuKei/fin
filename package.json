@@ -4,12 +4,11 @@
     "lerna": "^3.14.1"
   },
   "scripts": {
-    "install:all": "lerna exec -- npm install",
-    "build": "lerna run build"
   },
   "workspaces": [
     "packages/*",
-    "examples/*"
+    "examples/*",
+    "widgets/*"
   ],
   "dependencies": {
     "typescript": "^3.5.1"

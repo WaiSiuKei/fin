@@ -23,19 +23,19 @@ export class Line implements ILine {
   get vector() {return { x: this._vx, y: this._vy };}
   get length() {return Vector.euclideanMetric(this.vector);}
 
-  intersect(line, isInfinite = false) {return Line.intersect(this, line, isInfinite);}
+  intersect(line: ILine, isInfinite = false) {return Line.intersect(this, line, isInfinite);}
 
-  getSide(point, isInfinite = false) {return Line.getSide(this, point, isInfinite);}
+  getSide(point: IVector, isInfinite = false) {return Line.getSide(this, point, isInfinite);}
 
-  distanceTo(point) {return Line.distanceBetween(this, point);}
+  distanceTo(point: IVector) {return Line.distanceBetween(this, point);}
 
-  signedDistanceTo(point) {return Line.signedDistanceBetween(this, point);}
+  signedDistanceTo(point: IVector) {return Line.signedDistanceBetween(this, point);}
 
-  isCollinear(line) {
+  isCollinear(line: Line) {
     return Vector.isCollinear({ x: this._vx, y: this._vy }, { x: line._vx, y: line._vy });
   }
 
-  isOrthogonal(line) {
+  isOrthogonal(line: Line) {
     return Vector.isOrthogonal({ x: this._vx, y: this._vy }, { x: line._vx, y: line._vy });
   }
 
@@ -52,7 +52,7 @@ export class Line implements ILine {
     };
   }
 
-  static intersect(l1: ILine, l2: ILine, isInfinite): IVector {
+  static intersect(l1: ILine, l2: ILine, isInfinite: boolean): IVector {
     // Convert 2nd points to vectors if they are not specified as such.
     const { px: p1x, py: p1y, vx: v1x, vy: v1y } = l1;
     const { px: p2x, py: p2y, vx: v2x, vy: v2y } = l2;
@@ -121,7 +121,7 @@ export class Line implements ILine {
     return Math.abs(Line.signedDistanceBetween(line, v));
   }
 
-  static contains(x0, y0, x1, y1, lineWidth, x, y): boolean {
+  static contains(x0: number, y0: number, x1: number, y1: number, lineWidth: number, x: number, y: number): boolean {
     if (lineWidth === 0) {
       return false;
     }
@@ -150,7 +150,7 @@ export class Line implements ILine {
     return _s <= _l / 2 * _l / 2;
   }
 
-  static remotePointOfRay(x1, y1, x2, y2, width, height): IVector {
+  static remotePointOfRay(x1: number, y1: number, x2: number, y2: number, width: number, height: number): IVector {
     let dx = x2 - x1;
     let dy = y2 - y1;
 
@@ -196,7 +196,7 @@ export class Line implements ILine {
     }
   }
 
-  static verticalOffsetOfParallelLine(x1, y1, x2, y2, x3, y3): number {
+  static verticalOffsetOfParallelLine(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): number {
     if (x1 - x2 === 0) return y3 - (y2 - y1) / 2;
     if (x2 === x3 && y2 === y3) return 0;
     if (y2 === y1) return y3 - y2;

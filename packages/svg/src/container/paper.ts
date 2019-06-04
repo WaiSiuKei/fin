@@ -1,12 +1,12 @@
 import { Container } from './container';
 import { Shape } from '../shape/shape';
-import { Matrix, IVector } from '@fin/geometry';
+import { Matrix, IVector, IMatrix } from '@fin/geometry';
 
-function createNode(tagName) {
+export function createNode(tagName: string): SVGElement {
   return document.createElementNS('http://www.w3.org/2000/svg', tagName);
 }
 
-function createSVGNode() {
+function createSVGNode(): SVGElement {
   let node = createNode('svg');
   node.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   node.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
@@ -29,8 +29,8 @@ export class Paper {
   constructor(public container?: HTMLElement) {
     this.node = createSVGNode();
 
-    this.node.appendChild(this.resourceNode = createNode('defs'));
-    this.node.appendChild(this.shapeNode = createNode('g'));
+    this.node.appendChild(this.resourceNode = (createNode('defs')) as SVGDefsElement);
+    this.node.appendChild(this.shapeNode = (createNode('g')) as SVGGElement);
 
     this.resources = new Container();
     this.setWidth('100%').setHeight('100%');
@@ -89,7 +89,7 @@ export class Paper {
     }
   }
 
-  setViewBox(x, y, width, height) {
+  setViewBox(x: number, y: number, width: number, height: number) {
     this.node.setAttribute('viewBox', [x, y, width, height].join(' '));
     return this;
   }
@@ -97,7 +97,7 @@ export class Paper {
 
   //#region viewport
   viewport: ViewPort;
-  setViewPort(cx, cy, zoom) {
+  setViewPort(cx: number, cy: number, zoom: number) {
     let viewport, box;
     if (arguments.length == 1) {
       viewport = arguments[0];
@@ -111,10 +111,10 @@ export class Paper {
     let matrix = new Matrix();
     let dx = (box.x + box.width / 2) - cx,
       dy = (box.y + box.height / 2) - cy;
-    matrix.translate(-cx, -cy);
-    matrix.scale(zoom);
-    matrix.translate(cx, cy);
-    matrix.translate(dx, dy);
+    matrix.translate({ x: -cx, y: -cy });
+    matrix.scale({ x: zoom, y: zoom });
+    matrix.translate({ x: cx, y: cy });
+    matrix.translate({ x: dx, y: dy });
     this.shapeNode.setAttribute('transform', 'matrix(' + matrix + ')');
 
     this.viewport = {
@@ -158,13 +158,13 @@ export class Paper {
     return new Matrix(m);
   }
 
-  getTransform() {
-    return this.getViewPortTransform().reverse();
+  getTransform(): IMatrix {
+    return Matrix.invert(this.getViewPortTransform());
   }
   //#endregion
 
   //#region resource
-  addResource(resource) {
+  addResource(resource: Shape) {
     this.resources.appendItem(resource);
 
     if (resource.node) {
@@ -174,10 +174,7 @@ export class Paper {
     return this;
   }
 
-  removeResource(resource) {
-    if (resource.remove) {
-      resource.remove();
-    }
+  removeResource(resource: Shape) {
     if (resource.node) {
       this.resourceNode.removeChild(resource.node);
     }

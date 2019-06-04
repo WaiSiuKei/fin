@@ -1,5 +1,5 @@
 import { IMatrix, IVector } from './def';
-import { TRIGONOMETRIC_EPSILON, isZero } from '@fin/numerical/lib';
+import { TRIGONOMETRIC_EPSILON, isZero } from '@fin/numerical';
 
 export class Vector {
   private _x: number;
@@ -31,33 +31,33 @@ export class Vector {
   }
   get quadrant() {return Vector.quadrant(this);}
 
-  equals(point) {return Vector.equals(this, point);}
+  equals(point: Vector) {return Vector.equals(this, point);}
   clone() {return new Vector({ x: this._x, y: this._y });}
-  directedAngleTo(point) {return Vector.directedAngleBetween(this, point);}
-  directedRadianTo(point) {return Vector.directedRadianBetween(this, point);}
-  distanceTo(point, squared = false) {return Vector.distanceBetween(this, point, squared);}
+  directedAngleTo(point: Vector) {return Vector.directedAngleBetween(this, point);}
+  directedRadianTo(point: Vector) {return Vector.directedRadianBetween(this, point);}
+  distanceTo(point: Vector, squared = false) {return Vector.distanceBetween(this, point, squared);}
 
   normalize(length = 1) {return Vector.normalize(this, length);}
-  rotate(radian, center) {return Vector.rotate(this, radian, center);}
+  rotate(radian: number, center: Vector) {return Vector.rotate(this, radian, center);}
   transform(mx: IMatrix) {return Vector.transform(this, mx);}
 
-  add(point) {return new Vector(Vector.add(this, point));}
-  subtract(point) {return new Vector(Vector.subtract(this, point));}
-  multiply(point) {return new Vector(Vector.multiply(this, point));}
-  divide(point) {return new Vector(Vector.divide(this, point));}
-  modulo(point) {return new Vector(Vector.modulo(this, point));}
+  add(point: Vector) {return new Vector(Vector.add(this, point));}
+  subtract(point: Vector) {return new Vector(Vector.subtract(this, point));}
+  multiply(point: Vector) {return new Vector(Vector.multiply(this, point));}
+  divide(point: Vector) {return new Vector(Vector.divide(this, point));}
+  modulo(point: Vector) {return new Vector(Vector.modulo(this, point));}
   negate() {return new Vector(Vector.negate(this));}
 
-  isClose(point, tolerance) {return Vector.isClose(this, point, tolerance);}
-  isCollinear(point) {return Vector.isCollinear(this, point);}
-  isOrthogonal(point) {return Vector.isOrthogonal(this, point);}
+  isClose(point: Vector, tolerance: number) {return Vector.isClose(this, point, tolerance);}
+  isCollinear(point: Vector) {return Vector.isCollinear(this, point);}
+  isOrthogonal(point: Vector) {return Vector.isOrthogonal(this, point);}
   isZero() {return Vector.isZero(this);}
   isNaN() {return Vector.isNaN(this);}
-  isInQuadrant(q) {return Vector.isInQuadrant(this, q);}
+  isInQuadrant(q: number) {return Vector.isInQuadrant(this, q);}
 
   dot(point: IVector) {return Vector.dot(this, point);}
-  cross(point) {return Vector.cross(this, point);}
-  project(point) {return new Vector(Vector.project(this, point));}
+  cross(point: Vector) {return Vector.cross(this, point);}
+  project(point: Vector) {return new Vector(Vector.project(this, point));}
 
   round() {return new Vector(Vector.round(this));}
   ceil() {return new Vector(Vector.ceil(this));}
@@ -159,8 +159,8 @@ export class Vector {
     return { x: v1.x - v2.x, y: v1.y - v2.y };
   }
 
-  static multiply(v: IVector, point: IVector)
-  static multiply(v: IVector, num: number)
+  static multiply(v: IVector, point: IVector): IVector
+  static multiply(v: IVector, num: number): IVector
   static multiply(v: IVector, arg: any): IVector {
     if (typeof arg === 'number') return { x: v.x * arg, y: v.y * arg };
     return { x: v.x * arg.x, y: v.y * arg.y };
@@ -178,7 +178,7 @@ export class Vector {
     return { x: -v.x, y: -v.y };
   }
 
-  static isClose(v: IVector, point: IVector, tolerance): boolean {
+  static isClose(v: IVector, point: IVector, tolerance: number): boolean {
     return Vector.distanceBetween(v, point) <= tolerance;
   }
   static isCollinear(v1: IVector, v2: IVector): boolean {

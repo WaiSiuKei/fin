@@ -76,22 +76,23 @@ export class Matrix {
     this._b = this._c = this._tx = this._ty = 0;
     return this;
   }
-  translate(point) {
+  translate(point: IVector) {
     const { x, y } = point;
     this._tx += x * this._a + y * this._c;
     this._ty += x * this._b + y * this._d;
     return this;
   }
-  scale(scale, center) {
+  scale(scale: IVector, center?: IVector) {
     if (center) this.translate(center);
     this._a *= scale.x;
     this._b *= scale.x;
     this._c *= scale.y;
     this._d *= scale.y;
-    if (center) this.translate(center.negate());
+    if (center) this.translate(Vector.negate(center));
     return this;
   }
-  rotate(angle, center = { x: 1, y: 1 }) {
+
+  rotate(angle: number, center = { x: 1, y: 1 }) {
     angle *= Math.PI / 180;
 
     const { x, y } = center;
@@ -111,7 +112,7 @@ export class Matrix {
     this._ty += tx * b + ty * d;
     return this;
   }
-  shear(shear, center) {
+  shear(shear: IVector, center?: IVector) {
     if (center) this.translate(center);
     let a = this._a,
       b = this._b;
@@ -119,15 +120,15 @@ export class Matrix {
     this._b += shear.y * this._d;
     this._c += shear.x * a;
     this._d += shear.x * b;
-    if (center) this.translate(center.negate());
+    if (center) this.translate(Vector.negate(center));
     return this;
   }
-  skew(skew, center) {
+  skew(skew: IVector, center: IVector) {
     const toRadians = Math.PI / 180;
     const shear = { x: Math.tan(skew.x * toRadians), y: Math.tan(skew.y * toRadians) };
     return this.shear(shear, center);
   }
-  append(mx) {
+  append(mx: Matrix) {
     let a1 = this._a,
       b1 = this._b,
       c1 = this._c,
@@ -146,7 +147,7 @@ export class Matrix {
     this._ty += tx2 * b1 + ty2 * d1;
     return this;
   }
-  prepend(mx) {
+  prepend(mx: Matrix) {
     let a1 = this._a,
       b1 = this._b,
       c1 = this._c,
@@ -187,10 +188,10 @@ export class Matrix {
     }
     return res;
   }
-  appended(mx) {
+  appended(mx: Matrix) {
     return this.clone().append(mx);
   }
-  prepended(mx) {
+  prepended(mx: Matrix) {
     return this.clone().prepend(mx);
   }
   inverted() {
@@ -246,7 +247,7 @@ export class Matrix {
   }
 
   static initial: IMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
-  static translation(mx) {return { x: mx.tx, y: mx.ty };}
+  static translation(mx: IMatrix) {return { x: mx.tx, y: mx.ty };}
   static equals(mx1: IMatrix, mx2: IMatrix): boolean {
     return mx1 === mx2 || mx1.a === mx2.a && mx1.b === mx2.b
       && mx1.c === mx2.c && mx1.d === mx2.d
