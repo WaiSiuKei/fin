@@ -30,6 +30,7 @@ export class Rect extends Path {
   }
 
   update() {
+    this.clear()
     let { x, y, width: w, height: h, radius: r } = this;
 
     if (!r) {

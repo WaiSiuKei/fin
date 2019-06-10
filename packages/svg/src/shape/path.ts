@@ -28,8 +28,6 @@ export class Path extends Shape {
   setPathData(data: PathSegment | string = 'M0,0') {
     this.pathdata = pathToString(data);
 
-    this.node.setAttribute('d', this.pathdata);
-
     // fixme
     // this.trigger('shapeupdate', {
     //   type: 'pathdata'
@@ -43,7 +41,7 @@ export class Path extends Shape {
   }
 
   clear() {
-    this.setPathData('M 0 0');
+    this.pathdata = '';
     return this;
   }
 
@@ -101,6 +99,8 @@ export class Path extends Shape {
   }
 
   done() {
+    this.node.setAttribute('d', this.pathdata);
+
     return this;
   }
 }

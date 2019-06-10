@@ -59,4 +59,8 @@ export class Marker extends ShapeContainer {
   getHeight() {
     return +this.height;
   }
+
+  translate(x: number, y: number) {
+
+  }
 }

@@ -25,6 +25,7 @@ export class Paper {
   resourceNode: SVGDefsElement;
   shapeNode: SVGGElement;
   resources: Container<Shape>;
+  shapes: Container<Shape>;
 
   constructor(public container?: HTMLElement) {
     this.node = createSVGNode();
@@ -32,7 +33,7 @@ export class Paper {
     this.node.appendChild(this.resourceNode = (createNode('defs')) as SVGDefsElement);
     this.node.appendChild(this.shapeNode = (createNode('g')) as SVGGElement);
 
-    this.resources = new Container();
+    this.resources = new Container<Shape>();
     this.setWidth('100%').setHeight('100%');
 
     if (this.container) {
@@ -44,6 +45,7 @@ export class Paper {
     this.container = container;
     container.appendChild(this.node);
   }
+
   //#region width and height
   getWidth() {
     return this.node.clientWidth;
@@ -181,4 +183,10 @@ export class Paper {
     return this;
   }
   //@endregion
+
+  //#region shape
+  addShape(shape: Shape) {
+    this.shapeNode.appendChild(shape.node);
+  }
+  //#endregion
 }

@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@fin/geometry": "^0.0.5",
-    "@fin/types": "^0.0.5"
+    "@fin/types": "^0.0.5",
+    "@fin/svg": "^0.0.5"
   },
   "devDependencies": {
     "dts-bundle-generator": "*",
