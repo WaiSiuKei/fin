@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "lib": [
+      "es6",
+      "DOM"
+    ],
+    "outDir": "./out",
+    "baseUrl": ".",
+    "paths": {
+      "@fin/*": [
+        "../../../packages/*",
+        "../../../widgets/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+  "include": [
+    "./src"
+  ]
+}

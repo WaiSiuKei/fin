@@ -1,9 +1,8 @@
-import { IMap, ITopic } from './model';
-import { IDimension } from './common';
+import { getHorizionalSpacingToParent, IDimension } from './common';
 import { Paper, Shape } from '@fin/svg';
 import { Topic } from './topic';
 
-export class Mindmap implements IMap {
+export class Mindmap {
   private dimension: IDimension;
   private paper: Paper;
 
@@ -13,21 +12,28 @@ export class Mindmap implements IMap {
     const { width, height } = this.container.getBoundingClientRect();
     this.dimension = { width, height };
     this.paper = new Paper(container);
+    this.container.style.position = 'relative';
   }
 
   addTopic(topic: Topic, refTopic?: Topic): void {
     if (this.rootTopic && !refTopic) throw new Error('!rootTopic');
     if (!this.rootTopic && !refTopic) {
       this.rootTopic = topic;
+      topic.mountTo(this.container);
+    } else {
+      refTopic.add(topic);
+      refTopic.childrenContainer.mountTo(this.container);
+      // add connector
     }
-    this.paper.addShape(topic);
     this.layout(topic);
+
   }
 
-  layout(topic: ITopic) {
-    if (!topic.parent) { // rootTopic
-      topic.translate(this.dimension.width / 2 - topic.getWidth() / 2, this.dimension.height / 2 - topic.getHeight() / 2);
+  layout(topic: Topic) {
+    if (topic.parent) {
+      topic.parent.refresh();
     } else {
+      topic.translate(0, 0, { x: this.dimension.width / 2, y: this.dimension.height / 2 });
 
     }
   }
