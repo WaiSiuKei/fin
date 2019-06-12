@@ -1,2 +1,2 @@
 export * from './mindmap';
-export * from './topic';
+export * from './core/topic';

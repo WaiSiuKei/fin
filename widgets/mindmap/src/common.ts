@@ -3,22 +3,31 @@ export interface IDimension {
   height: number
 }
 
-export function getHorizionalSpacingToParent(tier: number) {
+export enum Align {
+  Top,
+  Center,
+  Bottom
+}
+
+export enum Justify {
+  Left,
+  Middle,
+  Right
+}
+
+export function getHorizionalSpacingOfChildren(tier: number) {
   if (tier === 0) {
     return 100;
   }
-  if (tier === 1) {
-    return 50;
-  }
-  return 10;
+  return 50;
 }
 
-export function getVerticalSpacingToParent(tier: number) {
+export function getVerticalSpacingOfChildren(tier: number) {
   if (tier === 0) {
-    return 10;
+    return 20;
   }
   if (tier === 1) {
-    return 8;
+    return 10;
   }
   return 5;
 }

@@ -1,40 +1,67 @@
-import { getHorizionalSpacingToParent, IDimension } from './common';
-import { Paper, Shape } from '@fin/svg';
-import { Topic } from './topic';
+import { IDimension } from './common';
+import { Topic } from './core/topic';
+import { createSVGNode, createNode } from '@fin/svg';
+import { Connector } from './core/connector';
+import { Slot } from './core/slot';
+import { ILayout } from './layout';
+import { MindmapLayout } from './layout/mindmap';
+
+export interface IMindmapOption {
+  layout: ILayout
+}
 
 export class Mindmap {
   private dimension: IDimension;
-  private paper: Paper;
+  private paper: SVGElement;
+  private topicLayer: SVGGElement;
+  private connectorLayer: SVGGElement;
 
   rootTopic: Topic;
+  connectors: Connector[] = [];
+  slots: Slot[] = [];
 
-  constructor(private container: HTMLElement) {
+  layoutAlgo: ILayout;
+
+  constructor(private container: HTMLElement, option?: IMindmapOption) {
     const { width, height } = this.container.getBoundingClientRect();
     this.dimension = { width, height };
-    this.paper = new Paper(container);
-    this.container.style.position = 'relative';
+    this.paper = createSVGNode();
+    this.paper.appendChild(this.connectorLayer = (createNode('g')) as SVGGElement);
+    this.paper.appendChild(this.topicLayer = (createNode('g')) as SVGGElement);
+    this.paper.setAttribute('width', '100%');
+    this.paper.setAttribute('height', '100%');
+    container.appendChild(this.paper);
+
+    if (!option) {
+      this.layoutAlgo = new MindmapLayout();
+    }
   }
 
   addTopic(topic: Topic, refTopic?: Topic): void {
     if (this.rootTopic && !refTopic) throw new Error('!rootTopic');
+    topic.mountTo(this.topicLayer);
+
     if (!this.rootTopic && !refTopic) {
       this.rootTopic = topic;
-      topic.mountTo(this.container);
     } else {
       refTopic.add(topic);
-      refTopic.childrenContainer.mountTo(this.container);
-      // add connector
-    }
-    this.layout(topic);
 
+      let connector = new Connector(refTopic, topic);
+      connector.mountTo(this.connectorLayer);
+      this.connectors.push(connector);
+      if (!refTopic.isRoot) {
+        let slot = new Slot(refTopic);
+        this.slots.push(slot);
+        slot.mountTo(this.connectorLayer);
+      }
+    }
+    this.layout();
   }
 
-  layout(topic: Topic) {
-    if (topic.parent) {
-      topic.parent.refresh();
-    } else {
-      topic.translate(0, 0, { x: this.dimension.width / 2, y: this.dimension.height / 2 });
-
-    }
+  layout() {
+    this.layoutAlgo.layout(this.rootTopic);
+    // this.rootTopic.translate(0, 0, { x: this.dimension.width / 2, y: this.dimension.height / 2 });
+    // this.connectors.forEach(c => c.render());
+    // this.slots.forEach(s => s.render());
   }
 }

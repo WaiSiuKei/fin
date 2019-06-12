@@ -6,7 +6,7 @@ export function createNode(tagName: string): SVGElement {
   return document.createElementNS('http://www.w3.org/2000/svg', tagName);
 }
 
-function createSVGNode(): SVGElement {
+export function createSVGNode(): SVGElement {
   let node = createNode('svg');
   node.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   node.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
@@ -187,6 +187,10 @@ export class Paper {
   //#region shape
   addShape(shape: Shape) {
     this.shapeNode.appendChild(shape.node);
+  }
+
+  addElement(el: SVGElement) {
+    this.shapeNode.appendChild(el);
   }
   //#endregion
 }

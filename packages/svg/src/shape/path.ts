@@ -23,15 +23,13 @@ export class Path extends Shape {
     if (data) {
       this.setPathData(data);
     }
+
+    this.node.setAttribute('stroke', 'black');
+    this.node.setAttribute('fill', 'transparent');
   }
 
   setPathData(data: PathSegment | string = 'M0,0') {
     this.pathdata = pathToString(data);
-
-    // fixme
-    // this.trigger('shapeupdate', {
-    //   type: 'pathdata'
-    // });
 
     return this;
   }

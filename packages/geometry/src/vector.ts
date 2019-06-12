@@ -151,8 +151,10 @@ export class Vector {
     };
   }
 
-  static add(v1: IVector, v2: IVector): IVector {
-    return { x: v1.x + v2.x, y: v1.y + v2.y };
+  static add(...vs: IVector[]): IVector {
+    return vs.reduce((acc, v) => {
+      return { x: acc.x + v.x, y: acc.y + v.y };
+    }, { x: 0, y: 0 });
   }
 
   static subtract(v1: IVector, v2: IVector): IVector {

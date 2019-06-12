@@ -4,10 +4,11 @@
   left: 0;
 }
 
-.topic-group {
+.topic-sizing-box {
   position: absolute;
   top: 0;
   left: 0;
-
   background-color: antiquewhite;
+
+  z-index: 1;
 }
