@@ -4,7 +4,7 @@ import { Topic } from '../../../widgets/mindmap/src/core/topic';
 
 function start() {
   let map = new Mindmap(document.getElementById('container'));
-  let topic = new Topic(true);
+  let topic = new Topic();
   map.addTopic(topic);
 
   let subTopic1 = new Topic();

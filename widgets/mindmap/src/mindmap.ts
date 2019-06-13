@@ -1,67 +1,114 @@
-import { IDimension } from './common';
-import { Topic } from './core/topic';
+import { Topic, TopicViewNode } from './core/topic';
 import { createSVGNode, createNode } from '@fin/svg';
 import { Connector } from './core/connector';
-import { Slot } from './core/slot';
 import { ILayout } from './layout';
 import { MindmapLayout } from './layout/mindmap';
+import { IConnector, ITopicNode, ITopicViewNode } from './topic';
+import { Emitter } from '@fin/event';
+import { Disposable } from '@fin/disposable';
+import { pseudoRandomBytes } from 'crypto';
 
 export interface IMindmapOption {
   layout: ILayout
 }
 
-export class Mindmap {
-  private dimension: IDimension;
-  private paper: SVGElement;
-  private topicLayer: SVGGElement;
-  private connectorLayer: SVGGElement;
+export class ViewContainer {
+  public paper: SVGElement;
+  public nodeLayer: SVGGElement;
+  public connectorLayer: SVGGElement;
 
-  rootTopic: Topic;
-  connectors: Connector[] = [];
-  slots: Slot[] = [];
-
-  layoutAlgo: ILayout;
-
-  constructor(private container: HTMLElement, option?: IMindmapOption) {
-    const { width, height } = this.container.getBoundingClientRect();
-    this.dimension = { width, height };
+  constructor(private container: HTMLElement) {
     this.paper = createSVGNode();
     this.paper.appendChild(this.connectorLayer = (createNode('g')) as SVGGElement);
-    this.paper.appendChild(this.topicLayer = (createNode('g')) as SVGGElement);
+    this.paper.appendChild(this.nodeLayer = (createNode('g')) as SVGGElement);
     this.paper.setAttribute('width', '100%');
     this.paper.setAttribute('height', '100%');
     container.appendChild(this.paper);
-
-    if (!option) {
-      this.layoutAlgo = new MindmapLayout();
-    }
   }
 
-  addTopic(topic: Topic, refTopic?: Topic): void {
-    if (this.rootTopic && !refTopic) throw new Error('!rootTopic');
-    topic.mountTo(this.topicLayer);
+  addNode(node: ITopicViewNode) {
+    node.mountTo(this.nodeLayer);
+  }
 
-    if (!this.rootTopic && !refTopic) {
+  addConnector(connector: Connector) {
+    connector.mountTo(this.connectorLayer);
+  }
+}
+
+export class LayoutView {
+  public viewContainer: ViewContainer;
+
+  public viewNodes: Map<ITopicNode, ITopicViewNode> = new Map<ITopicNode, ITopicViewNode>();
+  connectors: Map<ITopicViewNode, IConnector[]> = new Map<ITopicViewNode, IConnector[]>();
+
+  constructor(container: HTMLElement, public layoutAlgo: ILayout) {
+    this.viewContainer = new ViewContainer(container);
+  }
+
+  handleNodeAdded(mutatedTopic: ITopicNode) {
+    let viewNode = new TopicViewNode(mutatedTopic);
+    this.viewNodes.set(mutatedTopic, viewNode);
+
+    this.viewContainer.addNode(viewNode);
+
+    if (mutatedTopic.parent) {
+      let parent = this.viewNodes.get(mutatedTopic.parent);
+      viewNode.parent = parent;
+      parent.children.push(viewNode);
+
+      let connector = new Connector(viewNode.parent, viewNode);
+      let connectors = (this.connectors.get(viewNode.parent) || []);
+      connectors.push(connector);
+      this.connectors.set(viewNode.parent, connectors);
+      this.viewContainer.addConnector(connector);
+    }
+
+    let sizeMutated = this.layoutAlgo.measure(viewNode);
+    let positionMutated = this.layoutAlgo.layout(viewNode); // fixme: layout(mutated)
+    let connectorsToLayout: IConnector[] = [];
+    for (let n of positionMutated) {
+      connectorsToLayout.push(...(this.connectors.get(n) || []));
+    }
+    this.layoutAlgo.layoutConnectors(Array.from(new Set(connectorsToLayout)));
+  }
+
+  handleNodeRemoved(mutatedTopic: ITopicNode) {
+
+  }
+}
+
+export class LayoutModel extends Disposable {
+  private _onTopicAdded: Emitter<ITopicNode> = new Emitter<ITopicNode>();
+  get onTopicAdded() { return this._onTopicAdded.event; }
+
+  constructor(public rootTopic?: ITopicNode) {
+    super();
+    this._register(this._onTopicAdded);
+  }
+
+  addTopic(topic: Topic, refTopic?: Topic) {
+    if (!refTopic) {
       this.rootTopic = topic;
     } else {
       refTopic.add(topic);
-
-      let connector = new Connector(refTopic, topic);
-      connector.mountTo(this.connectorLayer);
-      this.connectors.push(connector);
-      if (!refTopic.isRoot) {
-        let slot = new Slot(refTopic);
-        this.slots.push(slot);
-        slot.mountTo(this.connectorLayer);
-      }
     }
-    this.layout();
+    this._onTopicAdded.fire(topic);
+  }
+}
+
+export class Mindmap extends Disposable {
+  layoutModel: LayoutModel;
+  layoutView: LayoutView;
+
+  constructor(private container: HTMLElement, option?: IMindmapOption) {
+    super();
+    this.layoutModel = new LayoutModel();
+    this.layoutView = new LayoutView(container, new MindmapLayout(container.getBoundingClientRect()));
+    this._register(this.layoutModel);
+    this._register(this.layoutModel.onTopicAdded((topic) => this.layoutView.handleNodeAdded(topic)));
   }
 
-  layout() {
-    this.layoutAlgo.layout(this.rootTopic);
-    // this.rootTopic.translate(0, 0, { x: this.dimension.width / 2, y: this.dimension.height / 2 });
-    // this.connectors.forEach(c => c.render());
-    // this.slots.forEach(s => s.render());
+  addTopic(topic: Topic, refTopic?: Topic): void {
+    this.layoutModel.addTopic(topic, refTopic);
   }
 }

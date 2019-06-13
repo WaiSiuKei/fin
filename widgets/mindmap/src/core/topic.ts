@@ -1,11 +1,34 @@
 import { IVector, Vector } from '@fin/geometry';
-import { Align, getHorizionalSpacingOfChildren, getVerticalSpacingOfChildren, Justify } from '../common';
-import { ITopicNode } from '../topic';
-import { IDisposable } from '../../../../packages/disposable/src';
-import { Signal } from '../../../../packages/signal/lib';
+import { Align, Justify } from '../common';
+import { ITopicNode, ITopicViewNode } from '../topic';
+import { Path } from '@fin/svg';
 
-class TopicPart {
-  container: SVGElement;
+export class Slot extends Path {
+  constructor(private parent: ITopicViewNode) {
+    super();
+  }
+
+  mountTo(group: SVGGElement) {
+    group.appendChild(this.node);
+  }
+
+  render() {
+    let { x, y } = this.parent.origin;
+    x += this.parent.getWidth();
+    this.clear();
+    this.moveTo(x, y);
+    this.lineTo(x + 25, y);
+    this.done();
+  }
+}
+
+export class TopicViewNode implements ITopicViewNode {
+  static counter = 1;
+
+  parent: ITopicViewNode;
+  children: ITopicViewNode[] = [];
+
+  container: SVGGraphicsElement;
   textarea: HTMLTextAreaElement;
 
   transform: IVector;
@@ -13,10 +36,16 @@ class TopicPart {
 
   align: Align;
 
+  slot: Slot;
+
+  id: number;
   constructor(private node: ITopicNode) {
+    this.id = TopicViewNode.counter++;
     this.align = Align.Center;
 
     this.transform = { x: 0, y: 0 };
+    this.slot = new Slot(this);
+    this.createElement();
   }
 
   createElement() {
@@ -25,6 +54,7 @@ class TopicPart {
     this.container.setAttribute('height', '100%');
     this.container.setAttribute('x', '0');
     this.container.setAttribute('y', '0');
+    this.container.dataset.id = this.id.toString();
     Object.defineProperty(this.container, '__ref__', { value: this });
     this.textarea = document.createElement('textarea') as HTMLTextAreaElement;
     this.container.appendChild(this.textarea);
@@ -38,8 +68,20 @@ class TopicPart {
     return this.node.isRoot ? Justify.Middle : Justify.Left;
   }
 
-  mountTo(group: SVGGElement) {
-    group.appendChild(this.container);
+  get tier() {
+    return this.node.tier;
+  }
+
+  mountTo(g: SVGGElement) {
+    g.appendChild(this.container);
+    if (!this.node.isRoot) {
+      this.slot.mountTo(g);
+    }
+  }
+
+  add(topic: TopicViewNode) {
+    this.children.push(topic);
+    topic.parent = this;
   }
 
   getWidth(): number {
@@ -50,53 +92,6 @@ class TopicPart {
     return this.textarea.clientHeight;
   }
 
-  cachedDeepWidth: number = null;
-  getDeepWidth(): number {
-    if (this.cachedDeepWidth === null) this.measure();
-    return this.cachedDeepWidth;
-    // return this.children.length ? 100 + getHorizionalSpacingOfChildren(this.tier) : this.getHeight();
-  }
-
-  cachedDeepHeight: number = null;
-  getDeepHeight(): number {
-    if (this.cachedDeepHeight === null) this.measure();
-    return this.cachedDeepHeight;
-  }
-
-  measure() {
-    let tier = this.node.tier;
-    this.cachedDeepHeight = this.node.children.length ? this.node.children.reduce((acc, t) => {
-      return acc + t.getDeepHeight();
-    }, (this.node.children.length - 1) * getVerticalSpacingOfChildren(tier)) : this.getHeight();
-    // TODO: width
-  }
-
-  _layoutChildren() {
-    let len = this.node.children.length;
-    if (!len) return;
-    let spaceLeft = getHorizionalSpacingOfChildren(this.node.tier);
-
-    let nextOrigin = this.origin;
-    if (this.justify === Justify.Left) {
-      nextOrigin = Vector.add(this.origin, { x: this.getWidth(), y: 0 });
-    }
-
-    if (len === 1) {
-      this.node.children[0].translate(0, 0, Vector.add(nextOrigin, { x: spaceLeft, y: 0 }));
-    } else {
-      let spaceV = getVerticalSpacingOfChildren(this.node.tier);
-      let top = -this.getDeepHeight() / 2;
-      for (let i = 0; i < len; i++) {
-        let topic = this.node.children[i];
-        let h = topic.getDeepHeight();
-        top += h / 2;
-        topic.translate(0, 0, Vector.add(nextOrigin, { x: spaceLeft, y: top }));
-        top += h / 2;
-        top += spaceV;
-      }
-    }
-  }
-
   translate(x: number, y: number, origin?: IVector) {
     this.transform = { x, y };
     if (origin) {
@@ -104,43 +99,21 @@ class TopicPart {
     } else {
       this.origin = { x: 0, y: 0 };
     }
-    let tr: IVector;
-    if (this.node.parent) {
-      tr = Vector.add(this.origin, this.transform, { x: 0, y: -this.getHeight() / 2 });
-    } else {
-      tr = Vector.add(this.origin, this.transform, { x: -this.getWidth() / 2, y: -this.getHeight() / 2 });
-    }
+    let tr = Vector.add(this.origin, this.transform, { x: 0, y: 0 });
     this.container.setAttribute('transform', `translate(${tr.x}, ${tr.y })`);
-    this._layoutChildren();
+    if (this.children.length && this.slot) this.slot.render();
   }
 }
 
-export class Topic implements ITopicNode, IDisposable {
+export class Topic implements ITopicNode {
   static IdCounter = 1;
 
   id: number;
   parent: Topic;
   children: Topic[] = [];
 
-  view: TopicPart;
-  onSubTopicAdded = new Signal<Topic, void>(this);
-
-  toDispose: IDisposable[] = [];
-
   constructor() {
     this.id = Topic.IdCounter++;
-
-    this.view = new TopicPart(this);
-
-    this.toDispose.push({
-      dispose() {
-        Signal.disconnectAll(this);
-      }
-    });
-  }
-
-  mountTo(group: SVGGElement) {
-    this.view.mountTo(group);
   }
 
   get isRoot() {
@@ -157,36 +130,8 @@ export class Topic implements ITopicNode, IDisposable {
     return counter;
   }
 
-  getWidth(): number {
-    return this.view.getWidth();
-  }
-
-  getHeight(): number {
-    return this.view.getHeight();
-  }
-
-  getDeepWidth(): number {
-    return this.view.getDeepWidth();
-  }
-
-  getDeepHeight(): number {
-    return this.view.getDeepHeight();
-  }
-
-  translate(x: number, y: number, origin?: IVector) {
-    this.view.translate(x, y, origin);
-  }
-
   add(topic: Topic) {
     this.children.push(topic);
     topic.parent = this;
-    this.view.measure();
-
-    topic.onSubTopicAdded.connect(this.handleSubTreeMutation, this);
-    this.onSubTopicAdded.emit();
-  }
-
-  handleSubTreeMutation(sender: Topic) {
-    this.view.measure();
   }
 }
