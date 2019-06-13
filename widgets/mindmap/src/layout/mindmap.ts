@@ -5,9 +5,9 @@ import { Vector } from '@fin/geometry';
 
 export function getHorizionalSpacingOfChildren(tier: number) {
   if (tier === 0) {
-    return 100;
+    return 40;
   }
-  return 50;
+  return 40;
 }
 
 export function getVerticalSpacingOfChildren(tier: number) {
@@ -22,57 +22,105 @@ export function getVerticalSpacingOfChildren(tier: number) {
 
 export class MindmapLayout implements ILayout {
 
-  public widths: Map<ITopicViewNode, number> = new Map<ITopicViewNode, number>();
-  public heights: Map<ITopicViewNode, number> = new Map<ITopicViewNode, number>();
+  private widths: Map<ITopicViewNode, number> = new Map<ITopicViewNode, number>();
+  private heights: Map<ITopicViewNode, number> = new Map<ITopicViewNode, number>();
+
+  private heightOfLeftTree: number;
+  private heightOfRightTree: number;
+
+  private leftTree: ITopicViewNode[] = [];
+  private rightTree: ITopicViewNode[] = [];
 
   constructor(public dimension: IDimension) {
   }
 
-  _layout(node: ITopicViewNode) {
-    let len = node.children.length;
+  _layout(node: ITopicViewNode, children: ITopicViewNode[], justify: Justify, specifiedHeight?: number) {
+    let len = children.length;
     if (!len) return;
+
     let spaceLeft = getHorizionalSpacingOfChildren(node.tier);
 
     let nextOrigin = node.origin;
-    if (node.justify === Justify.Left) {
-      nextOrigin = Vector.add(node.origin, { x: node.getWidth(), y: 0 });
+    if (justify === Justify.Left) {
+      nextOrigin = Vector.add(node.origin, { x: node.getWidth() + spaceLeft, y: 0 });
+    } else {
+      nextOrigin = Vector.subtract(node.origin, { x: node.getWidth() + spaceLeft, y: 0 });
     }
 
-    if (node.children.length === 1) {
-      let topic = node.children[0];
-      topic.translate(0, -topic.getHeight() / 2, Vector.add(nextOrigin, { x: spaceLeft, y: 0 }));
+    if (children.length === 1) {
+      let topic = children[0];
+      topic.translate(justify === Justify.Right ? -topic.getWidth() : 0, -topic.getHeight() / 2, Vector.add(nextOrigin, { x: 0, y: 0 }));
     } else {
       let spaceV = getVerticalSpacingOfChildren(node.tier);
-      let top = -this.heights.get(node) / 2;
+      let top = -(specifiedHeight || this.heights.get(node)) / 2;
       for (let i = 0; i < len; i++) {
-        let topic = node.children[i];
+        let topic = children[i];
         let h = this.heights.get(topic);
         top += h / 2;
-        topic.translate(0, -topic.getHeight() / 2, Vector.add(nextOrigin, { x: spaceLeft, y: top }));
+        topic.translate(justify === Justify.Right ? -topic.getWidth() : 0, -topic.getHeight() / 2, Vector.add(nextOrigin, { x: 0, y: top }));
         top += h / 2;
         top += spaceV;
       }
     }
   }
 
+  isBelongToTree(node: ITopicViewNode, nodes: ITopicViewNode[]) {
+    if (!node.parent) return false;
+    if (!nodes.length) return false;
+    let p = node;
+    let prevP = node;
+    while (p.parent) {
+      prevP = p;
+      p = p.parent;
+    }
+    return nodes.indexOf(prevP) > -1;
+  }
+
+  layoutSubTree(rootNode: ITopicViewNode, tree: ITopicViewNode[], justify: Justify): ITopicViewNode[] {
+    if (!tree.length) return [];
+    this._layout(rootNode, tree, justify, justify === Justify.Right ? this.heightOfLeftTree : this.heightOfRightTree);
+
+    let nodes = tree.slice();
+    let current: ITopicViewNode;
+    let mutated: ITopicViewNode[] = tree.slice();
+    while (current = nodes.shift()) {
+      this._layout(current, current.children, justify);
+      mutated.push(current);
+      current.justify = justify;
+      nodes = nodes.concat(current.children);
+    }
+    return mutated;
+  }
+
   layout(node: ITopicViewNode): ITopicViewNode[] {
+    this._measure(node);
     // find root
     let p = node;
     while (p.parent) {
       p = p.parent;
     }
 
+    let len = p.children.length;
+    if (len < 4) {
+      this.leftTree.length = 0;
+      this.rightTree = p.children.slice();
+    } else {
+      let mid = Math.floor(len / 2);
+      this.rightTree = p.children.slice(0, mid);
+      this.leftTree = p.children.slice(mid);
+    }
+
+    this.heightOfLeftTree = this.leftTree.length ? this.leftTree.reduce((acc, t) => {
+      return acc + this.heights.get(t);
+    }, (this.leftTree.length - 1) * getVerticalSpacingOfChildren(0)) : 0;
+
+    this.heightOfRightTree = this.rightTree.length ? this.rightTree.reduce((acc, t) => {
+      return acc + this.heights.get(t);
+    }, (this.rightTree.length - 1) * getVerticalSpacingOfChildren(0)) : 0;
+
     p.translate(-p.getWidth() / 2, -p.getHeight() / 2, { x: this.dimension.width / 2, y: this.dimension.height / 2 });
 
-    let nodes = [p];
-    let current;
-    let mutated = [];
-    while (current = nodes.shift()) {
-      this._layout(current);
-      mutated.push(current);
-      nodes = nodes.concat(current.children);
-    }
-    return mutated;
+    return this.layoutSubTree(p, this.leftTree, Justify.Right).concat(this.layoutSubTree(p, this.rightTree, Justify.Left)).concat(p);
   }
 
   layoutConnectors(connectors: IConnector[]): void {
@@ -80,8 +128,12 @@ export class MindmapLayout implements ILayout {
       let { x: x1, y: y1 } = c.from.origin;
       let { x: x2, y: y2 } = c.to.origin;
 
-      if (c.from.justify !== Justify.Middle) {
-        x1 += c.from.getWidth() + 25;
+      if (c.from.parent) {
+        if (this.isBelongToTree(c.from, this.rightTree)) {
+          x1 += c.from.getWidth() + 25;
+        } else {
+          x1 -= c.from.getWidth() + 25;
+        }
       }
 
       let cpx2: number;
@@ -111,7 +163,7 @@ export class MindmapLayout implements ILayout {
     }
   }
 
-  measure(viewNode: ITopicViewNode): ITopicViewNode[] {
+  _measure(viewNode: ITopicViewNode): ITopicViewNode[] {
     let node: ITopicViewNode = viewNode;
     let mutated = [node];
     while (node) {

@@ -14,10 +14,12 @@ export interface ITopicViewNode {
   parent: ITopicViewNode
   children: ITopicViewNode[]
 
+  align: Align
+  justify: Justify
+
   origin: IVector
   transform: IVector;
-  align: Align;
-  justify: Justify
+
   getWidth(): number
   getHeight(): number
   translate(x: number, y: number, origin?: IVector): void

@@ -63,8 +63,7 @@ export class LayoutView {
       this.viewContainer.addConnector(connector);
     }
 
-    let sizeMutated = this.layoutAlgo.measure(viewNode);
-    let positionMutated = this.layoutAlgo.layout(viewNode); // fixme: layout(mutated)
+    let positionMutated = this.layoutAlgo.layout(viewNode);
     let connectorsToLayout: IConnector[] = [];
     for (let n of positionMutated) {
       connectorsToLayout.push(...(this.connectors.get(n) || []));

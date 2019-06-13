@@ -1,9 +1,6 @@
 import { IConnector, ITopicViewNode } from './topic';
 
 export interface ILayout {
-  // getDeepHeight(node: ITopicViewNode): void
-  // getDeepWidth(node: ITopicViewNode): void
-  layout(node: ITopicViewNode): ITopicViewNode[] // size mutated
-  measure(of: ITopicViewNode): ITopicViewNode[] // position mutated
+  layout(node: ITopicViewNode): ITopicViewNode[]
   layoutConnectors(connector: IConnector[]): void
 }

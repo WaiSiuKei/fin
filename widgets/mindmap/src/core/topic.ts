@@ -14,11 +14,19 @@ export class Slot extends Path {
 
   render() {
     let { x, y } = this.parent.origin;
-    x += this.parent.getWidth();
-    this.clear();
-    this.moveTo(x, y);
-    this.lineTo(x + 25, y);
-    this.done();
+    if (this.parent.justify === Justify.Left) {
+      x += this.parent.getWidth();
+      this.clear();
+      this.moveTo(x, y);
+      this.lineTo(x + 25, y);
+      this.done();
+    } else {
+      x -= this.parent.getWidth();
+      this.clear();
+      this.moveTo(x, y);
+      this.lineTo(x - 25, y);
+      this.done();
+    }
   }
 }
 
@@ -35,6 +43,7 @@ export class TopicViewNode implements ITopicViewNode {
   origin: IVector;
 
   align: Align;
+  justify: Justify;
 
   slot: Slot;
 
@@ -64,10 +73,6 @@ export class TopicViewNode implements ITopicViewNode {
     this.textarea.style.height = '32px';
   }
 
-  get justify() {
-    return this.node.isRoot ? Justify.Middle : Justify.Left;
-  }
-
   get tier() {
     return this.node.tier;
   }
@@ -85,11 +90,13 @@ export class TopicViewNode implements ITopicViewNode {
   }
 
   getWidth(): number {
-    return this.textarea.clientWidth;
+    // return this.textarea.clientWidth;
+    return 100;
   }
 
   getHeight(): number {
-    return this.textarea.clientHeight;
+    // return this.textarea.clientHeight;
+    return 32;
   }
 
   translate(x: number, y: number, origin?: IVector) {

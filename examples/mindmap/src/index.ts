@@ -23,6 +23,16 @@ function start() {
 
   map.addTopic(new Topic(), topic11);
   map.addTopic(new Topic(), topic11);
+
+  let l1 = new Topic();
+  map.addTopic(l1, topic);
+  map.addTopic(new Topic(), topic);
+  map.addTopic(new Topic(), topic);
+
+  map.addTopic(new Topic(), l1);
+  map.addTopic(new Topic(), l1);
+  map.addTopic(new Topic(), l1);
+
 }
 
 setTimeout(start, 2000);
