@@ -23,7 +23,8 @@ export function getVerticalSpacingOfChildren(tier: number) {
 export class MindmapLayout implements ILayout {
 
   private widths: Map<ITopicViewNode, number> = new Map<ITopicViewNode, number>();
-  private heights: Map<ITopicViewNode, number> = new Map<ITopicViewNode, number>();
+  private heightOfSubtree: Map<ITopicViewNode, number> = new Map<ITopicViewNode, number>();
+  private heightOfBlock: Map<ITopicViewNode, number> = new Map<ITopicViewNode, number>();
 
   private heightOfLeftTree: number;
   private heightOfRightTree: number;
@@ -52,10 +53,10 @@ export class MindmapLayout implements ILayout {
       topic.translate(justify === Justify.Right ? -topic.getWidth() : 0, -topic.getHeight() / 2, Vector.add(nextOrigin, { x: 0, y: 0 }));
     } else {
       let spaceV = getVerticalSpacingOfChildren(node.tier);
-      let top = -(specifiedHeight || this.heights.get(node)) / 2;
+      let top = -(specifiedHeight || this.heightOfSubtree.get(node)) / 2;
       for (let i = 0; i < len; i++) {
         let topic = children[i];
-        let h = this.heights.get(topic);
+        let h = this.heightOfBlock.get(topic);
         top += h / 2;
         topic.translate(justify === Justify.Right ? -topic.getWidth() : 0, -topic.getHeight() / 2, Vector.add(nextOrigin, { x: 0, y: top }));
         top += h / 2;
@@ -111,11 +112,11 @@ export class MindmapLayout implements ILayout {
     }
 
     this.heightOfLeftTree = this.leftTree.length ? this.leftTree.reduce((acc, t) => {
-      return acc + this.heights.get(t);
+      return acc + this.heightOfBlock.get(t);
     }, (this.leftTree.length - 1) * getVerticalSpacingOfChildren(0)) : 0;
 
     this.heightOfRightTree = this.rightTree.length ? this.rightTree.reduce((acc, t) => {
-      return acc + this.heights.get(t);
+      return acc + this.heightOfBlock.get(t);
     }, (this.rightTree.length - 1) * getVerticalSpacingOfChildren(0)) : 0;
 
     p.translate(-p.getWidth() / 2, -p.getHeight() / 2, { x: this.dimension.width / 2, y: this.dimension.height / 2 });
@@ -163,23 +164,24 @@ export class MindmapLayout implements ILayout {
     }
   }
 
-  _measure(viewNode: ITopicViewNode): ITopicViewNode[] {
-    let node: ITopicViewNode = viewNode;
-    let mutated = [node];
-    while (node) {
-      let h = this._getDeepHeight(node);
-      this.heights.set(node, h);
-      node = node.parent;
-      mutated.push(node);
+  _measure(node: ITopicViewNode) {
+    let p = node;
+    while (p) {
+      this._getHeight(p);
+      p = p.parent;
     }
-    return mutated;
   }
 
-  _getDeepHeight(node: ITopicViewNode): number {
-    let tier = node.tier;
-    let deepHeight = node.children.length ? node.children.reduce((acc, t) => {
-      return acc + this._getDeepHeight(t);
-    }, (node.children.length - 1) * getVerticalSpacingOfChildren(tier)) : node.getHeight();
-    return deepHeight;
+  _getHeight(node: ITopicViewNode) {
+    let h = 0;
+    if (node.children.length) {
+      let tier = node.tier;
+      h = node.children.reduce((acc, t) => {
+        if (!this.heightOfSubtree.has(t)) this._measure(t);
+        return acc + this.heightOfBlock.get(t);
+      }, (node.children.length - 1) * getVerticalSpacingOfChildren(tier));
+    }
+    this.heightOfSubtree.set(node, h);
+    this.heightOfBlock.set(node, Math.max(h, node.getHeight()));
   }
 }

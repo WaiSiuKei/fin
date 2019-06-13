@@ -2,6 +2,8 @@ import { IVector, Vector } from '@fin/geometry';
 import { Align, Justify } from '../common';
 import { ITopicNode, ITopicViewNode } from '../topic';
 import { Path } from '@fin/svg';
+import { Signal } from '@fin/signal';
+import { Disposable } from '@fin/disposable';
 
 export class Slot extends Path {
   constructor(private parent: ITopicViewNode) {
@@ -30,7 +32,7 @@ export class Slot extends Path {
   }
 }
 
-export class TopicViewNode implements ITopicViewNode {
+export class TopicViewNode extends Disposable implements ITopicViewNode {
   static counter = 1;
 
   parent: ITopicViewNode;
@@ -48,19 +50,28 @@ export class TopicViewNode implements ITopicViewNode {
   slot: Slot;
 
   id: number;
+
+  onResize = new Signal<TopicViewNode, void>(this);
+
   constructor(private node: ITopicNode) {
+    super();
     this.id = TopicViewNode.counter++;
     this.align = Align.Center;
 
     this.transform = { x: 0, y: 0 };
     this.slot = new Slot(this);
     this.createElement();
+    this._register({
+      dispose() {
+        Signal.disconnectAll(this);
+      }
+    });
   }
 
   createElement() {
     this.container = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
-    this.container.setAttribute('width', '100%');
-    this.container.setAttribute('height', '100%');
+    this.container.setAttribute('width', '100px');
+    this.container.setAttribute('height', '32px');
     this.container.setAttribute('x', '0');
     this.container.setAttribute('y', '0');
     this.container.dataset.id = this.id.toString();
@@ -71,6 +82,30 @@ export class TopicViewNode implements ITopicViewNode {
     this.textarea.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
     this.textarea.style.width = '100px';
     this.textarea.style.height = '32px';
+
+    let prevWidth: number;
+    let prevHeight: number;
+    let isDragging = false;
+    this.textarea.onmousedown = () => {
+      let { width, height } = this.textarea.getBoundingClientRect();
+      prevWidth = width;
+      prevHeight = height;
+      this.container.style.zIndex = '999';
+      this.container.setAttribute('width', '100%');
+      this.container.setAttribute('height', '100%');
+      isDragging = true;
+    };
+
+    this.textarea.onmouseup = () => {
+      isDragging = false;
+      let { width, height } = this.textarea.getBoundingClientRect();
+      this.container.style.zIndex = '0';
+      this.container.setAttribute('width', width + 'px');
+      this.container.setAttribute('height', height + 'px');
+      if (prevWidth !== width || prevHeight !== height) {
+        this.onResize.emit();
+      }
+    };
   }
 
   get tier() {
@@ -90,13 +125,11 @@ export class TopicViewNode implements ITopicViewNode {
   }
 
   getWidth(): number {
-    // return this.textarea.clientWidth;
-    return 100;
+    return this.container.clientWidth;
   }
 
   getHeight(): number {
-    // return this.textarea.clientHeight;
-    return 32;
+    return this.container.clientHeight;
   }
 
   translate(x: number, y: number, origin?: IVector) {

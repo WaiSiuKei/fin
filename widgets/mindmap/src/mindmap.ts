@@ -6,7 +6,6 @@ import { MindmapLayout } from './layout/mindmap';
 import { IConnector, ITopicNode, ITopicViewNode } from './topic';
 import { Emitter } from '@fin/event';
 import { Disposable } from '@fin/disposable';
-import { pseudoRandomBytes } from 'crypto';
 
 export interface IMindmapOption {
   layout: ILayout
@@ -48,8 +47,9 @@ export class LayoutView {
   handleNodeAdded(mutatedTopic: ITopicNode) {
     let viewNode = new TopicViewNode(mutatedTopic);
     this.viewNodes.set(mutatedTopic, viewNode);
-
     this.viewContainer.addNode(viewNode);
+
+    viewNode.onResize.connect(this.handleNodeResize, this);
 
     if (mutatedTopic.parent) {
       let parent = this.viewNodes.get(mutatedTopic.parent);
@@ -63,12 +63,20 @@ export class LayoutView {
       this.viewContainer.addConnector(connector);
     }
 
+    this.refreshLayout(viewNode);
+  }
+
+  refreshLayout(viewNode: ITopicViewNode) {
     let positionMutated = this.layoutAlgo.layout(viewNode);
     let connectorsToLayout: IConnector[] = [];
     for (let n of positionMutated) {
       connectorsToLayout.push(...(this.connectors.get(n) || []));
     }
     this.layoutAlgo.layoutConnectors(Array.from(new Set(connectorsToLayout)));
+  }
+
+  handleNodeResize(viewNode: ITopicViewNode) {
+    this.refreshLayout(viewNode);
   }
 
   handleNodeRemoved(mutatedTopic: ITopicNode) {
