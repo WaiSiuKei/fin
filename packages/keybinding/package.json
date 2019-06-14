@@ -1,6 +1,6 @@
 {
   "name": "@fin/keybinding",
-  "version": "0.0.9-alpha.0",
+  "version": "0.0.9-alpha.1",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -15,14 +15,14 @@
     "release": "npm publish --access public || true"
   },
   "dependencies": {
-    "@fin/async": "^0.0.9-alpha.0",
-    "@fin/charcode": "^0.0.9-alpha.0",
-    "@fin/command": "^0.0.9-alpha.0",
+    "@fin/async": "^0.0.9-alpha.1",
+    "@fin/charcode": "^0.0.9-alpha.1",
+    "@fin/command": "^0.0.9-alpha.1",
     "@fin/contextkey": "^0.0.2",
-    "@fin/disposable": "^0.0.9-alpha.0",
-    "@fin/dom": "^0.0.9-alpha.0",
-    "@fin/event": "^0.0.9-alpha.0",
-    "@fin/keyboard": "^0.0.9-alpha.0"
+    "@fin/disposable": "^0.0.9-alpha.1",
+    "@fin/dom": "^0.0.9-alpha.1",
+    "@fin/event": "^0.0.9-alpha.1",
+    "@fin/keyboard": "^0.0.9-alpha.1"
   },
   "devDependencies": {
     "dts-bundle-generator": "*",

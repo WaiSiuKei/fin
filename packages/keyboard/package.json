@@ -1,6 +1,6 @@
 {
   "name": "@fin/keyboard",
-  "version": "0.0.9-alpha.0",
+  "version": "0.0.9-alpha.1",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -24,7 +24,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@fin/platform": "^0.0.9-alpha.0"
+    "@fin/platform": "^0.0.9-alpha.1"
   },
   "publishConfig": {
     "access": "public"

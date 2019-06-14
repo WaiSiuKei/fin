@@ -1,6 +1,6 @@
 {
   "name": "@fin/command",
-  "version": "0.0.9-alpha.0",
+  "version": "0.0.9-alpha.1",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -15,9 +15,9 @@
     "release": "npm publish --access public || true"
   },
   "dependencies": {
-    "@fin/collections": "^0.0.9-alpha.0",
-    "@fin/disposable": "^0.0.9-alpha.0",
-    "@fin/event": "^0.0.9-alpha.0"
+    "@fin/collections": "^0.0.9-alpha.1",
+    "@fin/disposable": "^0.0.9-alpha.1",
+    "@fin/event": "^0.0.9-alpha.1"
   },
   "devDependencies": {
     "dts-bundle-generator": "^3.1.0",

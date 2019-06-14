@@ -1,6 +1,6 @@
 {
   "name": "@fin/async",
-  "version": "0.0.9-alpha.0",
+  "version": "0.0.9-alpha.1",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -15,7 +15,7 @@
     "release": "npm publish --access public || true"
   },
   "dependencies": {
-    "@fin/disposable": "^0.0.9-alpha.0"
+    "@fin/disposable": "^0.0.9-alpha.1"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",
