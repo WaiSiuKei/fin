@@ -9,4 +9,8 @@ export class Connector extends Path implements IConnector {
   mountTo(g: SVGGElement) {
     g.appendChild(this.node);
   }
+
+  dispose() {
+    this.node.remove();
+  }
 }

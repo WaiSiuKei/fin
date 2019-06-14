@@ -1,121 +1,120 @@
-import { Topic, TopicViewNode } from './core/topic';
-import { createSVGNode, createNode } from '@fin/svg';
-import { Connector } from './core/connector';
 import { ILayout } from './layout';
-import { MindmapLayout } from './layout/mindmap';
-import { IConnector, ITopicNode, ITopicViewNode } from './topic';
-import { Emitter } from '@fin/event';
 import { Disposable } from '@fin/disposable';
+import { LayoutModel } from './model/layoutModel';
+import { LayoutView } from './view/layoutView';
+import { MindmapLayout } from './layout/mindmap';
+import { Topic } from './model/topic';
+import { KeybindingService, KeybindingsRegistry } from '@fin/keybinding';
+import { KeyCode, KeyMod } from '@fin/keyboard';
+import { ContextKeyService, IContextKey } from '@fin/contextkey';
+import { CommandService, CommandsRegistry } from '@fin/command';
+import { MapContextKeys } from './contextKeys';
+import { ITopicNode } from './topic';
 
 export interface IMindmapOption {
   layout: ILayout
 }
 
-export class ViewContainer {
-  public paper: SVGElement;
-  public nodeLayer: SVGGElement;
-  public connectorLayer: SVGGElement;
-
-  constructor(private container: HTMLElement) {
-    this.paper = createSVGNode();
-    this.paper.appendChild(this.connectorLayer = (createNode('g')) as SVGGElement);
-    this.paper.appendChild(this.nodeLayer = (createNode('g')) as SVGGElement);
-    this.paper.setAttribute('width', '100%');
-    this.paper.setAttribute('height', '100%');
-    container.appendChild(this.paper);
-  }
-
-  addNode(node: ITopicViewNode) {
-    node.mountTo(this.nodeLayer);
-  }
-
-  addConnector(connector: Connector) {
-    connector.mountTo(this.connectorLayer);
-  }
-}
-
-export class LayoutView {
-  public viewContainer: ViewContainer;
-
-  public viewNodes: Map<ITopicNode, ITopicViewNode> = new Map<ITopicNode, ITopicViewNode>();
-  connectors: Map<ITopicViewNode, IConnector[]> = new Map<ITopicViewNode, IConnector[]>();
-
-  constructor(container: HTMLElement, public layoutAlgo: ILayout) {
-    this.viewContainer = new ViewContainer(container);
-  }
-
-  handleNodeAdded(mutatedTopic: ITopicNode) {
-    let viewNode = new TopicViewNode(mutatedTopic);
-    this.viewNodes.set(mutatedTopic, viewNode);
-    this.viewContainer.addNode(viewNode);
-
-    viewNode.onResize.connect(this.handleNodeResize, this);
-
-    if (mutatedTopic.parent) {
-      let parent = this.viewNodes.get(mutatedTopic.parent);
-      viewNode.parent = parent;
-      parent.children.push(viewNode);
-
-      let connector = new Connector(viewNode.parent, viewNode);
-      let connectors = (this.connectors.get(viewNode.parent) || []);
-      connectors.push(connector);
-      this.connectors.set(viewNode.parent, connectors);
-      this.viewContainer.addConnector(connector);
-    }
-
-    this.refreshLayout(viewNode);
-  }
-
-  refreshLayout(viewNode: ITopicViewNode) {
-    let positionMutated = this.layoutAlgo.layout(viewNode);
-    let connectorsToLayout: IConnector[] = [];
-    for (let n of positionMutated) {
-      connectorsToLayout.push(...(this.connectors.get(n) || []));
-    }
-    this.layoutAlgo.layoutConnectors(Array.from(new Set(connectorsToLayout)));
-  }
-
-  handleNodeResize(viewNode: ITopicViewNode) {
-    this.refreshLayout(viewNode);
-  }
-
-  handleNodeRemoved(mutatedTopic: ITopicNode) {
-
-  }
-}
-
-export class LayoutModel extends Disposable {
-  private _onTopicAdded: Emitter<ITopicNode> = new Emitter<ITopicNode>();
-  get onTopicAdded() { return this._onTopicAdded.event; }
-
-  constructor(public rootTopic?: ITopicNode) {
-    super();
-    this._register(this._onTopicAdded);
-  }
-
-  addTopic(topic: Topic, refTopic?: Topic) {
-    if (!refTopic) {
-      this.rootTopic = topic;
-    } else {
-      refTopic.add(topic);
-    }
-    this._onTopicAdded.fire(topic);
-  }
-}
-
 export class Mindmap extends Disposable {
   layoutModel: LayoutModel;
   layoutView: LayoutView;
+  context: MapContext;
 
   constructor(private container: HTMLElement, option?: IMindmapOption) {
     super();
     this.layoutModel = new LayoutModel();
     this.layoutView = new LayoutView(container, new MindmapLayout(container.getBoundingClientRect()));
+    this._register(this.layoutView);
     this._register(this.layoutModel);
     this._register(this.layoutModel.onTopicAdded((topic) => this.layoutView.handleNodeAdded(topic)));
+    this._register(this.layoutModel.onTopicRemoved((topic) => this.layoutView.handleNodeRemoved(topic)));
+    this._registerKeybingingHandler();
   }
 
-  addTopic(topic: Topic, refTopic?: Topic): void {
+  addTopic(topic: ITopicNode, refTopic?: ITopicNode): void {
     this.layoutModel.addTopic(topic, refTopic);
+  }
+
+  _registerKeybingingHandler() {
+    const commandsRegistry = new CommandsRegistry();
+    const keybindingsRegistry = new KeybindingsRegistry(commandsRegistry);
+    const contextKeyService = new ContextKeyService();
+
+    this.context = new MapContext(this.layoutView, contextKeyService);
+    this._register(this.context);
+
+    keybindingsRegistry.registerCommandAndKeybindingRule({
+      id: 'addChildTopic',
+      weight: 100,
+      when: MapContextKeys.hadTopicFocus,
+      primary: KeyCode.Tab,
+      handler: () => {
+        let viewNode = this.layoutView.selection;
+        let newTopic = new Topic();
+        this.addTopic(newTopic, viewNode.topicNode);
+        this.layoutView.focus(newTopic);
+      }
+    });
+
+    keybindingsRegistry.registerCommandAndKeybindingRule({
+      id: 'addSiblingTopic',
+      weight: 100,
+      when: MapContextKeys.hadTopicFocus,
+      primary: KeyCode.Enter,
+      handler: () => {
+        let viewNode = this.layoutView.selection;
+        if (!viewNode.topicNode.isRoot) {
+          let newTopic = new Topic();
+          this.addTopic(newTopic, viewNode.topicNode.parent);
+          this.layoutView.focus(newTopic);
+        }
+      }
+    });
+
+    keybindingsRegistry.registerCommandAndKeybindingRule({
+      id: 'removeTopic',
+      weight: 100,
+      when: MapContextKeys.hadTopicFocus,
+      primary: KeyCode.Delete | KeyMod.Shift,
+      secondary: [KeyCode.Backspace],
+      handler: () => {
+        let viewNode = this.layoutView.selection;
+        if (!viewNode.topicNode.isRoot) {
+          this.layoutModel.removeTopic(viewNode.topicNode);
+        }
+      }
+    });
+
+    keybindingsRegistry.registerCommandAndKeybindingRule({
+      id: 'blurTopic',
+      weight: 100,
+      when: MapContextKeys.hadTopicFocus,
+      primary: KeyCode.Escape,
+      handler: () => {
+        this.layoutView.blur();
+      }
+    });
+
+    const keyBindingService = new KeybindingService(window, contextKeyService, new CommandService(commandsRegistry), keybindingsRegistry);
+  }
+}
+
+export class MapContext extends Disposable {
+  private readonly _hasTopicFocus: IContextKey<boolean>;
+  constructor(private view: LayoutView, private contextKeyService: ContextKeyService) {
+    super();
+
+    this._hasTopicFocus = MapContextKeys.hadTopicFocus.bindTo(this.contextKeyService);
+
+    this._register(this.view.onTopicFocus(this.updateFromSelection, this));
+    this._register(this.view.onTopicBlur(this.updateFromSelection, this));
+  }
+
+  updateFromSelection() {
+    if (this.view.selection) {
+      this._hasTopicFocus.set(true);
+    } else {
+      this._hasTopicFocus.set(false);
+    }
   }
 }

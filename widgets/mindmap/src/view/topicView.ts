@@ -4,6 +4,7 @@ import { ITopicNode, ITopicViewNode } from '../topic';
 import { Path } from '@fin/svg';
 import { Signal } from '@fin/signal';
 import { Disposable } from '@fin/disposable';
+import { addDisposableListener, EventType } from '@fin/dom';
 
 export class Slot extends Path {
   constructor(private parent: ITopicViewNode) {
@@ -30,6 +31,15 @@ export class Slot extends Path {
       this.done();
     }
   }
+
+  hide() {
+    this.clear();
+    this.done();
+  }
+
+  dispose() {
+    this.node.remove();
+  }
 }
 
 export class TopicViewNode extends Disposable implements ITopicViewNode {
@@ -52,8 +62,10 @@ export class TopicViewNode extends Disposable implements ITopicViewNode {
   id: number;
 
   onResize = new Signal<TopicViewNode, void>(this);
+  onFocus = new Signal<TopicViewNode, void>(this);
+  onBlur = new Signal<TopicViewNode, void>(this);
 
-  constructor(private node: ITopicNode) {
+  constructor(public topicNode: ITopicNode) {
     super();
     this.id = TopicViewNode.counter++;
     this.align = Align.Center;
@@ -83,38 +95,55 @@ export class TopicViewNode extends Disposable implements ITopicViewNode {
     this.textarea.style.width = '100px';
     this.textarea.style.height = '32px';
 
-    let prevWidth: number;
-    let prevHeight: number;
-    let isDragging = false;
-    this.textarea.onmousedown = () => {
-      let { width, height } = this.textarea.getBoundingClientRect();
-      prevWidth = width;
-      prevHeight = height;
-      this.container.style.zIndex = '999';
-      this.container.setAttribute('width', '100%');
-      this.container.setAttribute('height', '100%');
-      isDragging = true;
-    };
-
-    this.textarea.onmouseup = () => {
-      isDragging = false;
-      let { width, height } = this.textarea.getBoundingClientRect();
-      this.container.style.zIndex = '0';
-      this.container.setAttribute('width', width + 'px');
-      this.container.setAttribute('height', height + 'px');
-      if (prevWidth !== width || prevHeight !== height) {
-        this.onResize.emit();
-      }
-    };
+    this._register(addDisposableListener(this.textarea, EventType.MOUSE_DOWN, this._handleMouseDown.bind(this)));
+    this._register(addDisposableListener(this.textarea, EventType.MOUSE_UP, this._handleMouseUp.bind(this)));
+    this._register(addDisposableListener(this.textarea, EventType.INPUT, this._handleInput.bind(this)));
+    this._register(addDisposableListener(this.textarea, EventType.FOCUS, this._handleFocus.bind(this)));
+    this._register(addDisposableListener(this.textarea, EventType.BLUR, this._handleBlur.bind(this)));
   }
 
+  //#region event handler
+  private prevWidth: number;
+  private prevHeight: number;
+  _handleMouseDown() {
+    let { width, height } = this.textarea.getBoundingClientRect();
+    this.prevWidth = width;
+    this.prevHeight = height;
+    this.container.style.zIndex = '999';
+    this.container.setAttribute('width', '100%');
+    this.container.setAttribute('height', '100%');
+  }
+
+  _handleMouseUp() {
+    let { width, height } = this.textarea.getBoundingClientRect();
+    this.container.style.zIndex = '0';
+    this.container.setAttribute('width', width + 'px');
+    this.container.setAttribute('height', height + 'px');
+    if (this.prevWidth !== width || this.prevHeight !== height) {
+      this.onResize.emit();
+    }
+  }
+
+  _handleFocus() {
+    this.onFocus.emit();
+  }
+
+  _handleBlur() {
+    this.onBlur.emit();
+  }
+
+  _handleInput(e: KeyboardEvent) {
+    // todo update content
+  }
+  //#endregion
+
   get tier() {
-    return this.node.tier;
+    return this.topicNode.tier;
   }
 
   mountTo(g: SVGGElement) {
     g.appendChild(this.container);
-    if (!this.node.isRoot) {
+    if (!this.topicNode.isRoot) {
       this.slot.mountTo(g);
     }
   }
@@ -122,6 +151,16 @@ export class TopicViewNode extends Disposable implements ITopicViewNode {
   add(topic: TopicViewNode) {
     this.children.push(topic);
     topic.parent = this;
+  }
+
+  remove(topic: TopicViewNode) {
+    let idx = this.children.indexOf(topic);
+    if (idx > -1) {
+      this.children.splice(idx, 1);
+    }
+    if (!this.children.length) {
+      this.slot.hide();
+    }
   }
 
   getWidth(): number {
@@ -139,39 +178,25 @@ export class TopicViewNode extends Disposable implements ITopicViewNode {
     } else {
       this.origin = { x: 0, y: 0 };
     }
+    if (isNaN(this.origin.y)) debugger;
     let tr = Vector.add(this.origin, this.transform, { x: 0, y: 0 });
     this.container.setAttribute('transform', `translate(${tr.x}, ${tr.y })`);
     if (this.children.length && this.slot) this.slot.render();
   }
-}
 
-export class Topic implements ITopicNode {
-  static IdCounter = 1;
-
-  id: number;
-  parent: Topic;
-  children: Topic[] = [];
-
-  constructor() {
-    this.id = Topic.IdCounter++;
+  focus() {
+    this.textarea.focus();
+    this.onFocus.emit();
   }
 
-  get isRoot() {
-    return !this.parent;
+  blur() {
+    this.textarea.blur();
+    this.onBlur.emit();
   }
 
-  get tier(): number {
-    let p = this.parent;
-    let counter = 0;
-    while (p) {
-      counter++;
-      p = p.parent;
-    }
-    return counter;
-  }
-
-  add(topic: Topic) {
-    this.children.push(topic);
-    topic.parent = this;
+  dispose() {
+    super.dispose();
+    this.container.remove();
+    if (this.slot) this.slot.dispose();
   }
 }

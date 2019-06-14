@@ -11,6 +11,17 @@ export function find<T>(arr: ArrayLike<T>, predicate: (value: T, index: number, 
   return undefined;
 }
 
+export function findIndex<T>(arr: ArrayLike<T>, predicate: (value: T, index: number, arr: ArrayLike<T>) => any): number {
+  for (let i = 0; i < arr.length; i++) {
+    const element = arr[i];
+    if (predicate(element, i, arr)) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
 export function forEach<T>(object: Array<T>, fn: (value: T, index: number) => boolean | void): void {
   let index = 0;
   let it = Iterator.fromArray(object);

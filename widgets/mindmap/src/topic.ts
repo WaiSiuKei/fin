@@ -1,15 +1,21 @@
 import { IVector } from '@fin/geometry';
 import { Align, Justify } from './common';
 import { PathCommand } from '@fin/svg';
+import { IDisposable } from '@fin/disposable';
 
 export interface ITopicNode {
   isRoot: boolean
   tier: number
   parent: ITopicNode;
   children: ITopicNode[]
+
+  add(node: ITopicNode): void
+  remove(node: ITopicNode): void
 }
 
-export interface ITopicViewNode {
+export interface ITopicViewNode extends IDisposable {
+  topicNode: ITopicNode
+
   tier: number
   parent: ITopicViewNode
   children: ITopicViewNode[]
@@ -19,14 +25,18 @@ export interface ITopicViewNode {
 
   origin: IVector
   transform: IVector;
-
+  focus(): void
+  blur(): void
   getWidth(): number
   getHeight(): number
   translate(x: number, y: number, origin?: IVector): void
   mountTo(node: SVGGElement): void
+
+  add(child: ITopicViewNode): void
+  remove(child: ITopicViewNode): void
 }
 
-export interface IConnector {
+export interface IConnector extends IDisposable {
   from: ITopicViewNode
   to: ITopicViewNode
 

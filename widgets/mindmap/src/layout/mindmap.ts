@@ -95,11 +95,13 @@ export class MindmapLayout implements ILayout {
 
   layout(node: ITopicViewNode): ITopicViewNode[] {
     this._measure(node);
+
     // find root
     let p = node;
     while (p.parent) {
       p = p.parent;
     }
+
 
     let len = p.children.length;
     if (len < 4) {
@@ -177,11 +179,27 @@ export class MindmapLayout implements ILayout {
     if (node.children.length) {
       let tier = node.tier;
       h = node.children.reduce((acc, t) => {
-        if (!this.heightOfSubtree.has(t)) this._measure(t);
         return acc + this.heightOfBlock.get(t);
       }, (node.children.length - 1) * getVerticalSpacingOfChildren(tier));
     }
     this.heightOfSubtree.set(node, h);
     this.heightOfBlock.set(node, Math.max(h, node.getHeight()));
+  }
+
+  clear(mutated: ITopicViewNode) {
+    if (!mutated.parent) {
+      this.widths.clear();
+      this.heightOfBlock.clear();
+      this.heightOfSubtree.clear();
+    } else {
+      let nodes = [mutated];
+      let current;
+      while (current = nodes.pop()) {
+        this.widths.delete(current);
+        this.heightOfBlock.delete(current);
+        this.heightOfSubtree.delete(current);
+        nodes.push(...current.children);
+      }
+    }
   }
 }
