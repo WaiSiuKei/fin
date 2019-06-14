@@ -1,6 +1,6 @@
 {
   "name": "@fin/async",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -14,7 +14,7 @@
     "build": "rimraf ./lib && tsc"
   },
   "dependencies": {
-    "@fin/disposable": "^0.0.5"
+    "@fin/disposable": "^0.0.6"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",

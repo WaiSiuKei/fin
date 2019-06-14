@@ -1,15 +1,15 @@
 {
   "name": "@fin/example-keybinding",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "scripts": {
     "start": "cross-env NODE_ENV=dev webpack-dev-server --progress --mode development --config webpack.dev.js"
   },
   "dependencies": {
-    "@fin/keybinding": "^0.0.5",
-    "@fin/keyboard": "^0.0.5",
-    "@fin/contextkey": "^0.0.5",
-    "@fin/command": "^0.0.5"
+    "@fin/command": "^0.0.6",
+    "@fin/contextkey": "^0.0.6",
+    "@fin/keybinding": "^0.0.6",
+    "@fin/keyboard": "^0.0.6"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
