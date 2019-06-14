@@ -12,7 +12,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out",
-    "publish": "npm publish --access public || true"
+    "release": "npm publish --access public || true"
   },
   "dependencies": {
     "@fin/collections": "^0.0.8",
