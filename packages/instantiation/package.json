@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@fin/async": "^0.0.7",
-    "@fin/disposable": "^0.0.7"
+    "@fin/disposable": "^0.0.7",
+    "@fin/collections": "^0.0.7"
   }
 }
