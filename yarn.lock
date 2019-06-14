@@ -19,6 +19,11 @@
     "@fin/disposable" "*"
     "@fin/linkedlist" "*"
 
+"@fin/iterator@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@fin/iterator/-/iterator-0.0.5.tgz#982c84cfa305be2693bc5d60b395b5c19f9e54b4"
+  integrity sha512-xVWkLFe1Bcf8z411ssQV0qAKLO73zvd3e4f73tE8JifDfz2kfWyhOjli4foIfvfWjHFOu0zMK+hgEe3riMbUnQ==
+
 "@fin/linkedlist@*":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@fin/linkedlist/-/linkedlist-0.0.5.tgz#3ec3c838d252f75e1ab45858e946a699d4aed006"

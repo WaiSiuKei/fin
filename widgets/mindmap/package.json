@@ -14,6 +14,19 @@
     "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out",
     "publish": "npm publish --access public"
   },
+  "dependencies": {
+    "@fin/disposable": "^0.0.7",
+    "@fin/keybinding": "^0.0.7",
+    "@fin/keyboard": "^0.0.7",
+    "@fin/contextkey": "^0.0.7",
+    "@fin/command": "^0.0.7",
+    "@fin/svg": "^0.0.7",
+    "@fin/geometry": "^0.0.7",
+    "@fin/event": "^0.0.7",
+    "@fin/arrays": "^0.0.7",
+    "@fin/signal": "^0.0.7",
+    "@fin/dom": "^0.0.7"
+  },
   "devDependencies": {
     "dts-bundle-generator": "*",
     "rimraf": "^2.6.3",
