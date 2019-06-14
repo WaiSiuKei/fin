@@ -12,7 +12,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "rimraf ./lib && tsc",
-    "publish": "npm publish --access public"
+    "publish": "npm publish --access public || true"
   },
   "dependencies": {
     "@fin/iterator": "^0.0.8"
