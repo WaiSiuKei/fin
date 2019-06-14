@@ -1,6 +1,6 @@
 {
   "name": "@fin/event",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -9,8 +9,8 @@
     "publish": "npm publish --access public"
   },
   "dependencies": {
-    "@fin/collections": "^0.0.7",
-    "@fin/disposable": "^0.0.7"
+    "@fin/collections": "^0.0.8",
+    "@fin/disposable": "^0.0.8"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",

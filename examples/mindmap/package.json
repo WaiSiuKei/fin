@@ -1,12 +1,12 @@
 {
   "name": "@fin/example-mindmap",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "scripts": {
     "start": "cross-env NODE_ENV=dev webpack-dev-server --progress --mode development --config webpack.dev.js"
   },
   "dependencies": {
-    "@fin/keybinding": "^0.0.7"
+    "@fin/keybinding": "^0.0.8"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",

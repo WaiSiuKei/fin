@@ -1,6 +1,6 @@
 {
   "name": "@fin/contextkey",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -24,8 +24,8 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@fin/disposable": "^0.0.7",
-    "@fin/event": "^0.0.7",
-    "@fin/strings": "^0.0.7"
+    "@fin/disposable": "^0.0.8",
+    "@fin/event": "^0.0.8",
+    "@fin/strings": "^0.0.8"
   }
 }

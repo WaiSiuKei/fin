@@ -1,6 +1,6 @@
 {
   "name": "@fin/geometry",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -15,8 +15,8 @@
     "publish": "npm publish --access public"
   },
   "dependencies": {
-    "@fin/numerical": "^0.0.7",
-    "@fin/types": "^0.0.7"
+    "@fin/numerical": "^0.0.8",
+    "@fin/types": "^0.0.8"
   },
   "devDependencies": {
     "dts-bundle-generator": "^3.1.0",
