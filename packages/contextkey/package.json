@@ -1,6 +1,6 @@
 {
   "name": "@fin/contextkey",
-  "version": "0.0.8",
+  "version": "0.0.9-alpha.0",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -24,9 +24,9 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@fin/disposable": "^0.0.8",
-    "@fin/event": "^0.0.8",
-    "@fin/strings": "^0.0.8"
+    "@fin/disposable": "^0.0.9-alpha.0",
+    "@fin/event": "^0.0.9-alpha.0",
+    "@fin/strings": "^0.0.9-alpha.0"
   },
   "publishConfig": {
     "access": "public"

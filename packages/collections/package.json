@@ -1,6 +1,6 @@
 {
   "name": "@fin/collections",
-  "version": "0.0.8",
+  "version": "0.0.9-alpha.0",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -15,7 +15,7 @@
     "release": "npm publish --access public || true"
   },
   "dependencies": {
-    "@fin/iterator": "^0.0.8"
+    "@fin/iterator": "^0.0.9-alpha.0"
   },
   "devDependencies": {
     "dts-bundle-generator": "^3.1.0",

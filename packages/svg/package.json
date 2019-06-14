@@ -1,6 +1,6 @@
 {
   "name": "@fin/svg",
-  "version": "0.0.8",
+  "version": "0.0.9-alpha.0",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -15,8 +15,8 @@
     "release": "npm publish --access public || true"
   },
   "dependencies": {
-    "@fin/geometry": "^0.0.8",
-    "@fin/types": "^0.0.8"
+    "@fin/geometry": "^0.0.9-alpha.0",
+    "@fin/types": "^0.0.9-alpha.0"
   },
   "devDependencies": {
     "dts-bundle-generator": "*",
