@@ -1,6 +1,6 @@
 {
   "name": "@fin/keybinding",
-  "version": "0.0.6",
+  "version": "0.0.5",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -14,14 +14,14 @@
     "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
   },
   "dependencies": {
-    "@fin/async": "^0.0.6",
-    "@fin/charcode": "^0.0.6",
-    "@fin/command": "^0.0.6",
+    "@fin/async": "^0.0.5",
+    "@fin/charcode": "^0.0.5",
+    "@fin/command": "^0.0.5",
     "@fin/contextkey": "^0.0.2",
-    "@fin/disposable": "^0.0.6",
-    "@fin/dom": "^0.0.6",
-    "@fin/event": "^0.0.6",
-    "@fin/keyboard": "^0.0.6"
+    "@fin/disposable": "^0.0.5",
+    "@fin/dom": "^0.0.5",
+    "@fin/event": "^0.0.5",
+    "@fin/keyboard": "^0.0.5"
   },
   "devDependencies": {
     "dts-bundle-generator": "*",

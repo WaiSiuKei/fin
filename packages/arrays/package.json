@@ -1,6 +1,6 @@
 {
   "name": "@fin/arrays",
-  "version": "0.0.6",
+  "version": "0.0.5",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -14,7 +14,7 @@
     "build": "rimraf ./lib && tsc"
   },
   "dependencies": {
-    "@fin/iterator": "^0.0.6"
+    "@fin/iterator": "^0.0.5"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",

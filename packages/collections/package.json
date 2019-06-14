@@ -1,6 +1,6 @@
 {
   "name": "@fin/collections",
-  "version": "0.0.6",
+  "version": "0.0.5",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -14,7 +14,7 @@
     "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
   },
   "dependencies": {
-    "@fin/iterator": "^0.0.6"
+    "@fin/iterator": "^0.0.5"
   },
   "devDependencies": {
     "dts-bundle-generator": "^3.1.0",

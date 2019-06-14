@@ -1,6 +1,6 @@
 {
   "name": "@fin/instantiation",
-  "version": "0.0.6",
+  "version": "0.0.5",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -23,7 +23,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@fin/async": "^0.0.6",
-    "@fin/disposable": "^0.0.6"
+    "@fin/async": "^0.0.5",
+    "@fin/disposable": "^0.0.5"
   }
 }
