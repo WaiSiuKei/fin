@@ -27,5 +27,8 @@
     "@fin/async": "^0.0.8",
     "@fin/collections": "^0.0.8",
     "@fin/disposable": "^0.0.8"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

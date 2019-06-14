@@ -27,5 +27,8 @@
     "@fin/disposable": "^0.0.8",
     "@fin/event": "^0.0.8",
     "@fin/strings": "^0.0.8"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
