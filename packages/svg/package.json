@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@fin/geometry": "^0.0.6",
-    "@fin/svg": "^0.0.6",
     "@fin/types": "^0.0.6"
   },
   "devDependencies": {
