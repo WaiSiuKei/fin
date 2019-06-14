@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && rimraf .rpt2_cache"
+    "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && rimraf .rpt2_cache",
+    "publish": "npm publish --access public"
   },
   "dependencies": {
     "@fin/collections": "^0.0.5",
