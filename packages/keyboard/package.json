@@ -1,6 +1,6 @@
 {
   "name": "@fin/keyboard",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -24,6 +24,6 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@fin/platform": "^0.0.5"
+    "@fin/platform": "^0.0.7"
   }
 }

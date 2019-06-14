@@ -1,6 +1,6 @@
 {
   "name": "@fin/arrays",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
   "bugs": {
@@ -15,7 +15,7 @@
     "publish": "npm publish --access public"
   },
   "dependencies": {
-    "@fin/iterator": "^0.0.5"
+    "@fin/iterator": "^0.0.7"
   },
   "devDependencies": {
     "rimraf": "^2.6.3",
