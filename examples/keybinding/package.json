@@ -21,5 +21,9 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.4.1",
     "webpack-hot-middleware": "^2.25.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "cc4854ec859fb070cd014636d2c6f269b4acbdf0"
 }
