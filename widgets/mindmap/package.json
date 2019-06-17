@@ -8,7 +8,7 @@
   },
   "license": "BSD-3-Clause",
   "author": "Wai Siu Kei <wakiki@outlook.com>",
-  "main": "lib/index.ts",
+  "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out",
