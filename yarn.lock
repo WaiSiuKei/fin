@@ -11,6 +11,11 @@
     "@fin/event" "0.0.2"
     "@fin/strings" "0.0.1"
 
+"@fin/disposable@*":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@fin/disposable/-/disposable-0.0.5.tgz#51d700b35b38648a1a70ad78a375041ca7193752"
+  integrity sha512-N7cL8VRaFEttQbTdr292lHqoiOKzSNplDeVTvHOLTPO+rG2HfQPXj3RtpodpGBm6mJyNAXoH0Jr061alfLyxNA==
+
 "@fin/event@0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@fin/event/-/event-0.0.2.tgz#695449b8cb546b135382db58758231bbb5feed31"

@@ -1,0 +1,15 @@
+.fin-input {
+  width: 100%;
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-break: break-word;
+  caret-color: rgb(55, 53, 47);
+}
+
+.fin-input:focus {
+  outline: none;
+}
+
+.fin-input[contentEditable=true]:empty:not(:focus):before {
+  content: attr(data-placeholder)
+}

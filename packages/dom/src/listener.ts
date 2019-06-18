@@ -69,6 +69,12 @@ export const EventType = {
   FOCUS_OUT: 'focusout',
   BLUR: 'blur',
   INPUT: 'input',
+  // input
+  PASTE: 'paste',
+  BEFORE_INPUT: 'beforeinput',
+  COMPOSITION_START: 'compositionstart',
+  COMPOSITION_UPDATE: 'compositionupdate',
+  COMPOSITION_END: 'compositionend',
   // Local Storage
   STORAGE: 'storage',
   // Drag
@@ -83,4 +89,10 @@ export const EventType = {
   // ANIMATION_START: browser.isWebKit ? 'webkitAnimationStart' : 'animationstart',
   // ANIMATION_END: browser.isWebKit ? 'webkitAnimationEnd' : 'animationend',
   // ANIMATION_ITERATION: browser.isWebKit ? 'webkitAnimationIteration' : 'animationiteration'
+};
+
+export interface InputEvent {
+  data: string;
+  isComposing: boolean;
+  inputType: string;
 }
