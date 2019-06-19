@@ -2,15 +2,20 @@ import { URI } from '@fin/uri';
 
 export interface IInputInit {
   placeholder: string,
-  enableURL: boolean
+  enableURL: boolean,
+  multiline: boolean,
 }
 
 export interface IInlineItems {
-  update(input: string): void
+  node: Node
+  update?(): void
   focus?(): void
   blur?(): void
-  contentIfFocus: string
-  contentIfBlur: string
+  content: string;
+  setCaretToEnd?(): void
+  setCaretToStart(): void
+  // contentIfFocus: string
+  // contentIfBlur: string
 }
 
 export enum InputState {
