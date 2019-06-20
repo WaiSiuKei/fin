@@ -9,7 +9,6 @@ import { Position } from '../core/position';
 import { Selection } from '../core/selection';
 import { HorizontalRange, Range } from '../core/range';
 import { IKeyboardEvent } from '@fin/keyboard';
-import { isHighSurrogate } from '@fin/strings';
 
 export interface ITextAreaHandlerHelper {
   visibleRangeForPositionRelativeToEditor(lineNumber: number, column: number): HorizontalRange | null;
