@@ -19,7 +19,11 @@
     "@fin/dom": "0.0.9-alpha.1",
     "@fin/keyboard": "0.0.9-alpha.1",
     "@fin/signal": "0.0.9-alpha.1",
-    "@fin/uri": "0.0.9-alpha.1"
+    "@fin/uri": "0.0.9-alpha.1",
+    "@fin/platform": "0.0.9-alpha.1",
+    "@fin/event": "0.0.9-alpha.1",
+    "@fin/async": "0.0.9-alpha.1",
+    "@fin/strings": "0.0.9-alpha.1"
   },
   "devDependencies": {
     "dts-bundle-generator": "*",

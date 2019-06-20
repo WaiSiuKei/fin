@@ -16,3 +16,21 @@ export enum NodeType {
   /* deprected */
   NOTATION_NODE = 12
 }
+
+export function saveParentsScrollTop(node: Element): number[] {
+  let r: number[] = [];
+  for (let i = 0; node && node.nodeType === node.ELEMENT_NODE; i++) {
+    r[i] = node.scrollTop;
+    node = <Element>node.parentNode;
+  }
+  return r;
+}
+
+export function restoreParentsScrollTop(node: Element, state: number[]): void {
+  for (let i = 0; node && node.nodeType === node.ELEMENT_NODE; i++) {
+    if (node.scrollTop !== state[i]) {
+      node.scrollTop = state[i];
+    }
+    node = <Element>node.parentNode;
+  }
+}
