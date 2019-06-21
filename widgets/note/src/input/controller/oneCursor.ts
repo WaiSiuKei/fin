@@ -3,6 +3,7 @@ import { Range } from '../core/range';
 import { Selection } from '../core/selection';
 import { CursorContext, SingleCursorState } from './cursorCommon';
 import { SelectionDirection } from '../core/selection';
+import { TrackedRangeStickiness } from '../model/model';
 
 export class OneCursor {
 
