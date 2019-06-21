@@ -9,6 +9,9 @@ import { Position } from '../core/position';
 import { Selection } from '../core/selection';
 import { HorizontalRange, Range } from '../core/range';
 import { IKeyboardEvent } from '@fin/keyboard';
+import { ViewContext } from '../view/viewContext';
+import { ViewPart } from '../view/viewPart';
+import { ViewController } from '../view/viewController';
 
 export interface ITextAreaHandlerHelper {
   visibleRangeForPositionRelativeToEditor(lineNumber: number, column: number): HorizontalRange | null;
@@ -32,7 +35,7 @@ class VisibleTextAreaData {
 
 const canUseZeroSizeTextarea = (isEdgeOrIE || isFirefox);
 
-export class TextAreaHandler extends Disposable {
+export class TextAreaHandler extends ViewPart {
 
   private readonly _viewHelper: ITextAreaHandlerHelper;
   private _contentLeft: number;
@@ -42,8 +45,6 @@ export class TextAreaHandler extends Disposable {
   private _scrollTop: number;
   private _fontInfo: BareFontInfo;
   private _lineHeight: number;
-  private _emptySelectionClipboard: boolean;
-  private _copyWithSyntaxHighlighting: boolean;
 
   /**
    * Defined only when the text area is visible (composition case).
@@ -55,8 +56,8 @@ export class TextAreaHandler extends Disposable {
   public readonly textAreaCover: FastDomNode<HTMLElement>;
   private readonly _textAreaInput: TextAreaInput;
 
-  constructor(viewHelper: ITextAreaHandlerHelper) {
-    super();
+  constructor(context: ViewContext, private  _viewController: ViewController, viewHelper: ITextAreaHandlerHelper) {
+    super(context);
     this._viewHelper = viewHelper;
 
     const conf = this._context.configuration.editor;
@@ -68,8 +69,6 @@ export class TextAreaHandler extends Disposable {
     this._scrollTop = 0;
     this._fontInfo = conf.fontInfo;
     this._lineHeight = conf.lineHeight;
-    this._emptySelectionClipboard = conf.emptySelectionClipboard;
-    this._copyWithSyntaxHighlighting = conf.copyWithSyntaxHighlighting;
 
     this._visibleTextArea = null;
     this._selections = [new Selection(1, 1, 1, 1)];
@@ -82,7 +81,6 @@ export class TextAreaHandler extends Disposable {
     this.textArea.setAttribute('autocapitalize', 'off');
     this.textArea.setAttribute('autocomplete', 'off');
     this.textArea.setAttribute('spellcheck', 'false');
-    this.textArea.setAttribute('aria-label', conf.viewInfo.ariaLabel);
     this.textArea.setAttribute('role', 'textbox');
     this.textArea.setAttribute('aria-multiline', 'true');
     this.textArea.setAttribute('aria-haspopup', 'false');
@@ -126,7 +124,8 @@ export class TextAreaHandler extends Disposable {
       },
 
       deduceModelPosition: (viewAnchorPosition: Position, deltaOffset: number, lineFeedCnt: number): Position => {
-        return this._context.model.deduceModelPositionRelativeToViewPosition(viewAnchorPosition, deltaOffset, lineFeedCnt);
+        // return this._context.model.deduceModelPositionRelativeToViewPosition(viewAnchorPosition, deltaOffset, lineFeedCnt);
+        return null;
       }
     };
 
@@ -159,7 +158,7 @@ export class TextAreaHandler extends Disposable {
       // if (e.replaceCharCnt) {
       //   this._viewController.replacePreviousChar('keyboard', e.text, e.replaceCharCnt);
       // } else {
-      //   this._viewController.type('keyboard', e.text);
+      this._viewController.type('keyboard', e.text);
       // }
     }));
 
@@ -242,14 +241,10 @@ export class TextAreaHandler extends Disposable {
 
   // --- end view API
 
-  private _primaryCursorVisibleRange: HorizontalRange | null = null;
-
   public prepareRender(ctx: RenderingContext): void {
-    const primaryCursorPosition = new Position(this._selections[0].positionLineNumber, this._selections[0].positionColumn);
-    this._primaryCursorVisibleRange = ctx.visibleRangeForPosition(primaryCursorPosition);
   }
 
-  public render(ctx: RestrictedRenderingContext): void {
+  public render(ctx: any): void {
     // this._textAreaInput.writeScreenReaderContent('render');
     this._render();
   }
@@ -267,25 +262,8 @@ export class TextAreaHandler extends Disposable {
       return;
     }
 
-    if (!this._primaryCursorVisibleRange) {
-      // The primary cursor is outside the viewport => place textarea to the top left
-      this._renderAtTopLeft();
-      return;
-    }
-
-    const left = this._contentLeft + this._primaryCursorVisibleRange.left - this._scrollLeft;
-    if (left < this._contentLeft || left > this._contentLeft + this._contentWidth) {
-      // cursor is outside the viewport
-      this._renderAtTopLeft();
-      return;
-    }
-
-    const top = this._context.viewLayout.getVerticalOffsetForLineNumber(this._selections[0].positionLineNumber) - this._scrollTop;
-    if (top < 0 || top > this._contentHeight) {
-      // cursor is outside the viewport
-      this._renderAtTopLeft();
-      return;
-    }
+    let top = 0;
+    let left = 0;
 
     // The primary cursor is in the viewport (at least vertically) => place textarea on the cursor
     this._renderInsideEditor(
@@ -300,8 +278,6 @@ export class TextAreaHandler extends Disposable {
     const tac = this.textAreaCover;
 
     if (useEditorFont) {
-      Configuration.applyFontInfo(ta, this._fontInfo);
-    } else {
       ta.setFontSize(1);
       ta.setLineHeight(this._fontInfo.lineHeight);
     }
@@ -321,7 +297,6 @@ export class TextAreaHandler extends Disposable {
     const ta = this.textArea;
     const tac = this.textAreaCover;
 
-    Configuration.applyFontInfo(ta, this._fontInfo);
     ta.setTop(0);
     ta.setLeft(0);
     tac.setTop(0);

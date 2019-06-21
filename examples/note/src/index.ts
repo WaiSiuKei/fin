@@ -1,9 +1,12 @@
 import '@fin/note/input.css';
-import { Input } from '../../../widgets/note/src/input/input';
+import { InputWidget } from '../../../widgets/note/src/input/inputWidget';
+import { TextModel } from '../../../widgets/note/src/input/model/textModel';
 
 function start() {
-  let input = new Input();
-  document.querySelector('#container').appendChild(input.node);
+  let input = new InputWidget(document.querySelector('#container'));
+  let model = new TextModel('');
+  input.setModel(model);
+  input.focus()
 }
 
 start();
