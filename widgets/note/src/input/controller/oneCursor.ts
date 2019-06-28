@@ -17,7 +17,7 @@ export class OneCursor {
     this._selTrackedRange = null;
     this._trackSelection = true;
 
-    this._setState(
+    this.setState(
       context,
       new SingleCursorState(new Range(1, 1, 1, 1), 0, new Position(1, 1), 0),
       new SingleCursorState(new Range(1, 1, 1, 1), 0, new Position(1, 1), 0)
@@ -48,7 +48,7 @@ export class OneCursor {
     this._selTrackedRange = context.model._setTrackedRange(this._selTrackedRange, null, TrackedRangeStickiness.AlwaysGrowsWhenTypingAtEdges);
   }
 
-  private _setState(context: CursorContext, modelState: SingleCursorState | null, viewState: SingleCursorState | null): void {
+  public setState(context: CursorContext, modelState: SingleCursorState | null, viewState: SingleCursorState | null): void {
     if (!modelState) {
       if (!viewState) {
         return;

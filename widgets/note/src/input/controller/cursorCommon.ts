@@ -1,7 +1,7 @@
 import { ITextModel } from '../model/model';
 import { IViewModel } from '../viewModel/viewModel';
 import { ICommand, IConfiguration } from '../common';
-import { Selection } from '../core/selection';
+import { ISelection, Selection } from '../core/selection';
 import { Range } from '../core/range';
 import { Position } from '../core/position';
 
@@ -146,6 +146,50 @@ export class SingleCursorState {
       endLineNumber,
       endColumn
     );
+  }
+}
+
+export class CursorState {
+  _cursorStateBrand: void;
+
+  public static fromModelState(modelState: SingleCursorState): CursorState {
+    return new CursorState(modelState, null);
+  }
+
+  public static fromViewState(viewState: SingleCursorState): CursorState {
+    return new CursorState(null, viewState);
+  }
+
+  public static fromModelSelection(modelSelection: ISelection): CursorState {
+    const selectionStartLineNumber = modelSelection.selectionStartLineNumber;
+    const selectionStartColumn = modelSelection.selectionStartColumn;
+    const positionLineNumber = modelSelection.positionLineNumber;
+    const positionColumn = modelSelection.positionColumn;
+    const modelState = new SingleCursorState(
+      new Range(selectionStartLineNumber, selectionStartColumn, selectionStartLineNumber, selectionStartColumn), 0,
+      new Position(positionLineNumber, positionColumn), 0
+    );
+    return CursorState.fromModelState(modelState);
+  }
+
+  public static fromModelSelections(modelSelections: ISelection[]): CursorState[] {
+    let states: CursorState[] = [];
+    for (let i = 0, len = modelSelections.length; i < len; i++) {
+      states[i] = this.fromModelSelection(modelSelections[i]);
+    }
+    return states;
+  }
+
+  readonly modelState: SingleCursorState;
+  readonly viewState: SingleCursorState;
+
+  constructor(modelState: SingleCursorState, viewState: SingleCursorState) {
+    this.modelState = modelState;
+    this.viewState = viewState;
+  }
+
+  public equals(other: CursorState): boolean {
+    return (this.viewState.equals(other.viewState) && this.modelState.equals(other.modelState));
   }
 }
 

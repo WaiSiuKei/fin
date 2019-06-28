@@ -212,4 +212,8 @@ export class TextModel extends Disposable implements ITextModel {
   public getLineCount(): number {
     return this._buffer.getLineCount();
   }
+
+  public pushStackElement(): void {
+    this._commandManager.pushStackElement();
+  }
 }

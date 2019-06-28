@@ -4,7 +4,7 @@ import { Handler, ICommand, IConfiguration, IEditOperationBuilder } from '../com
 import { IViewModel } from '../viewModel/viewModel';
 import { isHighSurrogate } from '@fin/strings';
 import { TypeOperations } from './cursorTypeOperations';
-import { CursorContext, EditOperationResult, EditOperationType } from './cursorCommon';
+import { CursorContext, CursorState, EditOperationResult, EditOperationType } from './cursorCommon';
 import { OneCursor } from './oneCursor';
 import { SelectionDirection } from '../core/selection';
 import { Selection } from '../core/selection';
@@ -106,9 +106,9 @@ export class Cursor extends Disposable {
       return;
     }
 
-    // if (opResult.shouldPushStackElementBefore) {
-    //   this._model.pushStackElement();
-    // }
+    if (opResult.shouldPushStackElementBefore) {
+      this._model.pushStackElement();
+    }
 
     const result = CommandExecutor.executeCommands(this._model, this.getSelections(), opResult.commands);
     if (result) {
@@ -118,20 +118,18 @@ export class Cursor extends Disposable {
       this._prevEditOperationType = opResult.type;
     }
 
-    // if (opResult.shouldPushStackElementAfter) {
-    //   this._model.pushStackElement();
-    // }
+    if (opResult.shouldPushStackElementAfter) {
+      this._model.pushStackElement();
+    }
   }
 
   private _interpretCommandResult(cursorState: Selection[] | null): void {
     if (!cursorState || cursorState.length === 0) {
-      cursorState = [this.primaryCursor.readSelectionFromMarkers(this.context)];
+      return;
     }
 
-    // FIXME
-    // this._columnSelectData = null;
-    // this._cursors.setSelections(cursorState);
-    // this._cursors.normalize();
+    let s = CursorState.fromModelSelections(cursorState);
+    this.primaryCursor.setState(this.context, s[0].modelState, s[0].viewState);
   }
 
   public getSelections(): Selection[] {

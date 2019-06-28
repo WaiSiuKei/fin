@@ -50,6 +50,14 @@ export interface ITextModel {
    * Get the maximum legal column for line at `lineNumber`
    */
   getLineMaxColumn(lineNumber: number): number;
+
+
+  /**
+   * Push a stack element onto the undo stack. This acts as an undo/redo point.
+   * The idea is to use `pushEditOperations` to edit the model and then to
+   * `pushStackElement` to create an undo/redo stop point.
+   */
+  pushStackElement(): void;
 }
 
 /**
