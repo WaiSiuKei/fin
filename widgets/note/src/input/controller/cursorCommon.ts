@@ -28,6 +28,26 @@ export class CursorContext {
       configuration
     );
   }
+
+  public validateViewPosition(viewPosition: Position, modelPosition: Position): Position {
+    return this.viewModel.coordinatesConverter.validateViewPosition(viewPosition, modelPosition);
+  }
+
+  public validateViewRange(viewRange: Range, expectedModelRange: Range): Range {
+    return this.viewModel.coordinatesConverter.validateViewRange(viewRange, expectedModelRange);
+  }
+
+  public convertViewPositionToModelPosition(lineNumber: number, column: number): Position {
+    return this.viewModel.coordinatesConverter.convertViewPositionToModelPosition(new Position(lineNumber, column));
+  }
+
+  public convertViewRangeToModelRange(viewRange: Range): Range {
+    return this.viewModel.coordinatesConverter.convertViewRangeToModelRange(viewRange);
+  }
+
+  public convertModelPositionToViewPosition(modelPosition: Position): Position {
+    return this.viewModel.coordinatesConverter.convertModelPositionToViewPosition(modelPosition);
+  }
 }
 
 /**

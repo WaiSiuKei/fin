@@ -50,7 +50,7 @@ export class View extends ViewEventHandler {
     this.viewParts = [];
 
     // Keyboard handler
-    this._textAreaHandler = new TextAreaHandler(this._context, this.createTextAreaHandlerHelper());
+    this._textAreaHandler = new TextAreaHandler(this._context, viewController, this.createTextAreaHandlerHelper());
     this.viewParts.push(this._textAreaHandler);
 
     this.createViewParts();

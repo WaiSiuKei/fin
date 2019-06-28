@@ -1,5 +1,5 @@
 {
-  "name": "@fin/strings",
+  "name": "@fin/uint",
   "version": "0.0.9-alpha.1",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
@@ -11,18 +11,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
-  },
-  "dependencies": {
-    "@fin/charcode": "0.0.9-alpha.1"
+    "build": "rimraf ./lib && tsc"
   },
   "devDependencies": {
-    "dts-bundle-generator": "^3.1.0",
     "rimraf": "^2.6.3",
-    "rollup": "^1.12.4",
-    "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-node-resolve": "^5.0.0",
-    "rollup-plugin-typescript2": "^0.21.1",
     "typescript": "^3.4.5"
   },
   "publishConfig": {

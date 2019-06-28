@@ -20,6 +20,7 @@ export class Cursor extends Disposable {
   constructor(private _configuration: IConfiguration, private _model: ITextModel, private _viewModel: IViewModel) {
     super();
     this.context = new CursorContext(this._configuration, this._model, this._viewModel);
+    this.primaryCursor = new OneCursor(this.context);
     this._isDoingComposition = false;
     this._prevEditOperationType = EditOperationType.Other;
   }

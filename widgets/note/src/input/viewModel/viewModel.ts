@@ -20,7 +20,7 @@ export interface ICoordinatesConverter {
 
 export interface IViewModel {
 
-  // readonly coordinatesConverter: ICoordinatesConverter;
+  readonly coordinatesConverter: ICoordinatesConverter;
 
   readonly viewLayout: IViewLayout;
 

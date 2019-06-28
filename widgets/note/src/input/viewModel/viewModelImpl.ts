@@ -3,12 +3,15 @@ import { ITextModel } from '../model/model';
 import { IConfiguration } from '../common';
 import { Disposable, IDisposable } from '@fin/disposable';
 import { ViewLayout } from '../viewLayout/viewLayout';
+import { IdentityLinesCollection, IViewModelLinesCollection } from './splitLinesCollection';
 
 export class ViewModel extends Disposable implements IViewModel {
 
   private readonly editorId: number;
   private readonly configuration: IConfiguration;
   private readonly model: ITextModel;
+  public readonly coordinatesConverter: ICoordinatesConverter;
+  private readonly lines: IViewModelLinesCollection;
   public readonly viewLayout: ViewLayout;
 
   constructor(editorId: number, configuration: IConfiguration, model: ITextModel, scheduleAtNextAnimationFrame: (callback: () => void) => IDisposable) {
@@ -17,6 +20,9 @@ export class ViewModel extends Disposable implements IViewModel {
     this.editorId = editorId;
     this.configuration = configuration;
     this.model = model;
+
+    this.lines = new IdentityLinesCollection(this.model);
+    this.coordinatesConverter = this.lines.createCoordinatesConverter();
 
     this.viewLayout = this._register(new ViewLayout(this.configuration, 0, scheduleAtNextAnimationFrame));
   }

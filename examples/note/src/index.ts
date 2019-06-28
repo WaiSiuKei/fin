@@ -7,6 +7,7 @@ function start() {
   let model = new TextModel('');
   input.setModel(model);
   input.focus()
+  console.log(model)
 }
 
 start();
