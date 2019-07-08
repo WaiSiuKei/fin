@@ -47,6 +47,11 @@ export interface EditorLayoutInfo {
 
 }
 
+export interface InternalEditorViewOptions {
+  readonly stopRenderingLineAfter: number;
+  readonly renderWhitespace: 'none' | 'boundary' | 'all';
+}
+
 /**
  * Internal configuration options (transformed or computed) for the editor.
  */
@@ -54,18 +59,19 @@ export class InternalEditorOptions {
 
   // ---- grouped options
   lineHeight: number;
-  fontInfo?: FontInfo;
-  layoutInfo: EditorLayoutInfo;
-  /**
-   * @internal
-   */
+  readonly layoutInfo: EditorLayoutInfo;
+  readonly fontInfo: FontInfo;
+  readonly viewInfo: InternalEditorViewOptions;
+
   constructor(source: {
     lineHeight: number,
     fontInfo?: FontInfo,
     layoutInfo: EditorLayoutInfo,
+    viewInfo: InternalEditorViewOptions;
   }) {
     this.lineHeight = source.lineHeight;
     this.fontInfo = source.fontInfo;
     this.layoutInfo = source.layoutInfo;
+    this.viewInfo = source.viewInfo;
   }
 }

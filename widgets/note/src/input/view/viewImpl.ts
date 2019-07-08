@@ -9,6 +9,7 @@ import { IViewModel } from '../viewModel/viewModel';
 import { IConfiguration } from '../common';
 import { Position } from '../core/position';
 import { Cursor } from '../controller/cursor';
+import { ViewLines } from '../viewParts/lines/viewLines';
 
 const invalidFunc = () => { throw new Error(`Invalid change accessor`); };
 
@@ -18,7 +19,7 @@ export class View extends ViewEventHandler {
   private readonly _cursor: Cursor;
 
   // The view lines
-  // private viewLines: ViewLines;
+  private viewLines: ViewLines;
 
   // These are parts, but we must do some API related calls on them, so we keep a reference
   private viewParts: ViewPart[];
@@ -26,6 +27,7 @@ export class View extends ViewEventHandler {
   private readonly _textAreaHandler: TextAreaHandler;
 
   // Dom nodes
+  private linesContent: FastDomNode<HTMLElement>;
   public domNode: FastDomNode<HTMLElement>;
   private overflowGuardContainer: FastDomNode<HTMLElement>;
 
@@ -59,14 +61,19 @@ export class View extends ViewEventHandler {
 
   private createViewParts(): void {
     // These two dom nodes must be constructed up front, since references are needed in the layout provider (scrolling & co.)
+    this.linesContent = createFastDomNode(document.createElement('div'));
+    this.linesContent.setClassName('lines-content' + ' monaco-editor-background');
+    this.linesContent.setPosition('absolute');
 
     this.domNode = createFastDomNode(document.createElement('div'));
 
     this.overflowGuardContainer = createFastDomNode(document.createElement('div'));
     this.overflowGuardContainer.setClassName('overflow-guard');
 
-    // -------------- Wire dom nodes up
+    // View Lines
+    this.viewLines = new ViewLines(this._context, this.linesContent);
 
+    this.linesContent.appendChild(this.viewLines.getDomNode());
     this.overflowGuardContainer.appendChild(this._textAreaHandler.textArea);
     this.overflowGuardContainer.appendChild(this._textAreaHandler.textAreaCover);
     this.domNode.appendChild(this.overflowGuardContainer);
@@ -94,6 +101,8 @@ export class View extends ViewEventHandler {
     this.overflowGuardContainer.setWidth(layoutInfo.width);
     this.overflowGuardContainer.setHeight(layoutInfo.height);
 
+    this.linesContent.setWidth(1000000);
+    this.linesContent.setHeight(1000000);
   }
 
   public dispose(): void {

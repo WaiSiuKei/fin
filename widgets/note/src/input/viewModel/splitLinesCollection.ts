@@ -1,4 +1,4 @@
-import { ICoordinatesConverter } from './viewModel';
+import { ICoordinatesConverter, ViewLineData } from './viewModel';
 import { ITextModel } from '../model/model';
 import { Position } from '../core/position';
 import { Range } from '../core/range';
@@ -18,13 +18,13 @@ export interface IViewModelLinesCollection {
   // onModelLineChanged(versionId: number, lineNumber: number, newText: string): [boolean, viewEvents.ViewLinesChangedEvent, viewEvents.ViewLinesInsertedEvent, viewEvents.ViewLinesDeletedEvent];
   // acceptVersionId(versionId: number): void;
   //
-  // getViewLineCount(): number;
+  getViewLineCount(): number;
   // warmUpLookupCache(viewStartLineNumber: number, viewEndLineNumber: number): void;
   // getViewLinesIndentGuides(viewStartLineNumber: number, viewEndLineNumber: number): number[];
   // getViewLineContent(viewLineNumber: number): string;
-  // getViewLineMinColumn(viewLineNumber: number): number;
-  // getViewLineMaxColumn(viewLineNumber: number): number;
-  // getViewLineData(viewLineNumber: number): ViewLineData;
+  getViewLineMinColumn(viewLineNumber: number): number;
+  getViewLineMaxColumn(viewLineNumber: number): number;
+  getViewLineData(viewLineNumber: number): ViewLineData;
   // getViewLinesData(viewStartLineNumber: number, viewEndLineNumber: number, needed: boolean[]): ViewLineData[];
   //
   // getAllOverviewRulerDecorations(ownerId: number, filterOutValidation: boolean, theme: ITheme): IOverviewRulerDecorations;
@@ -131,9 +131,9 @@ export class IdentityLinesCollection implements IViewModelLinesCollection {
   // public acceptVersionId(versionId: number): void {
   // }
   //
-  // public getViewLineCount(): number {
-  //   return this.model.getLineCount();
-  // }
+  public getViewLineCount(): number {
+    return this.model.getLineCount();
+  }
   //
   // public warmUpLookupCache(viewStartLineNumber: number, viewEndLineNumber: number): void {
   // }
@@ -151,24 +151,22 @@ export class IdentityLinesCollection implements IViewModelLinesCollection {
   //   return this.model.getLineContent(viewLineNumber);
   // }
   //
-  // public getViewLineMinColumn(viewLineNumber: number): number {
-  //   return this.model.getLineMinColumn(viewLineNumber);
-  // }
+  public getViewLineMinColumn(viewLineNumber: number): number {
+    return this.model.getLineMinColumn(viewLineNumber);
+  }
+
+  public getViewLineMaxColumn(viewLineNumber: number): number {
+    return this.model.getLineMaxColumn(viewLineNumber);
+  }
   //
-  // public getViewLineMaxColumn(viewLineNumber: number): number {
-  //   return this.model.getLineMaxColumn(viewLineNumber);
-  // }
-  //
-  // public getViewLineData(viewLineNumber: number): ViewLineData {
-  //   let lineTokens = this.model.getLineTokens(viewLineNumber);
-  //   let lineContent = lineTokens.getLineContent();
-  //   return new ViewLineData(
-  //     lineContent,
-  //     1,
-  //     lineContent.length + 1,
-  //     lineTokens.inflate()
-  //   );
-  // }
+  public getViewLineData(viewLineNumber: number): ViewLineData {
+    let lineContent = this.model.getLineContent(viewLineNumber);
+    return new ViewLineData(
+      lineContent,
+      1,
+      lineContent.length + 1,
+    );
+  }
   //
   // public getViewLinesData(viewStartLineNumber: number, viewEndLineNumber: number, needed: boolean[]): ViewLineData[] {
   //   const lineCount = this.model.getLineCount();

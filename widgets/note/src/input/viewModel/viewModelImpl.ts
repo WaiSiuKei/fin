@@ -1,9 +1,10 @@
-import { ICoordinatesConverter, IViewModel } from './viewModel';
+import { ICoordinatesConverter, IViewModel, ViewLineRenderingData } from './viewModel';
 import { ITextModel } from '../model/model';
 import { IConfiguration } from '../common';
 import { Disposable, IDisposable } from '@fin/disposable';
 import { ViewLayout } from '../viewLayout/viewLayout';
 import { IdentityLinesCollection, IViewModelLinesCollection } from './splitLinesCollection';
+import { Range } from '../core/range';
 
 export class ViewModel extends Disposable implements IViewModel {
 
@@ -25,6 +26,34 @@ export class ViewModel extends Disposable implements IViewModel {
     this.coordinatesConverter = this.lines.createCoordinatesConverter();
 
     this.viewLayout = this._register(new ViewLayout(this.configuration, 0, scheduleAtNextAnimationFrame));
+  }
+
+  public getLineCount(): number {
+    return this.lines.getViewLineCount();
+  }
+
+  public getLineMinColumn(lineNumber: number): number {
+    return this.lines.getViewLineMinColumn(lineNumber);
+  }
+
+  public getLineMaxColumn(lineNumber: number): number {
+    return this.lines.getViewLineMaxColumn(lineNumber);
+  }
+
+  public getViewLineRenderingData(visibleRange: Range, lineNumber: number): ViewLineRenderingData {
+    // let mightContainRTL = this.model.mightContainRTL();
+    // let mightContainNonBasicASCII = this.model.mightContainNonBasicASCII();
+    let mightContainRTL = false;
+    let mightContainNonBasicASCII = false;
+    let lineData = this.lines.getViewLineData(lineNumber);
+
+    return new ViewLineRenderingData(
+      lineData.minColumn,
+      lineData.maxColumn,
+      lineData.content,
+      mightContainRTL,
+      mightContainNonBasicASCII,
+    );
   }
 
   public dispose(): void {

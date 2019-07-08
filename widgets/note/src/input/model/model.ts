@@ -47,10 +47,19 @@ export interface ITextModel {
   pushEditOperations(beforeCursorState: Selection[], editOperations: IIdentifiedSingleEditOperation[], cursorStateComputer: ICursorStateComputer): Selection[];
 
   /**
+   * Get the minimum legal column for line at `lineNumber`
+   */
+  getLineMinColumn(lineNumber: number): number;
+
+  /**
    * Get the maximum legal column for line at `lineNumber`
    */
   getLineMaxColumn(lineNumber: number): number;
 
+  /**
+   * Get the text for a certain line.
+   */
+  getLineContent(lineNumber: number): string;
 
   /**
    * Push a stack element onto the undo stack. This acts as an undo/redo point.
