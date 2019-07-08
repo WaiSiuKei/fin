@@ -202,6 +202,19 @@ export class TextModel extends Disposable implements ITextModel {
     return new Range(startLineNumber, startColumn, endLineNumber, endColumn + 1);
   }
 
+
+  public getLineContent(lineNumber: number): string {
+    if (lineNumber < 1 || lineNumber > this.getLineCount()) {
+      throw new Error('Illegal value ' + lineNumber + ' for `lineNumber`');
+    }
+
+    return this._buffer.getLineContent(lineNumber);
+  }
+
+  public getLineMinColumn(lineNumber: number): number {
+    return 1;
+  }
+
   public getLineMaxColumn(lineNumber: number): number {
     if (lineNumber < 1 || lineNumber > this.getLineCount()) {
       throw new Error('Illegal value ' + lineNumber + ' for `lineNumber`');

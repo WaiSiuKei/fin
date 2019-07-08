@@ -26,7 +26,8 @@
     "@fin/arrays": "0.0.9-alpha.1",
     "@fin/uint": "0.0.9-alpha.1",
     "@fin/strings": "0.0.9-alpha.1",
-    "@fin/charcode": "0.0.9-alpha.1"
+    "@fin/charcode": "0.0.9-alpha.1",
+    "@fin/string-builder": "0.0.9-alpha.1"
   },
   "devDependencies": {
     "dts-bundle-generator": "*",

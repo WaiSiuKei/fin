@@ -9,6 +9,7 @@ import { Cursor } from './controller/cursor';
 import { ICommandDelegate } from './view/viewController';
 import { scheduleAtNextAnimationFrame } from '@fin/dom';
 import { InternalEditorOptions } from './config/editorOptions';
+import { FontInfo } from './config/fontInfo';
 
 let EDITOR_ID = 0;
 
@@ -64,7 +65,24 @@ export class InputWidget extends Disposable {
           contentLeft: 0,
           contentWidth: this._domElement.clientWidth,
           contentHeight: this._domElement.clientHeight
-        }
+        },
+        viewInfo: {
+          renderWhitespace: 'none',
+          stopRenderingLineAfter: 100000,
+        },
+        fontInfo: new FontInfo({
+          zoomLevel: 1,
+          fontFamily: 'Arial',
+          fontWeight: 'normal',
+          fontSize: 12,
+          lineHeight: 24,
+          letterSpacing: 2,
+          typicalHalfwidthCharacterWidth: 1,
+          typicalFullwidthCharacterWidth: 2,
+          canUseHalfwidthRightwardsArrow: false,
+          spaceWidth: 1,
+          maxDigitWidth: 1,
+        }, true)
       })
     };
 

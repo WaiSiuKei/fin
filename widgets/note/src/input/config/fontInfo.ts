@@ -167,7 +167,6 @@ export class FontInfo extends BareFontInfo {
   readonly _editorStylingBrand: void;
 
   readonly isTrusted: boolean;
-  readonly isMonospace: boolean;
   readonly typicalHalfwidthCharacterWidth: number;
   readonly typicalFullwidthCharacterWidth: number;
   readonly canUseHalfwidthRightwardsArrow: boolean;
@@ -184,7 +183,6 @@ export class FontInfo extends BareFontInfo {
     fontSize: number;
     lineHeight: number;
     letterSpacing: number;
-    isMonospace: boolean;
     typicalHalfwidthCharacterWidth: number;
     typicalFullwidthCharacterWidth: number;
     canUseHalfwidthRightwardsArrow: boolean;
@@ -193,7 +191,6 @@ export class FontInfo extends BareFontInfo {
   }, isTrusted: boolean) {
     super(opts);
     this.isTrusted = isTrusted;
-    this.isMonospace = opts.isMonospace;
     this.typicalHalfwidthCharacterWidth = opts.typicalHalfwidthCharacterWidth;
     this.typicalFullwidthCharacterWidth = opts.typicalFullwidthCharacterWidth;
     this.canUseHalfwidthRightwardsArrow = opts.canUseHalfwidthRightwardsArrow;

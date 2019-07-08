@@ -3,9 +3,10 @@ import { FastDomNode } from '@fin/dom';
 import { RunOnceScheduler } from '@fin/async';
 import { ViewLine, ViewLineOptions } from './viewLine';
 import { ViewContext } from '../../view/viewContext';
-import { VisibleLinesCollection } from '../../view/viewLayer';
+import { IVisibleLinesHost, VisibleLinesCollection } from '../../view/viewLayer';
+import { IViewLines } from '../../view/renderingContext';
 
-export class ViewLines extends ViewPart {
+export class ViewLines extends ViewPart implements IVisibleLinesHost<ViewLine>, IViewLines {
   /**
    * Adds this ammount of pixels to the right of lines (no-one wants to type near the edge of the viewport)
    */
@@ -38,7 +39,7 @@ export class ViewLines extends ViewPart {
     const conf = this._context.configuration;
 
     this._lineHeight = conf.editor.lineHeight;
-    this._typicalHalfwidthCharacterWidth = conf.editor.fontInfo.typicalHalfwidthCharacterWidth;
+    this._typicalHalfwidthCharacterWidth = 1;
     this._isViewportWrapping = true;
     this._revealHorizontalRightPadding = 20; // fixme
     this._viewLineOptions = new ViewLineOptions(conf);
@@ -63,9 +64,9 @@ export class ViewLines extends ViewPart {
     return this.domNode;
   }
 
-  // ----------- HELPERS FOR OTHERS
-
-  // --- implementation
+  public createVisibleLine(): ViewLine {
+    return new ViewLine(this._viewLineOptions);
+  }
 
   /**
    * Updates the max line width if it is fast to compute.

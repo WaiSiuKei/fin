@@ -65,7 +65,7 @@ export class InternalEditorOptions {
 
   constructor(source: {
     lineHeight: number,
-    fontInfo?: FontInfo,
+    fontInfo: FontInfo,
     layoutInfo: EditorLayoutInfo,
     viewInfo: InternalEditorViewOptions;
   }) {
