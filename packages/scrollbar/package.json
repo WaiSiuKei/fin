@@ -1,5 +1,5 @@
 {
-  "name": "@fin/note",
+  "name": "@fin/scrollbar",
   "version": "0.0.9-alpha.1",
   "description": "",
   "homepage": "https://github.com/WaiSiuKei/fin",
@@ -8,30 +8,21 @@
   },
   "license": "BSD-3-Clause",
   "author": "Wai Siu Kei <wakiki@outlook.com>",
-  "main": "lib/index.ts",
+  "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out",
-    "release": "npm publish --access public || true"
+    "build": "rimraf ./lib && tsc && rollup -c rollup.config.js && dts-bundle-generator --config dts.config.js && rimraf .rpt2_cache && rimraf ./out"
   },
   "dependencies": {
     "@fin/disposable": "0.0.9-alpha.1",
+    "@fin/event": "0.0.9-alpha.1",
+    "@fin/platform": "0.0.9-alpha.1",
     "@fin/dom": "0.0.9-alpha.1",
     "@fin/keyboard": "0.0.9-alpha.1",
-    "@fin/signal": "0.0.9-alpha.1",
-    "@fin/uri": "0.0.9-alpha.1",
-    "@fin/platform": "0.0.9-alpha.1",
-    "@fin/event": "0.0.9-alpha.1",
-    "@fin/async": "0.0.9-alpha.1",
-    "@fin/arrays": "0.0.9-alpha.1",
-    "@fin/uint": "0.0.9-alpha.1",
-    "@fin/strings": "0.0.9-alpha.1",
-    "@fin/charcode": "0.0.9-alpha.1",
-    "@fin/string-builder": "0.0.9-alpha.1",
-    "@fin/scrollbar": "0.0.9-alpha.1"
+    "@fin/async": "0.0.9-alpha.1"
   },
   "devDependencies": {
-    "dts-bundle-generator": "*",
+    "dts-bundle-generator": "^3.1.0",
     "rimraf": "^2.6.3",
     "rollup": "^1.12.4",
     "rollup-plugin-commonjs": "^10.0.0",
@@ -41,5 +32,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "cc4854ec859fb070cd014636d2c6f269b4acbdf0"
 }

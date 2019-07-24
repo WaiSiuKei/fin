@@ -2,6 +2,7 @@
  * @internal
  */
 import { FontInfo } from './fontInfo';
+import { ScrollbarVisibility } from '@fin/scrollbar';
 
 export const INPUT_FONT_DEFAULTS = {
   fontFamily: (
@@ -47,9 +48,26 @@ export interface EditorLayoutInfo {
 
 }
 
+export interface InternalEditorScrollbarOptions {
+  readonly arrowSize: number;
+  readonly vertical: ScrollbarVisibility;
+  readonly horizontal: ScrollbarVisibility;
+  readonly useShadows: boolean;
+  readonly verticalHasArrows: boolean;
+  readonly horizontalHasArrows: boolean;
+  readonly handleMouseWheel: boolean;
+  readonly horizontalScrollbarSize: number;
+  readonly horizontalSliderSize: number;
+  readonly verticalScrollbarSize: number;
+  readonly verticalSliderSize: number;
+  readonly mouseWheelScrollSensitivity: number;
+}
+
+
 export interface InternalEditorViewOptions {
   readonly stopRenderingLineAfter: number;
   readonly renderWhitespace: 'none' | 'boundary' | 'all';
+  readonly scrollbar: InternalEditorScrollbarOptions;
 }
 
 /**

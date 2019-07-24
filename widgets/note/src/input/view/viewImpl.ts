@@ -10,6 +10,8 @@ import { IConfiguration } from '../common';
 import { Position } from '../core/position';
 import { Cursor } from '../controller/cursor';
 import { ViewLines } from '../viewParts/lines/viewLines';
+import { EditorScrollbar } from '../viewParts/editorScrollbar/editorScrollbar';
+import { ViewportData } from '../viewLayout/viewLinesViewportData';
 
 const invalidFunc = () => { throw new Error(`Invalid change accessor`); };
 
@@ -18,6 +20,7 @@ export class View extends ViewEventHandler {
   private readonly _context: ViewContext;
   private readonly _cursor: Cursor;
 
+  private _scrollbar: EditorScrollbar;
   // The view lines
   private viewLines: ViewLines;
 
@@ -69,6 +72,9 @@ export class View extends ViewEventHandler {
 
     this.overflowGuardContainer = createFastDomNode(document.createElement('div'));
     this.overflowGuardContainer.setClassName('overflow-guard');
+
+    this._scrollbar = new EditorScrollbar(this._context, this.linesContent, this.domNode, this.overflowGuardContainer);
+    this.viewParts.push(this._scrollbar);
 
     // View Lines
     this.viewLines = new ViewLines(this._context, this.linesContent);
@@ -153,8 +159,22 @@ export class View extends ViewEventHandler {
   }
 
   private _actualRender(): void {
-
     let viewPartsToRender = this._getViewPartsToRender();
+
+    const partialViewportData = this._context.viewLayout.getLinesViewportData();
+    let viewportData = new ViewportData(
+      [],
+      partialViewportData,
+      this._context.model
+    );
+
+    if (this.viewLines.shouldRender()) {
+      this.viewLines.renderText(viewportData);
+      this.viewLines.onDidRender();
+
+      // Rendering of viewLines might cause scroll events to occur, so collect view parts to render again
+      viewPartsToRender = this._getViewPartsToRender();
+    }
 
     const renderingContext: any = null;
 

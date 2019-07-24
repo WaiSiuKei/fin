@@ -196,3 +196,64 @@ export class StandardWheelEvent {
 		}
 	}
 }
+
+export class StandardMouseWheelEvent {
+
+  public readonly browserEvent: IMouseWheelEvent;
+  public readonly deltaY: number;
+  public readonly deltaX: number;
+  public readonly target: Node;
+
+  constructor(e: IMouseWheelEvent, deltaX: number = 0, deltaY: number = 0) {
+
+    this.browserEvent = e || null;
+    this.target = e ? (e.target || (<any>e).targetNode || e.srcElement) : null;
+
+    this.deltaY = deltaY;
+    this.deltaX = deltaX;
+
+    if (e) {
+      let e1 = <IWebKitMouseWheelEvent><any>e;
+      let e2 = <IGeckoMouseWheelEvent><any>e;
+
+      // vertical delta scroll
+      if (typeof e1.wheelDeltaY !== 'undefined') {
+        this.deltaY = e1.wheelDeltaY / 120;
+      } else if (typeof e2.VERTICAL_AXIS !== 'undefined' && e2.axis === e2.VERTICAL_AXIS) {
+        this.deltaY = -e2.detail / 3;
+      }
+
+      // horizontal delta scroll
+      if (typeof e1.wheelDeltaX !== 'undefined') {
+        if (isSafari && isWindows) {
+          this.deltaX = - (e1.wheelDeltaX / 120);
+        } else {
+          this.deltaX = e1.wheelDeltaX / 120;
+        }
+      } else if (typeof e2.HORIZONTAL_AXIS !== 'undefined' && e2.axis === e2.HORIZONTAL_AXIS) {
+        this.deltaX = -e.detail / 3;
+      }
+
+      // Assume a vertical scroll if nothing else worked
+      if (this.deltaY === 0 && this.deltaX === 0 && e.wheelDelta) {
+        this.deltaY = e.wheelDelta / 120;
+      }
+    }
+  }
+
+  public preventDefault(): void {
+    if (this.browserEvent) {
+      if (this.browserEvent.preventDefault) {
+        this.browserEvent.preventDefault();
+      }
+    }
+  }
+
+  public stopPropagation(): void {
+    if (this.browserEvent) {
+      if (this.browserEvent.stopPropagation) {
+        this.browserEvent.stopPropagation();
+      }
+    }
+  }
+}

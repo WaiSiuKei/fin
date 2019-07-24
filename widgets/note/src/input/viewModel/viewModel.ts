@@ -1,8 +1,27 @@
-import { IDisposable } from '@fin/disposable';
 import { Position } from '../core/position';
 import { Range } from '../core/range';
+import { Scrollable } from '@fin/scrollbar';
+import { IPartialViewLinesViewportData } from '../viewLayout/viewLinesViewportData';
+
+export class Viewport {
+  readonly _viewportBrand: void;
+
+  readonly top: number;
+  readonly left: number;
+  readonly width: number;
+  readonly height: number;
+
+  constructor(top: number, left: number, width: number, height: number) {
+    this.top = top | 0;
+    this.left = left | 0;
+    this.width = width | 0;
+    this.height = height | 0;
+  }
+}
 
 export interface IViewLayout {
+  readonly scrollable: Scrollable;
+  getLinesViewportData(): IPartialViewLinesViewportData;
 }
 
 export interface ICoordinatesConverter {

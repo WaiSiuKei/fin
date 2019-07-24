@@ -29,11 +29,51 @@ export class IntervalTimer extends Disposable {
   }
 }
 
+export class TimeoutTimer extends Disposable {
+  private _token: any;
+
+  constructor() {
+    super();
+    this._token = -1;
+  }
+
+  dispose(): void {
+    this.cancel();
+    super.dispose();
+  }
+
+  cancel(): void {
+    if (this._token !== -1) {
+      clearTimeout(this._token);
+      this._token = -1;
+    }
+  }
+
+  cancelAndSet(runner: () => void, timeout: number): void {
+    this.cancel();
+    this._token = setTimeout(() => {
+      this._token = -1;
+      runner();
+    }, timeout);
+  }
+
+  setIfNotSet(runner: () => void, timeout: number): void {
+    if (this._token !== -1) {
+      // timer is already set
+      return;
+    }
+    this._token = setTimeout(() => {
+      this._token = -1;
+      runner();
+    }, timeout);
+  }
+}
+
 //#region -- run on idle tricks ------------
 
 export interface IdleDeadline {
   readonly didTimeout: boolean;
-  timeRemaining(): DOMHighResTimeStamp;
+  timeRemaining(): number;
 }
 
 /**

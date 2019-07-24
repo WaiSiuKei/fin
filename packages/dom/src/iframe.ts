@@ -118,3 +118,10 @@ export function getPositionOfChildWindowRelativeToAncestorWindow(childWindow: Wi
     left: left
   };
 }
+
+export function hasDifferentOriginAncestor(): boolean {
+  if (!sameOriginWindowChainCache) {
+    this.getSameOriginWindowChain();
+  }
+  return hasDifferentOriginAncestorFlag;
+}

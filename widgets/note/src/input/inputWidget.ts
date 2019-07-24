@@ -1,4 +1,3 @@
-import { EndOfLinePreference } from './model';
 import { Disposable, dispose, IDisposable } from '@fin/disposable';
 import { Handler, IConfiguration } from './common';
 import { IDimension } from './core/dimension';
@@ -10,6 +9,7 @@ import { ICommandDelegate } from './view/viewController';
 import { scheduleAtNextAnimationFrame } from '@fin/dom';
 import { InternalEditorOptions } from './config/editorOptions';
 import { FontInfo } from './config/fontInfo';
+import { ScrollbarVisibility } from '@fin/scrollbar';
 
 let EDITOR_ID = 0;
 
@@ -69,6 +69,20 @@ export class InputWidget extends Disposable {
         viewInfo: {
           renderWhitespace: 'none',
           stopRenderingLineAfter: 100000,
+          scrollbar: {
+            vertical: ScrollbarVisibility.Auto,
+            horizontal: ScrollbarVisibility.Auto,
+            arrowSize: 11,
+            useShadows: true,
+            verticalHasArrows: false,
+            horizontalHasArrows: false,
+            horizontalScrollbarSize: 10,
+            horizontalSliderSize: 10,
+            verticalScrollbarSize: 14,
+            verticalSliderSize: 14,
+            handleMouseWheel: true,
+            mouseWheelScrollSensitivity: 1,
+          },
         },
         fontInfo: new FontInfo({
           zoomLevel: 1,

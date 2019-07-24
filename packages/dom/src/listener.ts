@@ -1,6 +1,7 @@
-import { IDisposable } from '@fin/disposable';
+import { Disposable, IDisposable } from '@fin/disposable';
 import { IKeyboardEvent, StandardKeyboardEvent } from '@fin/keyboard';
 import { IMouseEvent, StandardMouseEvent } from './mouseEvent';
+import { TimeoutTimer } from '@fin/async';
 
 class DomListener implements IDisposable {
 
@@ -45,6 +46,7 @@ export interface IAddStandardDisposableListenerSignature {
   (node: HTMLElement, type: 'keyup', handler: (event: IKeyboardEvent) => void, useCapture?: boolean): IDisposable;
   (node: HTMLElement, type: string, handler: (event: any) => void, useCapture?: boolean): IDisposable;
 }
+
 function _wrapAsStandardMouseEvent(handler: (e: IMouseEvent) => void): (e: MouseEvent) => void {
   return function (e: MouseEvent) {
     return handler(new StandardMouseEvent(e));
@@ -54,6 +56,69 @@ function _wrapAsStandardKeyboardEvent(handler: (e: IKeyboardEvent) => void): (e:
   return function (e: KeyboardEvent) {
     return handler(new StandardKeyboardEvent(e));
   };
+}
+
+export interface IEventMerger<R, E> {
+  (lastEvent: R, currentEvent: E): R;
+}
+
+export interface DOMEvent {
+  preventDefault(): void;
+  stopPropagation(): void;
+}
+
+const MINIMUM_TIME_MS = 16;
+const DEFAULT_EVENT_MERGER: IEventMerger<DOMEvent, DOMEvent> = function (lastEvent: DOMEvent, currentEvent: DOMEvent) {
+  return currentEvent;
+};
+
+class TimeoutThrottledDomListener<R, E extends DOMEvent> extends Disposable {
+
+  constructor(node: any, type: string, handler: (event: R) => void, eventMerger: IEventMerger<R, E> = <any>DEFAULT_EVENT_MERGER, minimumTimeMs: number = MINIMUM_TIME_MS) {
+    super();
+
+    let lastEvent: R = null;
+    let lastHandlerTime = 0;
+    let timeout = this._register(new TimeoutTimer());
+
+    let invokeHandler = () => {
+      lastHandlerTime = (new Date()).getTime();
+      handler(lastEvent);
+      lastEvent = null;
+    };
+
+    this._register(addDisposableListener(node, type, (e) => {
+
+      lastEvent = eventMerger(lastEvent, e);
+      let elapsedTime = (new Date()).getTime() - lastHandlerTime;
+
+      if (elapsedTime >= minimumTimeMs) {
+        timeout.cancel();
+        invokeHandler();
+      } else {
+        timeout.setIfNotSet(invokeHandler, minimumTimeMs - elapsedTime);
+      }
+    }));
+  }
+}
+
+export function addDisposableThrottledListener<R, E extends DOMEvent = DOMEvent>(node: any, type: string, handler: (event: R) => void, eventMerger?: IEventMerger<R, E>, minimumTimeMs?: number): IDisposable {
+  return new TimeoutThrottledDomListener<R, E>(node, type, handler, eventMerger, minimumTimeMs);
+}
+
+export function addDisposableNonBubblingMouseOutListener(node: Element, handler: (event: MouseEvent) => void): IDisposable {
+  return addDisposableListener(node, 'mouseout', (e: MouseEvent) => {
+    // Mouse out bubbles, so this is an attempt to ignore faux mouse outs coming from children elements
+    let toElement = <Node>(e.relatedTarget || e.toElement);
+    while (toElement && toElement !== node) {
+      toElement = toElement.parentNode;
+    }
+    if (toElement === node) {
+      return;
+    }
+
+    handler(e);
+  });
 }
 
 export let addStandardDisposableListener: IAddStandardDisposableListenerSignature = function addStandardDisposableListener(node: HTMLElement, type: string, handler: (event: any) => void, useCapture?: boolean): IDisposable {

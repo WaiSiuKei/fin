@@ -5,6 +5,7 @@ import { ViewLine, ViewLineOptions } from './viewLine';
 import { ViewContext } from '../../view/viewContext';
 import { IVisibleLinesHost, VisibleLinesCollection } from '../../view/viewLayer';
 import { IViewLines } from '../../view/renderingContext';
+import { ViewportData } from '../../viewLayout/viewLinesViewportData';
 
 export class ViewLines extends ViewPart implements IVisibleLinesHost<ViewLine>, IViewLines {
   /**
@@ -111,6 +112,29 @@ export class ViewLines extends ViewPart implements IVisibleLinesHost<ViewLine>, 
 
   public render(): void {
     throw new Error('Not supported');
+  }
+
+  public renderText(viewportData: ViewportData): void {
+    // (1) render lines - ensures lines are in the DOM
+    this._visibleLines.renderLines(viewportData);
+    // this.domNode.setWidth(this._context.viewLayout.getScrollWidth());
+    // this.domNode.setHeight(Math.min(this._context.viewLayout.getScrollHeight(), 1000000));
+
+    // (2) compute horizontal scroll position:
+    //  - this must happen after the lines are in the DOM since it might need a line that rendered just now
+    //  - it might change `scrollWidth` and `scrollLeft`
+
+    // Update max line width (not so important, it is just so the horizontal scrollbar doesn't get too small)
+    // if (!this._updateLineWidthsFast()) {
+      // Computing the width of some lines would be slow => delay it
+      // this._asyncUpdateLineWidths.schedule();
+    // }
+
+    // (3) handle scrolling
+    // this._linesContent.setLayerHinting(this._canUseLayerHinting);
+    // const adjustedScrollTop = this._context.viewLayout.getCurrentScrollTop() - viewportData.bigNumbersDelta;
+    // this._linesContent.setTop(-adjustedScrollTop);
+    // this._linesContent.setLeft(-this._context.viewLayout.getCurrentScrollLeft());
   }
 
   // --- width
